@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "tracer:block/turned_block"
+    }
+  }
+}

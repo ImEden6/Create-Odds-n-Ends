@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,formed=false": {
+      "model": "tracer:block/tracer_holder"
+    },
+    "facing=north,formed=true": {
+      "model": "tracer:block/tracer_holder_formed"
+    },
+    "facing=east,formed=false": {
+      "model": "tracer:block/tracer_holder",
+      "y": 90
+    },
+    "facing=east,formed=true": {
+      "model": "tracer:block/tracer_holder_formed",
+      "y": 90
+    },
+    "facing=south,formed=false": {
+      "model": "tracer:block/tracer_holder",
+      "y": 180
+    },
+    "facing=south,formed=true": {
+      "model": "tracer:block/tracer_holder_formed",
+      "y": 180
+    },
+    "facing=west,formed=false": {
+      "model": "tracer:block/tracer_holder",
+      "y": 270
+    },
+    "facing=west,formed=true": {
+      "model": "tracer:block/tracer_holder_formed",
+      "y": 270
+    }
+  }
+}

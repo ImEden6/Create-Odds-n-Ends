@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,formed=false": {
+      "model": "tracer:block/lathe_tailstock"
+    },
+    "facing=north,formed=true": {
+      "model": "tracer:block/lathe_tailstock_formed"
+    },
+    "facing=east,formed=false": {
+      "model": "tracer:block/lathe_tailstock",
+      "y": 90
+    },
+    "facing=east,formed=true": {
+      "model": "tracer:block/lathe_tailstock_formed",
+      "y": 90
+    },
+    "facing=south,formed=false": {
+      "model": "tracer:block/lathe_tailstock",
+      "y": 180
+    },
+    "facing=south,formed=true": {
+      "model": "tracer:block/lathe_tailstock_formed",
+      "y": 180
+    },
+    "facing=west,formed=false": {
+      "model": "tracer:block/lathe_tailstock",
+      "y": 270
+    },
+    "facing=west,formed=true": {
+      "model": "tracer:block/lathe_tailstock_formed",
+      "y": 270
+    }
+  }
+}
