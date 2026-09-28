@@ -1,0 +1,80 @@
+{
+  "textures": {
+    "particle": "create:block/andesite_casing",
+    "casing": "create:block/andesite_casing",
+    "steel": "tracer:block/tool_steel",
+    "way": "tracer:block/lathe_way",
+    "tway": "tracer:block/tracer_way",
+    "chuck": "tracer:block/chuck"
+  },
+  "elements": [
+    {
+      "from": [
+        17,
+        2,
+        6
+      ],
+      "to": [
+        21,
+        7.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            11,
+            8.5,
+            15,
+            14
+          ],
+          "texture": "#casing"
+        },
+        "south": {
+          "uv": [
+            1,
+            8.5,
+            5,
+            14
+          ],
+          "texture": "#casing"
+        },
+        "east": {
+          "uv": [
+            6,
+            8.5,
+            10,
+            14
+          ],
+          "texture": "#casing"
+        },
+        "west": {
+          "uv": [
+            6,
+            8.5,
+            10,
+            14
+          ],
+          "texture": "#casing"
+        },
+        "up": {
+          "uv": [
+            1,
+            6,
+            5,
+            10
+          ],
+          "texture": "#casing"
+        },
+        "down": {
+          "uv": [
+            1,
+            6,
+            5,
+            10
+          ],
+          "texture": "#casing"
+        }
+      }
+    }
+  ]
+}
