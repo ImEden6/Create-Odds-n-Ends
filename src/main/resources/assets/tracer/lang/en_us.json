@@ -1,0 +1,25 @@
+{
+  "itemGroup.tracer": "Tracer",
+  "block.tracer.lathe_headstock": "Lathe Headstock",
+  "block.tracer.lathe_bed": "Lathe Bed",
+  "block.tracer.lathe_tailstock": "Lathe Tailstock",
+  "block.tracer.tracer_rail": "Tracer Rail",
+  "block.tracer.tracer_holder": "Tracer Holder",
+  "block.tracer.turned_block": "Turned Block",
+  "item.tracer.profile_template": "Profile Template",
+
+  "tracer.lathe.missing": "Lathe needs a %s at %s",
+  "tracer.lathe.blocked": "Lathe needs the space at %s left empty",
+  "tracer.lathe.taken": "%s at %s is already part of another lathe",
+  "tracer.lathe.formed": "Lathe assembled",
+  "tracer.lathe.formed_tracer": "Lathe assembled with tracer",
+  "tracer.lathe.formed_tracer_missing": "Lathe assembled without tracer. %s",
+
+  "tracer.configuration.title": "Tracer Configs",
+  "tracer.configuration.section.tracer.common.toml": "Tracer Configs",
+  "tracer.configuration.section.tracer.common.toml.title": "Tracer Configs",
+  "tracer.configuration.items": "Item List",
+  "tracer.configuration.logDirtBlock": "Log Dirt Block",
+  "tracer.configuration.magicNumberIntroduction": "Magic Number Text",
+  "tracer.configuration.magicNumber": "Magic Number"
+}
