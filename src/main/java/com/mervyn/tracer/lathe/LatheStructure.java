@@ -23,7 +23,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 // Layout is relative to the headstock: "along" runs toward the tailstock, "back" is the
-// side the tracer row sits on (counter-clockwise of facing, away from the operator).
+// side the tracer row sits on (counter-clockwise of facing, away from the operator). The tracer
+// row stands one block back from the lathe, leaving a gap for the stylus.
 public final class LatheStructure {
     record Spot(int along, int up, int back, @Nullable Supplier<? extends Block> block) {}
 
@@ -36,12 +37,12 @@ public final class LatheStructure {
             new Spot(2, -1, 0, Tracer.LATHE_BED));
 
     static final List<Spot> TRACER = List.of(
-            new Spot(0, 0, 1, Tracer.TRACER_HOLDER),
-            new Spot(1, 0, 1, null),
-            new Spot(2, 0, 1, Tracer.TRACER_HOLDER),
-            new Spot(0, -1, 1, Tracer.TRACER_RAIL),
-            new Spot(1, -1, 1, Tracer.TRACER_RAIL),
-            new Spot(2, -1, 1, Tracer.TRACER_RAIL));
+            new Spot(0, 0, 2, Tracer.TRACER_HOLDER),
+            new Spot(1, 0, 2, null),
+            new Spot(2, 0, 2, Tracer.TRACER_HOLDER),
+            new Spot(0, -1, 2, Tracer.TRACER_RAIL),
+            new Spot(1, -1, 2, Tracer.TRACER_RAIL),
+            new Spot(2, -1, 2, Tracer.TRACER_RAIL));
 
     private LatheStructure() {}
 
