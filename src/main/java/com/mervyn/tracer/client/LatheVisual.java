@@ -71,8 +71,6 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
     @Nullable
     private RotatingInstance masterPattern;
     @Nullable
-    private TransformedInstance tracerSlide;
-    @Nullable
     private TransformedInstance stylus;
 
     public static BlockEntityVisual<? super HeadstockBlockEntity> create(VisualizationContext ctx, HeadstockBlockEntity be, float partialTick) {
@@ -150,7 +148,6 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
         if (tracer) {
             masterPattern = spinning(model, master);
             masterPattern.setRotationalSpeed(0).setChanged();
-            tracerSlide = sliding(LathePartials.TRACER_SLIDE);
             stylus = sliding(LathePartials.STYLUS);
         }
         updateLight(0);
@@ -159,12 +156,9 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
     private void deleteTracer() {
         if (masterPattern != null)
             masterPattern.delete();
-        if (tracerSlide != null)
-            tracerSlide.delete();
         if (stylus != null)
             stylus.delete();
         masterPattern = null;
-        tracerSlide = null;
         stylus = null;
     }
 
@@ -198,10 +192,8 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
         place(crossSlide, carriage.reach(), along);
         place(toolPost, carriage.reach(), along);
         place(cutter, carriage.reach(), along);
-        if (tracer) {
-            place(tracerSlide, -2, along);
+        if (tracer)
             place(stylus, carriage.reach(), along);
-        }
     }
 
     private void place(TransformedInstance instance, float x, float z) {
@@ -239,7 +231,7 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
         relight(pos, shaft, chuck);
         relight(tailstock, liveCenter);
         relight(slot, workpiece, saddle, crossSlide, toolPost, cutter);
-        relight(master, masterPattern, tracerSlide, stylus);
+        relight(master, masterPattern, stylus);
     }
 
     @Override

@@ -12,7 +12,6 @@ public final class LathePartials {
     public static final PartialModel CROSS_SLIDE = of("cross_slide");
     public static final PartialModel TOOL_POST = of("tool_post");
     public static final PartialModel CUTTER = of("cutter");
-    public static final PartialModel TRACER_SLIDE = of("tracer_slide");
     public static final PartialModel STYLUS = of("stylus");
 
     private LathePartials() {}

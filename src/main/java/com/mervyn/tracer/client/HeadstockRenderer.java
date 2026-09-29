@@ -109,11 +109,6 @@ public class HeadstockRenderer extends SafeBlockEntityRenderer<HeadstockBlockEnt
             LatheLayout.layOnAxis(ms);
             quads(shape, source, level, master, ms, buffer, masterLight);
             ms.popPose();
-
-            ms.pushPose();
-            ms.translate(-2, 0, -1 + carriage.along());
-            partial(LathePartials.TRACER_SLIDE, state, ms, buffer, masterLight);
-            ms.popPose();
         }
 
         ms.popPose();
