@@ -10,7 +10,7 @@ import net.minecraft.core.Direction;
 
 // Everything about the formed lathe is drawn in "model space": the lathe as if the headstock
 // faced north. The slot is at z -1, the tailstock at z -2, the bed at y -1, the operator stands
-// on the +x side and the tracer row sits at x -1. Shared by the block entity renderer and the
+// on the +x side and the tracer row sits at x -2. Shared by the block entity renderer and the
 // Flywheel visual so the two can't drift apart.
 public final class LatheLayout {
     private static final float PREVIEW_TICKS = 200;
@@ -41,7 +41,7 @@ public final class LatheLayout {
     }
 
     // along: z offset of the carriage from the middle of the slot, reach: how far the cross slide
-    // (and, mirrored, the stylus) has moved in from radius 8. Both in blocks.
+    // (and the stylus arm with it) has moved in from radius 8. Both in blocks.
     public record Carriage(float along, float reach) {}
 
     // PLACEHOLDER: a client-only loop so the carriage has something to do. Feeds from the

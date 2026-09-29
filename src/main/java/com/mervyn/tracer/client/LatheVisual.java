@@ -89,7 +89,7 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
         rotation = LatheLayout.facingRotation(facing);
         slot = pos.relative(facing);
         tailstock = pos.relative(facing, 2);
-        master = slot.relative(LatheStructure.back(facing));
+        master = slot.relative(LatheStructure.back(facing), 2);
 
         shaft = instancerProvider().instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF))
                 .createInstance()
@@ -199,8 +199,8 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
         place(toolPost, carriage.reach(), along);
         place(cutter, carriage.reach(), along);
         if (tracer) {
-            place(tracerSlide, -1, along);
-            place(stylus, -1 - carriage.reach(), along);
+            place(tracerSlide, -2, along);
+            place(stylus, carriage.reach(), along);
         }
     }
 
@@ -222,7 +222,7 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
     @Override
     public boolean isVisible(FrustumIntersection frustum) {
         BlockPos at = getVisualPosition().relative(facing);
-        return frustum.testSphere(at.getX() + .5f, at.getY() + .5f, at.getZ() + .5f, 2.5f);
+        return frustum.testSphere(at.getX() + .5f, at.getY() + .5f, at.getZ() + .5f, 3f);
     }
 
     @Override

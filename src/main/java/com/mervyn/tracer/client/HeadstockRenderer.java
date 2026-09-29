@@ -59,7 +59,7 @@ public class HeadstockRenderer extends SafeBlockEntityRenderer<HeadstockBlockEnt
 
         BlockPos pos = be.getBlockPos();
         BlockPos slot = pos.relative(facing);
-        BlockPos master = slot.relative(LatheStructure.back(facing));
+        BlockPos master = slot.relative(LatheStructure.back(facing), 2);
         int slotLight = LevelRenderer.getLightColor(level, slot);
         int masterLight = LevelRenderer.getLightColor(level, master);
         BlockState source = be.getSource().defaultBlockState();
@@ -99,20 +99,20 @@ public class HeadstockRenderer extends SafeBlockEntityRenderer<HeadstockBlockEnt
         partial(LathePartials.CROSS_SLIDE, state, ms, buffer, slotLight);
         partial(LathePartials.TOOL_POST, state, ms, buffer, slotLight);
         partial(LathePartials.CUTTER, state, ms, buffer, slotLight);
+        if (be.hasTracer())
+            partial(LathePartials.STYLUS, state, ms, buffer, slotLight);
         ms.popPose();
 
         if (be.hasTracer()) {
             ms.pushPose();
-            ms.translate(-1, 0, -1);
+            ms.translate(-2, 0, -1);
             LatheLayout.layOnAxis(ms);
             quads(shape, source, level, master, ms, buffer, masterLight);
             ms.popPose();
 
             ms.pushPose();
-            ms.translate(-1, 0, -1 + carriage.along());
+            ms.translate(-2, 0, -1 + carriage.along());
             partial(LathePartials.TRACER_SLIDE, state, ms, buffer, masterLight);
-            ms.translate(-carriage.reach(), 0, 0);
-            partial(LathePartials.STYLUS, state, ms, buffer, masterLight);
             ms.popPose();
         }
 
