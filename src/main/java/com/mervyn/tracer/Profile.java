@@ -33,6 +33,22 @@ public record Profile(List<Byte> radii) {
         return radii.get(layer);
     }
 
+    public boolean valid() {
+        return check(radii).isSuccess();
+    }
+
+    public Profile mirrored() {
+        return new Profile(radii.reversed());
+    }
+
+    // same 16 digits /tracer takes, foot first
+    public String digits() {
+        StringBuilder out = new StringBuilder(LAYERS);
+        for (byte b : radii)
+            out.append(b);
+        return out.toString();
+    }
+
     public byte[] toBytes() {
         byte[] out = new byte[LAYERS];
         for (int i = 0; i < LAYERS; i++)
