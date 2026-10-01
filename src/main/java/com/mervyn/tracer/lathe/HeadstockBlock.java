@@ -9,6 +9,11 @@ import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -49,6 +54,18 @@ public class HeadstockBlock extends HorizontalKineticBlock implements IBE<Headst
     @Override
     public InteractionResult onWrenched(BlockState state, UseOnContext context) {
         return LatheStructure.wrench(context.getLevel(), context.getClickedPos(), context.getPlayer());
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        HeadstockBlockEntity lathe = HeadstockBlockEntity.find(level, pos);
+        return lathe != null ? lathe.useItem(player, stack) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        HeadstockBlockEntity lathe = HeadstockBlockEntity.find(level, pos);
+        return lathe != null && player.getMainHandItem().isEmpty() ? lathe.useEmptyHand(player) : InteractionResult.PASS;
     }
 
     @Override

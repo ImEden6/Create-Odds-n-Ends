@@ -1,11 +1,17 @@
 package com.mervyn.tracer.lathe;
 
+import com.mervyn.tracer.Tracer;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 
 import net.createmod.catnip.math.VoxelShaper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -21,6 +27,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
 public class LathePartBlock extends Block implements IWrenchable {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -85,10 +92,35 @@ public class LathePartBlock extends Block implements IWrenchable {
     }
 
     @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        HeadstockBlockEntity lathe = HeadstockBlockEntity.find(level, pos);
+        return lathe != null ? lathe.useItem(player, stack) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        HeadstockBlockEntity lathe = HeadstockBlockEntity.find(level, pos);
+        return lathe != null && player.getMainHandItem().isEmpty() ? lathe.useEmptyHand(player) : InteractionResult.PASS;
+    }
+
+    @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock()) && state.getValue(FORMED))
             LatheStructure.breakFrom(level, pos, state);
         super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    // The lathe's middle and the tracer row's middle hold the workpiece and the master; nothing
+    // gets placed there while formed. A formed headstock or holder points its facing at that spot.
+    public static void keepSlotsClear(BlockEvent.EntityPlaceEvent event) {
+        for (Direction d : Direction.Plane.HORIZONTAL) {
+            BlockState next = event.getLevel().getBlockState(event.getPos().relative(d));
+            if ((next.is(Tracer.LATHE_HEADSTOCK.get()) || next.is(Tracer.TRACER_HOLDER.get()))
+                    && next.getValue(FORMED) && next.getValue(FACING) == d.getOpposite()) {
+                event.setCanceled(true);
+                return;
+            }
+        }
     }
 
     @Override
