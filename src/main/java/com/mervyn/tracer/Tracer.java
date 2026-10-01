@@ -4,16 +4,27 @@ import org.slf4j.Logger;
 
 import com.mervyn.tracer.lathe.HeadstockBlock;
 import com.mervyn.tracer.lathe.HeadstockBlockEntity;
+import com.mervyn.tracer.lathe.LatheArmPoint;
+import com.mervyn.tracer.lathe.LatheItems;
 import com.mervyn.tracer.lathe.LathePartBlock;
+import com.mervyn.tracer.template.ProfileTemplateItem;
+import com.mervyn.tracer.template.SaveProfile;
+import com.mervyn.tracer.template.TemplateTableBlock;
+import com.mervyn.tracer.template.TemplateTableMenu;
 import com.mervyn.tracer.turned.TurnedBlock;
 import com.mervyn.tracer.turned.TurnedBlockEntity;
+import com.mervyn.tracer.turned.TurnedBlockItem;
 import com.mojang.logging.LogUtils;
+import com.simibubi.create.api.registry.CreateRegistries;
+import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPointType;
 
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -27,7 +38,10 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -41,6 +55,8 @@ public class Tracer {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
     public static final DeferredRegister.DataComponents COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MODID);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, MODID);
+    public static final DeferredRegister<ArmInteractionPointType> ARM_POINTS = DeferredRegister.create(CreateRegistries.ARM_INTERACTION_POINT_TYPE, MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Profile>> PROFILE = COMPONENTS.registerComponentType("profile",
@@ -60,18 +76,26 @@ public class Tracer {
     public static final DeferredBlock<TurnedBlock> TURNED_BLOCK = BLOCKS.register("turned_block", () -> new TurnedBlock(
             BlockBehaviour.Properties.of().strength(1.5f).noOcclusion().dynamicShape()));
 
+    public static final DeferredBlock<TemplateTableBlock> TEMPLATE_TABLE = BLOCKS.register("template_table", () -> new TemplateTableBlock(machine()));
+
     public static final DeferredItem<BlockItem> LATHE_HEADSTOCK_ITEM = ITEMS.registerSimpleBlockItem(LATHE_HEADSTOCK);
     public static final DeferredItem<BlockItem> LATHE_BED_ITEM = ITEMS.registerSimpleBlockItem(LATHE_BED);
     public static final DeferredItem<BlockItem> LATHE_TAILSTOCK_ITEM = ITEMS.registerSimpleBlockItem(LATHE_TAILSTOCK);
     public static final DeferredItem<BlockItem> TRACER_RAIL_ITEM = ITEMS.registerSimpleBlockItem(TRACER_RAIL);
     public static final DeferredItem<BlockItem> TRACER_HOLDER_ITEM = ITEMS.registerSimpleBlockItem(TRACER_HOLDER);
-    public static final DeferredItem<BlockItem> TURNED_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(TURNED_BLOCK);
-    public static final DeferredItem<Item> PROFILE_TEMPLATE = ITEMS.registerSimpleItem("profile_template", new Item.Properties().stacksTo(1));
+    public static final DeferredItem<TurnedBlockItem> TURNED_BLOCK_ITEM = ITEMS.registerItem("turned_block", p -> new TurnedBlockItem(TURNED_BLOCK.get(), p));
+    public static final DeferredItem<BlockItem> TEMPLATE_TABLE_ITEM = ITEMS.registerSimpleBlockItem(TEMPLATE_TABLE);
+    public static final DeferredItem<ProfileTemplateItem> PROFILE_TEMPLATE = ITEMS.registerItem("profile_template", ProfileTemplateItem::new, new Item.Properties().stacksTo(1));
+
+    public static final DeferredHolder<MenuType<?>, MenuType<TemplateTableMenu>> TEMPLATE_TABLE_MENU = MENUS.register("template_table",
+            () -> new MenuType<>(TemplateTableMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<HeadstockBlockEntity>> LATHE_HEADSTOCK_BE = BLOCK_ENTITIES.register("lathe_headstock",
             () -> BlockEntityType.Builder.of((pos, state) -> new HeadstockBlockEntity(Tracer.LATHE_HEADSTOCK_BE.get(), pos, state), LATHE_HEADSTOCK.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurnedBlockEntity>> TURNED_BLOCK_BE = BLOCK_ENTITIES.register("turned_block",
             () -> BlockEntityType.Builder.of(TurnedBlockEntity::new, TURNED_BLOCK.get()).build(null));
+
+    public static final DeferredHolder<ArmInteractionPointType, LatheArmPoint.Type> LATHE_ARM_POINT = ARM_POINTS.register("lathe", LatheArmPoint.Type::new);
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("tracer", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.tracer"))
@@ -83,6 +107,7 @@ public class Tracer {
                 output.accept(LATHE_TAILSTOCK_ITEM.get());
                 output.accept(TRACER_RAIL_ITEM.get());
                 output.accept(TRACER_HOLDER_ITEM.get());
+                output.accept(TEMPLATE_TABLE_ITEM.get());
                 output.accept(PROFILE_TEMPLATE.get());
             }).build());
 
@@ -91,10 +116,24 @@ public class Tracer {
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
         COMPONENTS.register(modEventBus);
+        MENUS.register(modEventBus);
+        ARM_POINTS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
+        modEventBus.addListener(Tracer::registerPayloads);
+        modEventBus.addListener(Tracer::registerCapabilities);
 
         NeoForge.EVENT_BUS.addListener(TracerCommands::register);
+        NeoForge.EVENT_BUS.addListener(LathePartBlock::keepSlotsClear);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+    }
+
+    private static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, be, side) -> new LatheItems(level, pos),
+                LATHE_HEADSTOCK.get(), LATHE_BED.get(), LATHE_TAILSTOCK.get(), TRACER_RAIL.get(), TRACER_HOLDER.get());
+    }
+
+    private static void registerPayloads(RegisterPayloadHandlersEvent event) {
+        event.registrar("1").playToServer(SaveProfile.TYPE, SaveProfile.STREAM_CODEC, SaveProfile::handle);
     }
 }
