@@ -5,6 +5,7 @@ import static com.simibubi.create.content.kinetics.base.HorizontalKineticBlock.H
 
 import java.util.List;
 
+import com.mervyn.tracer.Profile;
 import com.mervyn.tracer.lathe.HeadstockBlockEntity;
 import com.mervyn.tracer.lathe.LatheStructure;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -62,8 +63,9 @@ public class HeadstockRenderer extends SafeBlockEntityRenderer<HeadstockBlockEnt
         BlockPos master = slot.relative(LatheStructure.back(facing), 2);
         int slotLight = LevelRenderer.getLightColor(level, slot);
         int masterLight = LevelRenderer.getLightColor(level, master);
-        BlockState source = be.getSource().defaultBlockState();
-        List<BakedQuad> shape = TurnedQuads.all(be.getProfile(), source);
+        Profile template = be.templateProfile();
+        float layerPos = be.layerPos(partialTicks);
+        HeadstockBlockEntity.Work work = be.work(layerPos);
         float time = AnimationTickHolder.getRenderTime(level);
         // model +z is the negative world axis for north and east facings
         float spin = Mth.DEG_TO_RAD * LatheLayout.spinDegrees(be.getSpeed(), time)
@@ -83,14 +85,17 @@ public class HeadstockRenderer extends SafeBlockEntityRenderer<HeadstockBlockEnt
         partial(LathePartials.LIVE_CENTER, state, ms, buffer, LevelRenderer.getLightColor(level, pos.relative(facing, 2)));
         ms.popPose();
 
-        ms.pushPose();
-        ms.translate(0, 0, -1);
-        spinAroundAxis(ms, spin);
-        LatheLayout.layOnAxis(ms);
-        quads(shape, source, level, slot, ms, buffer, slotLight);
-        ms.popPose();
+        if (work != null) {
+            BlockState source = work.source().defaultBlockState();
+            ms.pushPose();
+            ms.translate(0, 0, -1);
+            spinAroundAxis(ms, spin);
+            LatheLayout.layOnAxis(ms);
+            quads(TurnedQuads.all(work.profile(), source), source, level, slot, ms, buffer, slotLight);
+            ms.popPose();
+        }
 
-        LatheLayout.Carriage carriage = LatheLayout.preview(be.getProfile(), time);
+        LatheLayout.Carriage carriage = LatheLayout.carriage(template, layerPos);
 
         ms.pushPose();
         ms.translate(0, 0, -1 + carriage.along());
@@ -103,11 +108,11 @@ public class HeadstockRenderer extends SafeBlockEntityRenderer<HeadstockBlockEnt
             partial(LathePartials.STYLUS, state, ms, buffer, slotLight);
         ms.popPose();
 
-        if (be.hasTracer()) {
+        if (be.hasTracer() && template != null) {
             ms.pushPose();
             ms.translate(-2, 0, -1);
             LatheLayout.layOnAxis(ms);
-            quads(shape, source, level, master, ms, buffer, masterLight);
+            quads(TurnedQuads.all(template, LatheLayout.MASTER), LatheLayout.MASTER, level, master, ms, buffer, masterLight);
             ms.popPose();
         }
 

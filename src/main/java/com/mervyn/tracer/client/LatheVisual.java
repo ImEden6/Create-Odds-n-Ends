@@ -3,6 +3,7 @@ package com.mervyn.tracer.client;
 import static com.mervyn.tracer.lathe.LathePartBlock.FORMED;
 import static com.simibubi.create.content.kinetics.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
@@ -36,14 +37,13 @@ import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleTickableVisual;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.block.state.BlockState;
 
 // Flywheel side of the formed lathe. Everything that spins is a RotatingInstance so the GPU turns
-// it; only the carriage and stylus get moved each frame. Layout comes from LatheLayout, same as
+// it; only the carriage and stylus get moved each frame, and the workpiece is swapped as layers get cut. Layout comes from LatheLayout, same as
 // the fallback HeadstockRenderer.
 public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> implements SimpleDynamicVisual, SimpleTickableVisual {
     private record Shape(Profile profile, BlockState source) {}
@@ -65,8 +65,12 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
     private final TransformedInstance toolPost;
     private final TransformedInstance cutter;
 
-    private Shape shape;
     private boolean tracer;
+    @Nullable
+    private Profile masterProfile;
+    @Nullable
+    private Shape work;
+    @Nullable
     private RotatingInstance workpiece;
     @Nullable
     private RotatingInstance masterPattern;
@@ -103,10 +107,12 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
         toolPost = sliding(LathePartials.TOOL_POST);
         cutter = sliding(LathePartials.CUTTER);
 
-        shape = shapeOf(be);
         tracer = be.hasTracer();
-        buildWork();
-        moveCarriage();
+        masterProfile = be.templateProfile();
+        buildTracer();
+        work = workShape();
+        buildWorkpiece();
+        moveCarriage(partialTick);
     }
 
     private static Model buildShape(Shape shape) {
@@ -118,8 +124,11 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
                 .build();
     }
 
-    private static Shape shapeOf(HeadstockBlockEntity be) {
-        return new Shape(be.getProfile(), be.getSource().defaultBlockState());
+    // sampled once a tick, which is as often as a layer can finish
+    @Nullable
+    private Shape workShape() {
+        HeadstockBlockEntity.Work now = blockEntity.work(blockEntity.layerPos(0));
+        return now == null ? null : new Shape(now.profile(), now.source().defaultBlockState());
     }
 
     // chuck, live centre and workpiece share one angle, so they skip Create's per-position offset
@@ -138,17 +147,21 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
         return instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(partial)).createInstance();
     }
 
-    private void buildWork() {
+    private void buildWorkpiece() {
         if (workpiece != null)
             workpiece.delete();
-        deleteTracer();
+        workpiece = work == null ? null : spinning(SHAPES.get(work), slot);
+        updateLight(0);
+    }
 
-        Model model = SHAPES.get(shape);
-        workpiece = spinning(model, slot);
+    private void buildTracer() {
+        deleteTracer();
         if (tracer) {
-            masterPattern = spinning(model, master);
-            masterPattern.setRotationalSpeed(0).setChanged();
             stylus = sliding(LathePartials.STYLUS);
+            if (masterProfile != null) {
+                masterPattern = spinning(SHAPES.get(new Shape(masterProfile, LatheLayout.MASTER)), master);
+                masterPattern.setRotationalSpeed(0).setChanged();
+            }
         }
         updateLight(0);
     }
@@ -162,37 +175,47 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
         stylus = null;
     }
 
+    private void refreshWork() {
+        Shape now = workShape();
+        if (Objects.equals(now, work))
+            return;
+        work = now;
+        buildWorkpiece();
+    }
+
     @Override
     public void update(float partialTick) {
         shaft.setup(blockEntity).setChanged();
         float speed = blockEntity.getSpeed() * RotatingInstance.SPEED_MULTIPLIER;
         chuck.setRotationalSpeed(speed).setChanged();
         liveCenter.setRotationalSpeed(speed).setChanged();
-        workpiece.setRotationalSpeed(speed).setChanged();
+        if (workpiece != null)
+            workpiece.setRotationalSpeed(speed).setChanged();
 
-        Shape now = shapeOf(blockEntity);
-        if (!now.equals(shape) || blockEntity.hasTracer() != tracer) {
-            shape = now;
+        Profile template = blockEntity.templateProfile();
+        if (blockEntity.hasTracer() != tracer || !Objects.equals(template, masterProfile)) {
             tracer = blockEntity.hasTracer();
-            buildWork();
+            masterProfile = template;
+            buildTracer();
         }
+        refreshWork();
     }
 
     @Override
     public void beginFrame(DynamicVisual.Context ctx) {
         if (!isVisible(ctx.frustum()) || doDistanceLimitThisFrame(ctx))
             return;
-        moveCarriage();
+        moveCarriage(ctx.partialTick());
     }
 
-    private void moveCarriage() {
-        LatheLayout.Carriage carriage = LatheLayout.preview(shape.profile, AnimationTickHolder.getRenderTime(level));
+    private void moveCarriage(float partialTick) {
+        LatheLayout.Carriage carriage = LatheLayout.carriage(blockEntity.templateProfile(), blockEntity.layerPos(partialTick));
         float along = -1 + carriage.along();
         place(saddle, 0, along);
         place(crossSlide, carriage.reach(), along);
         place(toolPost, carriage.reach(), along);
         place(cutter, carriage.reach(), along);
-        if (tracer)
+        if (stylus != null)
             place(stylus, carriage.reach(), along);
     }
 
@@ -209,6 +232,7 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
     @Override
     public void tick(TickableVisual.Context context) {
         applyOverstressEffect(blockEntity, shaft);
+        refreshWork();
     }
 
     @Override
@@ -249,7 +273,8 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
         crossSlide.delete();
         toolPost.delete();
         cutter.delete();
-        workpiece.delete();
+        if (workpiece != null)
+            workpiece.delete();
         deleteTracer();
     }
 }

@@ -1,5 +1,6 @@
 package com.mervyn.tracer.client;
 
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 import com.mervyn.tracer.Profile;
@@ -7,13 +8,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 // Everything about the formed lathe is drawn in "model space": the lathe as if the headstock
 // faced north. The slot is at z -1, the tailstock at z -2, the bed at y -1, the operator stands
 // on the +x side and the tracer row sits at x -2. Shared by the block entity renderer and the
 // Flywheel visual so the two can't drift apart.
 public final class LatheLayout {
-    private static final float PREVIEW_TICKS = 200;
+    private static final float PARKED_RADIUS = 10;
+    // the master pattern is shown in a wood of its own, like the mockup
+    public static final BlockState MASTER = Blocks.SPRUCE_PLANKS.defaultBlockState();
     private static final float STYLUS_TIP = 1.75f;
 
     private LatheLayout() {}
@@ -45,23 +51,15 @@ public final class LatheLayout {
     // (and the stylus arm with it) has moved in from radius 8. Both in blocks.
     public record Carriage(float along, float reach) {}
 
-    // PLACEHOLDER: a client-only loop so the carriage has something to do. Feeds from the
-    // tailstock to the chuck with the cutter following the stylus over the profile, backs off, then returns.
-    // Swap for real cutting progress synced from the block entity later.
-    public static Carriage preview(Profile profile, float renderTime) {
-        float t = renderTime % PREVIEW_TICKS / PREVIEW_TICKS;
-        float layerPos;
-        float radius;
-        if (t < .75f) {
-            layerPos = Profile.LAYERS * (1 - t / .75f);
-            radius = stylusRadius(profile, layerPos, STYLUS_TIP);
-        } else if (t < .85f) {
-            layerPos = 0;
-            float start = stylusRadius(profile, 0, STYLUS_TIP);
-            radius = start + (10 - start) * (t - .75f) / .1f;
-        } else {
-            layerPos = Profile.LAYERS * (t - .85f) / .15f;
-            radius = 10;
+    // Where the carriage sits for a carriage position along the piece in px (16 at the tailstock
+    // end, 0 at the chuck). The cutter follows the stylus over the template, easing in from parked
+    // over the first pixel; with nothing to cut it stays backed off.
+    public static Carriage carriage(@Nullable Profile template, float layerPos) {
+        float radius = PARKED_RADIUS;
+        if (template != null && layerPos < Profile.LAYERS) {
+            radius = stylusRadius(template, layerPos, STYLUS_TIP);
+            if (layerPos > Profile.LAYERS - 1)
+                radius = Mth.lerp(layerPos - (Profile.LAYERS - 1), radius, PARKED_RADIUS);
         }
         return new Carriage(.5f - layerPos / Profile.LAYERS, (radius - Profile.MAX_RADIUS) / 16f);
     }

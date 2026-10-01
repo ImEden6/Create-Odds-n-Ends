@@ -79,8 +79,8 @@ public final class TracerCommands {
         if (controller == null || !(level.getBlockEntity(controller) instanceof HeadstockBlockEntity be))
             throw NOT_A_LATHE.create();
 
-        be.setShape(profile, source);
-        ctx.getSource().sendSuccess(() -> Component.literal("lathe at " + controller.toShortString() + " now shows that profile"), false);
+        be.debugLoad(profile, source);
+        ctx.getSource().sendSuccess(() -> Component.literal("lathe at " + controller.toShortString() + " loaded with that template and block"), false);
         return 1;
     }
 
