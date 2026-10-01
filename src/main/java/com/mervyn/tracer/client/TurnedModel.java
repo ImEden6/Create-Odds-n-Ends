@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.mervyn.tracer.Profile;
 import com.mervyn.tracer.Tracer;
+import com.mervyn.tracer.turned.TurnedBlock;
 import com.mervyn.tracer.turned.TurnedBlockEntity;
 
 import net.minecraft.client.Minecraft;
@@ -74,7 +75,8 @@ public class TurnedModel implements IDynamicBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData data, @Nullable RenderType renderType) {
-        return TurnedQuads.get(profile(data), source(data), side);
+        Direction.Axis axis = fixedProfile == null && state != null && state.hasProperty(TurnedBlock.AXIS) ? state.getValue(TurnedBlock.AXIS) : Direction.Axis.Y;
+        return TurnedQuads.get(profile(data), source(data), axis, side);
     }
 
     @Override

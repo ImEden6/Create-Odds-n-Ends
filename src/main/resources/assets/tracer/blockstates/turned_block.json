@@ -1,6 +1,12 @@
 {
   "variants": {
-    "": {
+    "axis=x": {
+      "model": "tracer:block/turned_block"
+    },
+    "axis=y": {
+      "model": "tracer:block/turned_block"
+    },
+    "axis=z": {
       "model": "tracer:block/turned_block"
     }
   }

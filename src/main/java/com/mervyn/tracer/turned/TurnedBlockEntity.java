@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 
 public class TurnedBlockEntity extends BlockEntity {
@@ -42,8 +43,24 @@ public class TurnedBlockEntity extends BlockEntity {
         this.profile = profile;
         this.source = source;
         setChanged();
+        updateLight();
         if (level != null)
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        updateLight();
+    }
+
+    private void updateLight() {
+        if (level == null)
+            return;
+        AuxiliaryLightManager lights = level.getAuxLightManager(worldPosition);
+        int light = source.defaultBlockState().getLightEmission();
+        if (lights != null)
+            lights.setLightAt(worldPosition, light);
     }
 
     @Override
@@ -68,6 +85,7 @@ public class TurnedBlockEntity extends BlockEntity {
         if (tag.contains("Source"))
             source = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(tag.getString("Source")));
         if (level != null && level.isClientSide) {
+            updateLight();
             requestModelDataUpdate();
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
@@ -78,6 +96,7 @@ public class TurnedBlockEntity extends BlockEntity {
         super.applyImplicitComponents(input);
         profile = input.getOrDefault(Tracer.PROFILE.get(), Profile.FULL);
         source = input.getOrDefault(Tracer.SOURCE_BLOCK.get(), Blocks.OAK_PLANKS);
+        updateLight();
     }
 
     @Override
