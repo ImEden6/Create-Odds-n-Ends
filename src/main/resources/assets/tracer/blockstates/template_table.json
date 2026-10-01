@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "tracer:block/template_table"
+    }
+  }
+}
