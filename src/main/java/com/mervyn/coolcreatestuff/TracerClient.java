@@ -8,9 +8,11 @@ import com.mervyn.coolcreatestuff.client.TemplateTableScreen;
 import com.mervyn.coolcreatestuff.client.TurnedModel;
 import com.mervyn.coolcreatestuff.client.TurnedQuads;
 
+import com.mervyn.coolcreatestuff.ponder.TracerPonder;
 import com.mervyn.coolcreatestuff.turned.TurnedBlockEntity;
 
 import dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer;
+import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.block.BlockModelShaper;
@@ -38,6 +40,7 @@ public class TracerClient {
     public TracerClient(ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
         LathePartials.init();
+        PonderIndex.addPlugin(new TracerPonder());
     }
 
     @SubscribeEvent
