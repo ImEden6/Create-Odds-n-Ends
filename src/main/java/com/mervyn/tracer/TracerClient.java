@@ -15,6 +15,7 @@ import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
@@ -56,7 +57,6 @@ public class TracerClient {
         event.register(Tracer.TEMPLATE_TABLE_MENU.get(), TemplateTableScreen::new);
     }
 
-    // grass, leaves and the like are grey in their textures; the tint has to come from the source block
     @SubscribeEvent
     static void blockColors(RegisterColorHandlersEvent.Block event) {
         BlockColors colors = event.getBlockColors();
@@ -67,8 +67,10 @@ public class TracerClient {
     @SubscribeEvent
     static void itemColors(RegisterColorHandlersEvent.Item event) {
         ItemColors colors = event.getItemColors();
-        event.register((stack, tint) -> colors.getColor(new ItemStack(stack.getOrDefault(Tracer.SOURCE_BLOCK.get(), Blocks.OAK_PLANKS)), tint),
-                Tracer.TURNED_BLOCK_ITEM.get());
+        event.register((stack, tint) -> {
+            Block source = stack.getOrDefault(Tracer.SOURCE_BLOCK.get(), Blocks.OAK_PLANKS);
+            return source == Tracer.TURNED_BLOCK.get() ? -1 : colors.getColor(new ItemStack(source), tint);
+        }, Tracer.TURNED_BLOCK_ITEM.get());
     }
 
     @SubscribeEvent

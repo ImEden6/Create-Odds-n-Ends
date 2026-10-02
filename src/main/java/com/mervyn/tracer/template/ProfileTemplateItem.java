@@ -23,7 +23,6 @@ public class ProfileTemplateItem extends Item {
         super(properties);
     }
 
-    // sneak-use on a turned block copies its profile, blank or written
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();

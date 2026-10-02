@@ -110,13 +110,13 @@ public class LathePartBlock extends Block implements IWrenchable {
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
-    // The lathe's middle and the tracer row's middle hold the workpiece and the master; nothing
-    // gets placed there while formed. A formed headstock or holder points its facing at that spot.
     public static void keepSlotsClear(BlockEvent.EntityPlaceEvent event) {
         for (Direction d : Direction.Plane.HORIZONTAL) {
             BlockState next = event.getLevel().getBlockState(event.getPos().relative(d));
-            if ((next.is(Tracer.LATHE_HEADSTOCK.get()) || next.is(Tracer.TRACER_HOLDER.get()))
-                    && next.getValue(FORMED) && next.getValue(FACING) == d.getOpposite()) {
+            boolean headstock = next.is(Tracer.LATHE_HEADSTOCK.get());
+            boolean holder = next.is(Tracer.TRACER_HOLDER.get())
+                    && event.getLevel().getBlockState(event.getPos().relative(d.getOpposite())).is(Tracer.TRACER_HOLDER.get());
+            if ((headstock || holder) && next.getValue(FORMED) && next.getValue(FACING) == d.getOpposite()) {
                 event.setCanceled(true);
                 return;
             }

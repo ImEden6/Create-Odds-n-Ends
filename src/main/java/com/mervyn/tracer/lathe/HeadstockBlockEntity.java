@@ -100,7 +100,6 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
         super(type, pos, state);
     }
 
-    // the headstock behind any formed lathe part, or null
     @Nullable
     public static HeadstockBlockEntity find(Level level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
@@ -119,7 +118,6 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
         return LatheWork.STRESS_IMPACT;
     }
 
-    // covers the formed lathe, the tracer row behind it and the carriage hanging off the front, in any facing
     @Override
     protected AABB createRenderBoundingBox() {
         return new AABB(getBlockPos()).inflate(2, 1, 2);
@@ -162,7 +160,8 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
         if (templateProfile() == null || in.isEmpty() || !Turnable.allows(in))
             return false;
         ItemStack out = output.getStackInSlot(0);
-        return out.isEmpty() || ItemStack.isSameItemSameComponents(out, result()) && out.getCount() < out.getMaxStackSize();
+        return out.isEmpty() || out.is(Tracer.TURNED_BLOCK_ITEM.get()) && out.getCount() < out.getMaxStackSize()
+                && templateProfile().equals(out.get(Tracer.PROFILE.get())) && inputBlock() == out.get(Tracer.SOURCE_BLOCK.get());
     }
 
     private ItemStack result() {
@@ -257,7 +256,6 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
             SoundScapes.play(AmbienceGroup.MILLING, worldPosition, Mth.clamp(Math.abs(getSpeed()) / 256f + .7f, .7f, 1.2f));
     }
 
-    // Right click with a written template swaps it in, with an allowed block loads it.
     public ItemInteractionResult useItem(Player player, ItemStack held) {
         if (template.isItemValid(0, held)) {
             if (!level.isClientSide) {
@@ -278,7 +276,6 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
-    // Empty hand takes the output, else the input; sneaking takes the template.
     public InteractionResult useEmptyHand(Player player) {
         ItemStackHandler from = player.isSecondaryUseActive() ? template
                 : !output.getStackInSlot(0).isEmpty() ? output : input;
@@ -308,7 +305,6 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
         notifyUpdate();
     }
 
-    // /tracer lathe: drop a written template and one source block straight in
     public void debugLoad(Profile profile, Block source) {
         ItemStack written = new ItemStack(Tracer.PROFILE_TEMPLATE.get());
         written.set(Tracer.PROFILE.get(), profile);

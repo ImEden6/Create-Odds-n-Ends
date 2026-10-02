@@ -18,9 +18,8 @@ public record Profile(List<Byte> radii) {
             .validate(Profile::check)
             .xmap(Profile::new, Profile::radii);
 
-    public static final StreamCodec<ByteBuf, Profile> STREAM_CODEC = ByteBufCodecs.BYTE
-            .apply(ByteBufCodecs.list(LAYERS))
-            .map(Profile::new, Profile::radii);
+    public static final StreamCodec<ByteBuf, Profile> STREAM_CODEC = ByteBufCodecs.BYTE_ARRAY
+            .map(Profile::unchecked, Profile::toBytes);
 
     public static final Profile FULL = of(new int[] {8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8});
     public static final Profile BALUSTER = of(new int[] {6, 6, 5, 3, 3, 4, 6, 7, 7, 6, 4, 3, 3, 5, 6, 6});
@@ -60,6 +59,13 @@ public record Profile(List<Byte> radii) {
         List<Byte> list = new ArrayList<>(LAYERS);
         for (int v : values)
             list.add((byte) v);
+        return new Profile(list);
+    }
+
+    private static Profile unchecked(byte[] bytes) {
+        List<Byte> list = new ArrayList<>(bytes.length);
+        for (byte b : bytes)
+            list.add(b);
         return new Profile(list);
     }
 

@@ -10,10 +10,9 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.core.component.DataComponents;
+import com.mervyn.tracer.turned.TurnedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-// What the lathe will take: a full cube, unless a tag says otherwise.
 public final class Turnable {
     public static final TagKey<Block> TURNABLE = tag("turnable");
     public static final TagKey<Block> UNTURNABLE = tag("unturnable");
@@ -31,9 +30,7 @@ public final class Turnable {
         BlockState state = block.defaultBlockState();
         if (state.is(TURNABLE))
             return true;
-        // block entity blocks turn into a plain decorative copy; a stack carrying saved data is
-        // refused so nothing stored in it gets thrown away
-        if (state.is(UNTURNABLE) || stack.has(DataComponents.BLOCK_ENTITY_DATA) || stack.has(DataComponents.CONTAINER))
+        if (block instanceof TurnedBlock || state.is(UNTURNABLE) || !stack.getComponentsPatch().isEmpty())
             return false;
         return state.isCollisionShapeFullBlock(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
     }

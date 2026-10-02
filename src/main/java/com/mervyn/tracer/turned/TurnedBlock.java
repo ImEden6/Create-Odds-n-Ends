@@ -99,10 +99,8 @@ public class TurnedBlock extends Block implements EntityBlock {
         return stack;
     }
 
-    // everything below acts like the block it was turned from
-
     static BlockState source(BlockGetter level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof TurnedBlockEntity be)
+        if (level.getBlockEntity(pos) instanceof TurnedBlockEntity be && !(be.getSource() instanceof TurnedBlock))
             return be.getSource().defaultBlockState();
         return Blocks.OAK_PLANKS.defaultBlockState();
     }
