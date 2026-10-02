@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "com.mervyn.tracer.mixin",
+  "package": "com.mervyn.coolcreatestuff.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
   "injectors": {
