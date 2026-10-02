@@ -23,6 +23,7 @@ public record Profile(List<Byte> radii) {
 
     public static final Profile FULL = of(new int[] {8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8});
     public static final Profile BALUSTER = of(new int[] {6, 6, 5, 3, 3, 4, 6, 7, 7, 6, 4, 3, 3, 5, 6, 6});
+    public static final Profile VASE = of(new int[] {5, 6, 7, 7, 7, 6, 5, 4, 3, 3, 3, 4, 5, 5, 4, 3});
 
     public Profile {
         radii = List.copyOf(radii);

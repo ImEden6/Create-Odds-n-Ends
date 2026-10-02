@@ -28,6 +28,12 @@
   "tracer.lathe.goggles.no_template": "No template",
   "tracer.lathe.goggles.no_profile": "No template or master",
 
+  "tracer.jei.turning": "Turning",
+  "tracer.jei.any_block": "Any full block works, not just these",
+  "tracer.jei.template": "Goes in the headstock",
+  "tracer.jei.master": "Goes between the tracer holders, needs the tracer row formed. Wins over the template",
+  "tracer.jei.template_table": "Put a profile template in, drag the bars to set how wide each layer is and hit Save. Sneak-click a turned block with a template to copy its shape instead.",
+
   "tracer.configuration.title": "Tracer Configs",
   "tracer.configuration.section.tracer.common.toml": "Tracer Configs",
   "tracer.configuration.section.tracer.common.toml.title": "Tracer Configs",

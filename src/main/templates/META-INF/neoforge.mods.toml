@@ -58,3 +58,10 @@ config="${mod_id}.mixins.json"
     versionRange="[6.0.10,)"
     ordering="AFTER"
     side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="jei"
+    type="optional"
+    versionRange="[19,)"
+    ordering="NONE"
+    side="CLIENT"
