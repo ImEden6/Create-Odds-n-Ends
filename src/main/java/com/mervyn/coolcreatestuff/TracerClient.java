@@ -3,6 +3,7 @@ package com.mervyn.coolcreatestuff;
 import com.mervyn.coolcreatestuff.client.HeadstockRenderer;
 import com.mervyn.coolcreatestuff.client.LathePartials;
 import com.mervyn.coolcreatestuff.client.LatheVisual;
+import com.mervyn.coolcreatestuff.client.TemplateModel;
 import com.mervyn.coolcreatestuff.client.TemplateTableScreen;
 import com.mervyn.coolcreatestuff.client.TurnedModel;
 import com.mervyn.coolcreatestuff.client.TurnedQuads;
@@ -78,10 +79,12 @@ public class TracerClient {
         for (BlockState state : Tracer.TURNED_BLOCK.get().getStateDefinition().getPossibleStates())
             event.getModels().computeIfPresent(BlockModelShaper.stateToModelLocation(state), (key, base) -> new TurnedModel(base));
         event.getModels().computeIfPresent(ModelResourceLocation.inventory(Tracer.TURNED_BLOCK.getId()), (key, base) -> new TurnedModel(base));
+        event.getModels().computeIfPresent(ModelResourceLocation.inventory(Tracer.PROFILE_TEMPLATE.getId()), (key, base) -> new TemplateModel(base));
     }
 
     @SubscribeEvent
     static void clearTurnedQuads(ModelEvent.BakingCompleted event) {
         TurnedQuads.clear();
+        TemplateModel.clear();
     }
 }
