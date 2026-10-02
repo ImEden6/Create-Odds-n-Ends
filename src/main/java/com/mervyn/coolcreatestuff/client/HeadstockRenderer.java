@@ -63,7 +63,7 @@ public class HeadstockRenderer extends SafeBlockEntityRenderer<HeadstockBlockEnt
         BlockPos master = slot.relative(LatheStructure.back(facing), 2);
         int slotLight = LevelRenderer.getLightColor(level, slot);
         int masterLight = LevelRenderer.getLightColor(level, master);
-        Profile template = be.templateProfile();
+        Profile profile = be.profile();
         float layerPos = be.layerPos(partialTicks);
         HeadstockBlockEntity.Work work = be.work(layerPos);
         float time = AnimationTickHolder.getRenderTime(level);
@@ -95,7 +95,7 @@ public class HeadstockRenderer extends SafeBlockEntityRenderer<HeadstockBlockEnt
             ms.popPose();
         }
 
-        LatheLayout.Carriage carriage = LatheLayout.carriage(template, layerPos);
+        LatheLayout.Carriage carriage = LatheLayout.carriage(profile, layerPos);
 
         ms.pushPose();
         ms.translate(0, 0, -1 + carriage.along());
@@ -108,11 +108,13 @@ public class HeadstockRenderer extends SafeBlockEntityRenderer<HeadstockBlockEnt
             partial(LathePartials.STYLUS, state, ms, buffer, slotLight);
         ms.popPose();
 
-        if (be.hasTracer() && template != null) {
+        HeadstockBlockEntity.Work pattern = LatheLayout.pattern(be);
+        if (be.hasTracer() && pattern != null) {
+            BlockState source = pattern.source().defaultBlockState();
             ms.pushPose();
             ms.translate(-2, 0, -1);
             LatheLayout.layOnAxis(ms);
-            quads(TurnedQuads.all(template, LatheLayout.MASTER), LatheLayout.MASTER, level, master, ms, buffer, masterLight);
+            quads(TurnedQuads.all(pattern.profile(), source), source, level, master, ms, buffer, masterLight);
             ms.popPose();
         }
 

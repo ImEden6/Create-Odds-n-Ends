@@ -18,6 +18,13 @@ public class TurnedBlockItem extends BlockItem {
         super(block, properties);
     }
 
+    public static ItemStack of(Profile profile, Block source) {
+        ItemStack stack = new ItemStack(Tracer.TURNED_BLOCK_ITEM.get());
+        stack.set(Tracer.PROFILE.get(), profile);
+        stack.set(Tracer.SOURCE_BLOCK.get(), source);
+        return stack;
+    }
+
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         Block source = stack.getOrDefault(Tracer.SOURCE_BLOCK.get(), Blocks.OAK_PLANKS);

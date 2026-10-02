@@ -4,13 +4,14 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 import com.mervyn.coolcreatestuff.Profile;
+import com.mervyn.coolcreatestuff.lathe.HeadstockBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 
 // Everything about the formed lathe is drawn in "model space": the lathe as if the headstock
 // faced north. The slot is at z -1, the tailstock at z -2, the bed at y -1, the operator stands
@@ -19,10 +20,19 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class LatheLayout {
     private static final float PARKED_RADIUS = 10;
     // the master pattern is shown in a wood of its own, like the mockup
-    public static final BlockState MASTER = Blocks.SPRUCE_PLANKS.defaultBlockState();
+    private static final Block MASTER = Blocks.SPRUCE_PLANKS;
     private static final float STYLUS_TIP = 1.75f;
 
     private LatheLayout() {}
+
+    @Nullable
+    public static HeadstockBlockEntity.Work pattern(HeadstockBlockEntity be) {
+        HeadstockBlockEntity.Work master = be.master();
+        if (master != null)
+            return master;
+        Profile template = be.templateProfile();
+        return template == null ? null : new HeadstockBlockEntity.Work(template, MASTER);
+    }
 
     // the same turn the blockstate's "y" rotation gives the part models
     public static Quaternionf facingRotation(Direction facing) {

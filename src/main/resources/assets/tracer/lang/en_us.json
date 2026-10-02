@@ -24,7 +24,9 @@
   "tracer.lathe.goggles.title": "Lathe",
   "tracer.lathe.goggles.progress": "Cut %s%%",
   "tracer.lathe.goggles.template": "Template %s",
+  "tracer.lathe.goggles.master": "Master %s",
   "tracer.lathe.goggles.no_template": "No template",
+  "tracer.lathe.goggles.no_profile": "No template or master",
 
   "tracer.configuration.title": "Tracer Configs",
   "tracer.configuration.section.tracer.common.toml": "Tracer Configs",

@@ -94,13 +94,17 @@ public class LathePartBlock extends Block implements IWrenchable {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         HeadstockBlockEntity lathe = HeadstockBlockEntity.find(level, pos);
-        return lathe != null ? lathe.useItem(player, stack) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        if (lathe == null)
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return state.is(Tracer.TRACER_HOLDER.get()) ? lathe.useHolder(player, stack) : lathe.useItem(player, stack);
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         HeadstockBlockEntity lathe = HeadstockBlockEntity.find(level, pos);
-        return lathe != null && player.getMainHandItem().isEmpty() ? lathe.useEmptyHand(player) : InteractionResult.PASS;
+        if (lathe == null || !player.getMainHandItem().isEmpty())
+            return InteractionResult.PASS;
+        return state.is(Tracer.TRACER_HOLDER.get()) ? lathe.useHolderEmptyHand(player) : lathe.useEmptyHand(player);
     }
 
     @Override

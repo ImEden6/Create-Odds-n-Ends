@@ -67,7 +67,7 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
 
     private boolean tracer;
     @Nullable
-    private Profile masterProfile;
+    private Shape pattern;
     @Nullable
     private Shape work;
     @Nullable
@@ -108,7 +108,7 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
         cutter = sliding(LathePartials.CUTTER);
 
         tracer = be.hasTracer();
-        masterProfile = be.templateProfile();
+        pattern = patternShape();
         buildTracer();
         work = workShape();
         buildWorkpiece();
@@ -122,6 +122,12 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
                 .level(SinglePosVirtualBlockGetter.createFullDark().blockState(shape.source))
                 .poseStack(ms)
                 .build();
+    }
+
+    @Nullable
+    private Shape patternShape() {
+        HeadstockBlockEntity.Work pattern = LatheLayout.pattern(blockEntity);
+        return pattern == null ? null : new Shape(pattern.profile(), pattern.source().defaultBlockState());
     }
 
     // sampled once a tick, which is as often as a layer can finish
@@ -158,8 +164,8 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
         deleteTracer();
         if (tracer) {
             stylus = sliding(LathePartials.STYLUS);
-            if (masterProfile != null) {
-                masterPattern = spinning(SHAPES.get(new Shape(masterProfile, LatheLayout.MASTER)), master);
+            if (pattern != null) {
+                masterPattern = spinning(SHAPES.get(pattern), master);
                 masterPattern.setRotationalSpeed(0).setChanged();
             }
         }
@@ -192,10 +198,10 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
         if (workpiece != null)
             workpiece.setRotationalSpeed(speed).setChanged();
 
-        Profile template = blockEntity.templateProfile();
-        if (blockEntity.hasTracer() != tracer || !Objects.equals(template, masterProfile)) {
+        Shape nowPattern = patternShape();
+        if (blockEntity.hasTracer() != tracer || !Objects.equals(nowPattern, pattern)) {
             tracer = blockEntity.hasTracer();
-            masterProfile = template;
+            pattern = nowPattern;
             buildTracer();
         }
         refreshWork();
@@ -209,7 +215,7 @@ public class LatheVisual extends KineticBlockEntityVisual<HeadstockBlockEntity> 
     }
 
     private void moveCarriage(float partialTick) {
-        LatheLayout.Carriage carriage = LatheLayout.carriage(blockEntity.templateProfile(), blockEntity.layerPos(partialTick));
+        LatheLayout.Carriage carriage = LatheLayout.carriage(blockEntity.profile(), blockEntity.layerPos(partialTick));
         float along = -1 + carriage.along();
         place(saddle, 0, along);
         place(crossSlide, carriage.reach(), along);

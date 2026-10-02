@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.mervyn.coolcreatestuff.Profile;
 import com.mervyn.coolcreatestuff.Tracer;
+import com.mervyn.coolcreatestuff.turned.TurnedBlockItem;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -49,11 +50,11 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
         public boolean isItemValid(int slot, ItemStack stack) {
             return stack.is(Tracer.PROFILE_TEMPLATE.get()) && stack.has(Tracer.PROFILE.get());
         }
-
+    };
+    final ItemStackHandler master = new Slot() {
         @Override
-        protected void onContentsChanged(int slot) {
-            progress = 0;
-            super.onContentsChanged(slot);
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return stack.is(Tracer.TURNED_BLOCK_ITEM.get()) && stack.has(Tracer.PROFILE.get());
         }
     };
     final ItemStackHandler input = new Slot() {
@@ -93,6 +94,8 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
     }
 
     private float progress;
+    @Nullable
+    private Profile cutProfile;
     private boolean cutting;
     private boolean tracer;
 
@@ -141,6 +144,14 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
             return;
         }
 
+        if (tracer && !getBlockState().getValue(FORMED))
+            setTracer(false);
+        Profile now = profile();
+        if (now != null && !now.equals(cutProfile)) {
+            cutProfile = now;
+            progress = 0;
+            sendData();
+        }
         boolean can = canCut();
         if (can != cutting) {
             cutting = can;
@@ -157,22 +168,16 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
         if (!getBlockState().getValue(FORMED) || getSpeed() == 0)
             return false;
         ItemStack in = input.getStackInSlot(0);
-        if (templateProfile() == null || in.isEmpty() || !Turnable.allows(in))
+        Profile profile = profile();
+        if (profile == null || in.isEmpty() || !Turnable.allows(in))
             return false;
         ItemStack out = output.getStackInSlot(0);
         return out.isEmpty() || out.is(Tracer.TURNED_BLOCK_ITEM.get()) && out.getCount() < out.getMaxStackSize()
-                && templateProfile().equals(out.get(Tracer.PROFILE.get())) && inputBlock() == out.get(Tracer.SOURCE_BLOCK.get());
-    }
-
-    private ItemStack result() {
-        ItemStack stack = new ItemStack(Tracer.TURNED_BLOCK_ITEM.get());
-        stack.set(Tracer.PROFILE.get(), templateProfile());
-        stack.set(Tracer.SOURCE_BLOCK.get(), inputBlock());
-        return stack;
+                && profile.equals(out.get(Tracer.PROFILE.get())) && inputBlock() == out.get(Tracer.SOURCE_BLOCK.get());
     }
 
     private void finish() {
-        output.insertItem(0, result(), false);
+        output.insertItem(0, TurnedBlockItem.of(profile(), inputBlock()), false);
         input.extractItem(0, 1, false);
         progress = 0;
         cutting = false;
@@ -194,6 +199,20 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
         return template.getStackInSlot(0).get(Tracer.PROFILE.get());
     }
 
+    @Nullable
+    public Work master() {
+        ItemStack stack = master.getStackInSlot(0);
+        if (!tracer || stack.isEmpty())
+            return null;
+        return new Work(stack.getOrDefault(Tracer.PROFILE.get(), Profile.FULL), stack.getOrDefault(Tracer.SOURCE_BLOCK.get(), Blocks.OAK_PLANKS));
+    }
+
+    @Nullable
+    public Profile profile() {
+        Work master = master();
+        return master != null ? master.profile() : templateProfile();
+    }
+
     public boolean isCutting() {
         return cutting;
     }
@@ -212,7 +231,7 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
     public Work work(float layerPos) {
         Block in = inputBlock();
         if (in != null) {
-            Profile target = templateProfile();
+            Profile target = profile();
             if (target == null)
                 return new Work(Profile.FULL, in);
             int[] radii = new int[Profile.LAYERS];
@@ -228,7 +247,7 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
 
     private void spawnChips() {
         Block in = inputBlock();
-        Profile target = templateProfile();
+        Profile target = profile();
         if (in == null || target == null)
             return;
         RandomSource random = level.random;
@@ -257,15 +276,8 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
     }
 
     public ItemInteractionResult useItem(Player player, ItemStack held) {
-        if (template.isItemValid(0, held)) {
-            if (!level.isClientSide) {
-                ItemStack old = template.getStackInSlot(0);
-                template.setStackInSlot(0, held.consumeAndReturn(1, player));
-                if (!old.isEmpty())
-                    player.getInventory().placeItemBackInInventory(old);
-            }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
-        }
+        if (template.isItemValid(0, held))
+            return swap(template, player, held);
         if (Turnable.allows(held)) {
             if (!input.getStackInSlot(0).isEmpty())
                 return ItemInteractionResult.CONSUME;
@@ -274,6 +286,30 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    public ItemInteractionResult useHolder(Player player, ItemStack held) {
+        if (tracer && master.isItemValid(0, held))
+            return swap(master, player, held);
+        return useItem(player, held);
+    }
+
+    private ItemInteractionResult swap(ItemStackHandler slot, Player player, ItemStack held) {
+        if (!level.isClientSide) {
+            ItemStack old = slot.getStackInSlot(0);
+            slot.setStackInSlot(0, held.consumeAndReturn(1, player));
+            if (!old.isEmpty())
+                player.getInventory().placeItemBackInInventory(old);
+        }
+        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    public InteractionResult useHolderEmptyHand(Player player) {
+        if (player.isSecondaryUseActive() || master.getStackInSlot(0).isEmpty())
+            return useEmptyHand(player);
+        if (!level.isClientSide)
+            player.getInventory().placeItemBackInInventory(master.extractItem(0, 1, false));
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     public InteractionResult useEmptyHand(Player player) {
@@ -290,6 +326,7 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
     public void destroy() {
         super.destroy();
         ItemHelper.dropContents(level, worldPosition, template);
+        ItemHelper.dropContents(level, worldPosition, master);
         ItemHelper.dropContents(level, worldPosition, input);
         ItemHelper.dropContents(level, worldPosition, output);
     }
@@ -302,7 +339,14 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
         if (this.tracer == tracer)
             return;
         this.tracer = tracer;
+        if (!tracer)
+            ItemHelper.dropContents(level, masterPos(), master);
         notifyUpdate();
+    }
+
+    public BlockPos masterPos() {
+        Direction facing = getBlockState().getValue(HorizontalKineticBlock.HORIZONTAL_FACING);
+        return worldPosition.relative(facing).relative(LatheStructure.back(facing), 2);
     }
 
     public void debugLoad(Profile profile, Block source) {
@@ -322,9 +366,16 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
         int percent = in == null ? 0 : Mth.floor(100 * progress / required());
         lang().translate("lathe.goggles.progress", percent).style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
 
-        Profile profile = templateProfile();
-        lang().add(profile == null ? lang().translate("lathe.goggles.no_template") : lang().translate("lathe.goggles.template", profile.digits()))
-                .style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
+        Work master = master();
+        Profile template = templateProfile();
+        LangBuilder source;
+        if (master != null)
+            source = lang().translate("lathe.goggles.master", master.profile().digits());
+        else if (template != null)
+            source = lang().translate("lathe.goggles.template", template.digits());
+        else
+            source = lang().translate(tracer ? "lathe.goggles.no_profile" : "lathe.goggles.no_template");
+        lang().add(source).style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
 
         ItemStack out = output.getStackInSlot(0);
         if (in != null || !out.isEmpty()) {
@@ -343,6 +394,7 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.write(tag, registries, clientPacket);
         tag.put("Template", template.serializeNBT(registries));
+        tag.put("Master", master.serializeNBT(registries));
         tag.put("Input", input.serializeNBT(registries));
         tag.put("Output", output.serializeNBT(registries));
         tag.putFloat("Progress", progress);
@@ -354,10 +406,12 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
     protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(tag, registries, clientPacket);
         template.deserializeNBT(registries, tag.getCompound("Template"));
+        master.deserializeNBT(registries, tag.getCompound("Master"));
         input.deserializeNBT(registries, tag.getCompound("Input"));
         output.deserializeNBT(registries, tag.getCompound("Output"));
         progress = tag.getFloat("Progress");
         cutting = tag.getBoolean("Cutting");
         tracer = tag.getBoolean("Tracer");
+        cutProfile = profile();
     }
 }
