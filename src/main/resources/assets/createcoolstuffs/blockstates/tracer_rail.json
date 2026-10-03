@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,formed=false": {
+      "model": "createcoolstuffs:block/tracer_rail"
+    },
+    "facing=north,formed=true": {
+      "model": "createcoolstuffs:block/tracer_rail_formed"
+    },
+    "facing=east,formed=false": {
+      "model": "createcoolstuffs:block/tracer_rail",
+      "y": 90
+    },
+    "facing=east,formed=true": {
+      "model": "createcoolstuffs:block/tracer_rail_formed",
+      "y": 90
+    },
+    "facing=south,formed=false": {
+      "model": "createcoolstuffs:block/tracer_rail",
+      "y": 180
+    },
+    "facing=south,formed=true": {
+      "model": "createcoolstuffs:block/tracer_rail_formed",
+      "y": 180
+    },
+    "facing=west,formed=false": {
+      "model": "createcoolstuffs:block/tracer_rail",
+      "y": 270
+    },
+    "facing=west,formed=true": {
+      "model": "createcoolstuffs:block/tracer_rail_formed",
+      "y": 270
+    }
+  }
+}

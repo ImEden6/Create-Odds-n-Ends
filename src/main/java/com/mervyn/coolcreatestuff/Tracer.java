@@ -49,7 +49,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 @Mod(Tracer.MODID)
 public class Tracer {
-    public static final String MODID = "tracer";
+    public static final String MODID = "createcoolstuffs";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
@@ -98,7 +98,7 @@ public class Tracer {
     public static final DeferredHolder<ArmInteractionPointType, LatheArmPoint.Type> LATHE_ARM_POINT = ARM_POINTS.register("lathe", LatheArmPoint.Type::new);
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("tracer", () -> CreativeModeTab.builder()
-            .title(Component.translatable("itemGroup.tracer"))
+            .title(Component.translatable("itemGroup.createcoolstuffs"))
             .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
             .icon(() -> LATHE_HEADSTOCK_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {

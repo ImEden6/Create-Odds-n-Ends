@@ -380,7 +380,7 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
         ItemStack out = output.getStackInSlot(0);
         if (in != null || !out.isEmpty()) {
             Component from = in != null ? in.getName() : Component.literal("-");
-            Component to = !out.isEmpty() ? out.getHoverName() : Component.translatable("block.tracer.turned_block");
+            Component to = !out.isEmpty() ? out.getHoverName() : Component.translatable("block.createcoolstuffs.turned_block");
             lang().add(from.copy()).text(" → ").add(to.copy()).style(ChatFormatting.GOLD).forGoggles(tooltip, 1);
         }
         return true;

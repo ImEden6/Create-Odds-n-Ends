@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "createcoolstuffs:block/turned_block"
+    },
+    "axis=y": {
+      "model": "createcoolstuffs:block/turned_block"
+    },
+    "axis=z": {
+      "model": "createcoolstuffs:block/turned_block"
+    }
+  }
+}

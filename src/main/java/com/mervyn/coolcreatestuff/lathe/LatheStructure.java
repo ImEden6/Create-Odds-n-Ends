@@ -82,11 +82,11 @@ public final class LatheStructure {
 
         Component message;
         if (tracer)
-            message = Component.translatable("tracer.lathe.formed_tracer");
+            message = Component.translatable("createcoolstuffs.lathe.formed_tracer");
         else if (startedTracer(level, controller, facing))
-            message = Component.translatable("tracer.lathe.formed_tracer_missing", tracerProblem);
+            message = Component.translatable("createcoolstuffs.lathe.formed_tracer_missing", tracerProblem);
         else
-            message = Component.translatable("tracer.lathe.formed");
+            message = Component.translatable("createcoolstuffs.lathe.formed");
         player.displayClientMessage(message, true);
         return true;
     }
@@ -104,15 +104,15 @@ public final class LatheStructure {
 
             if (spot.block == null) {
                 if (!state.isAir())
-                    return Component.translatable("tracer.lathe.blocked", where);
+                    return Component.translatable("createcoolstuffs.lathe.blocked", where);
                 continue;
             }
 
             Block expected = spot.block.get();
             if (!state.is(expected))
-                return Component.translatable("tracer.lathe.missing", expected.getName(), where);
+                return Component.translatable("createcoolstuffs.lathe.missing", expected.getName(), where);
             if (state.getValue(FORMED) && !controller.equals(findController(level, pos, state)))
-                return Component.translatable("tracer.lathe.taken", expected.getName(), where);
+                return Component.translatable("createcoolstuffs.lathe.taken", expected.getName(), where);
         }
         return null;
     }

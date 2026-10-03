@@ -24,7 +24,7 @@ public class TurningCategory extends AbstractRecipeCategory<TurningCategory.Turn
     public record Turning(ItemStack pattern, Profile profile, List<Block> blocks, String hint) {}
 
     public TurningCategory(IGuiHelper gui) {
-        super(TYPE, Component.translatable("tracer.jei.turning"), gui.createDrawableItemLike(Tracer.LATHE_HEADSTOCK_ITEM.get()), 112, 40);
+        super(TYPE, Component.translatable("createcoolstuffs.jei.turning"), gui.createDrawableItemLike(Tracer.LATHE_HEADSTOCK_ITEM.get()), 112, 40);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class TurningCategory extends AbstractRecipeCategory<TurningCategory.Turn
         IRecipeSlotBuilder blocks = builder.addInputSlot(1, 22)
                 .setStandardSlotBackground()
                 .addItemStacks(recipe.blocks().stream().map(ItemStack::new).toList())
-                .addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable("tracer.jei.any_block").withStyle(ChatFormatting.GRAY)));
+                .addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable("createcoolstuffs.jei.any_block").withStyle(ChatFormatting.GRAY)));
 
         IRecipeSlotBuilder turned = builder.addOutputSlot(91, 12)
                 .setOutputSlotBackground()

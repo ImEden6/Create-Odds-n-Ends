@@ -38,10 +38,10 @@ public class TracerJei implements IModPlugin {
         template.set(Tracer.PROFILE.get(), Profile.BALUSTER);
         ItemStack master = TurnedBlockItem.of(Profile.VASE, Blocks.SPRUCE_PLANKS);
         registration.addRecipes(TurningCategory.TYPE, List.of(
-                new TurningCategory.Turning(template, Profile.BALUSTER, EXAMPLES, "tracer.jei.template"),
-                new TurningCategory.Turning(master, Profile.VASE, EXAMPLES, "tracer.jei.master")));
+                new TurningCategory.Turning(template, Profile.BALUSTER, EXAMPLES, "createcoolstuffs.jei.template"),
+                new TurningCategory.Turning(master, Profile.VASE, EXAMPLES, "createcoolstuffs.jei.master")));
 
-        registration.addIngredientInfo(Tracer.TEMPLATE_TABLE_ITEM.get(), Component.translatable("tracer.jei.template_table"));
+        registration.addIngredientInfo(Tracer.TEMPLATE_TABLE_ITEM.get(), Component.translatable("createcoolstuffs.jei.template_table"));
     }
 
     @Override

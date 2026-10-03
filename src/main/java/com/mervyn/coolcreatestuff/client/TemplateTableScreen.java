@@ -55,11 +55,11 @@ public class TemplateTableScreen extends AbstractContainerScreen<TemplateTableMe
     protected void init() {
         super.init();
         int y = topPos + 76;
-        save = addRenderableWidget(Button.builder(Component.translatable("tracer.template_table.save"), b -> save())
+        save = addRenderableWidget(Button.builder(Component.translatable("createcoolstuffs.template_table.save"), b -> save())
                 .bounds(leftPos + 30, y, 46, 18).build());
-        addRenderableWidget(Button.builder(Component.translatable("tracer.template_table.clear"), b -> Arrays.fill(radii, Profile.MAX_RADIUS))
+        addRenderableWidget(Button.builder(Component.translatable("createcoolstuffs.template_table.clear"), b -> Arrays.fill(radii, Profile.MAX_RADIUS))
                 .bounds(leftPos + 78, y, 44, 18).build());
-        addRenderableWidget(Button.builder(Component.translatable("tracer.template_table.mirror"), b -> mirror())
+        addRenderableWidget(Button.builder(Component.translatable("createcoolstuffs.template_table.mirror"), b -> mirror())
                 .bounds(leftPos + 124, y, 46, 18).build());
     }
 

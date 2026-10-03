@@ -1,0 +1,148 @@
+{
+  "textures": {
+    "particle": "create:block/andesite_casing",
+    "casing": "create:block/andesite_casing",
+    "steel": "createcoolstuffs:block/tool_steel",
+    "way": "createcoolstuffs:block/lathe_way",
+    "tway": "createcoolstuffs:block/tracer_way",
+    "chuck": "createcoolstuffs:block/chuck"
+  },
+  "elements": [
+    {
+      "from": [
+        16,
+        -4,
+        4
+      ],
+      "to": [
+        21,
+        0,
+        12
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            11,
+            0,
+            16,
+            4
+          ],
+          "texture": "#casing"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            5,
+            4
+          ],
+          "texture": "#casing"
+        },
+        "east": {
+          "uv": [
+            4,
+            0,
+            12,
+            4
+          ],
+          "texture": "#casing"
+        },
+        "west": {
+          "uv": [
+            4,
+            0,
+            12,
+            4
+          ],
+          "texture": "#casing"
+        },
+        "up": {
+          "uv": [
+            0,
+            4,
+            5,
+            12
+          ],
+          "texture": "#casing"
+        },
+        "down": {
+          "uv": [
+            0,
+            4,
+            5,
+            12
+          ],
+          "texture": "#casing"
+        }
+      }
+    },
+    {
+      "from": [
+        18,
+        -8,
+        5
+      ],
+      "to": [
+        21,
+        -4,
+        11
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            11,
+            4,
+            14,
+            8
+          ],
+          "texture": "#casing"
+        },
+        "south": {
+          "uv": [
+            2,
+            4,
+            5,
+            8
+          ],
+          "texture": "#casing"
+        },
+        "east": {
+          "uv": [
+            5,
+            4,
+            11,
+            8
+          ],
+          "texture": "#casing"
+        },
+        "west": {
+          "uv": [
+            5,
+            4,
+            11,
+            8
+          ],
+          "texture": "#casing"
+        },
+        "up": {
+          "uv": [
+            2,
+            5,
+            5,
+            11
+          ],
+          "texture": "#casing"
+        },
+        "down": {
+          "uv": [
+            2,
+            5,
+            5,
+            11
+          ],
+          "texture": "#casing"
+        }
+      }
+    }
+  ]
+}

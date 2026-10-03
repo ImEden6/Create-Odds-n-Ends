@@ -30,6 +30,6 @@ public class TurnedBlockItem extends BlockItem {
         Block source = stack.getOrDefault(Tracer.SOURCE_BLOCK.get(), Blocks.OAK_PLANKS);
         Profile profile = stack.getOrDefault(Tracer.PROFILE.get(), Profile.FULL);
         tooltip.add(source.getName().withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("tracer.tooltip.profile", profile.digits()).withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("createcoolstuffs.tooltip.profile", profile.digits()).withStyle(ChatFormatting.DARK_GRAY));
     }
 }

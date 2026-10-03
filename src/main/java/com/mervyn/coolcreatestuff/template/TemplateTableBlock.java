@@ -18,7 +18,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 // Works like a crafting table: the template sits in the menu while it's open and comes back on close.
 public class TemplateTableBlock extends Block {
-    private static final Component TITLE = Component.translatable("container.tracer.template_table");
+    private static final Component TITLE = Component.translatable("container.createcoolstuffs.template_table");
     private static final VoxelShape SHAPE = Shapes.or(
             box(0, 12, 0, 16, 16, 16),
             box(1, 0, 1, 4, 12, 4), box(12, 0, 1, 15, 12, 4),

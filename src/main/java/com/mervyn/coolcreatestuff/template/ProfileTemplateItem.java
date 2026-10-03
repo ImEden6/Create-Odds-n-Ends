@@ -41,8 +41,8 @@ public class ProfileTemplateItem extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         Profile profile = stack.get(Tracer.PROFILE.get());
         if (profile == null)
-            tooltip.add(Component.translatable("tracer.tooltip.blank").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("createcoolstuffs.tooltip.blank").withStyle(ChatFormatting.GRAY));
         else
-            tooltip.add(Component.translatable("tracer.tooltip.profile", profile.digits()).withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("createcoolstuffs.tooltip.profile", profile.digits()).withStyle(ChatFormatting.GRAY));
     }
 }
