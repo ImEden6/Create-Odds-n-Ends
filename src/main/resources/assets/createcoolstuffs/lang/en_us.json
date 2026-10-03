@@ -34,6 +34,8 @@
   "createcoolstuffs.jei.master": "Goes between the tracer holders, needs the tracer row formed. Wins over the template",
   "createcoolstuffs.jei.template_table": "Put a profile template in, drag the bars to set how wide each layer is and hit Save. Sneak-click a turned block with a template to copy its shape instead.",
 
+  "createcoolstuffs.ponder.tag.cool_stuffs": "Create: Cool Stuffs",
+  "createcoolstuffs.ponder.tag.cool_stuffs.description": "The copy lathe, its tracer and the tools that go with them",
   "createcoolstuffs.ponder.lathe_build.header": "Building the Lathe",
   "createcoolstuffs.ponder.lathe_build.text_1": "A lathe sits on three lathe beds in a row",
   "createcoolstuffs.ponder.lathe_build.text_2": "Headstock on one end, tailstock on the other. Place them looking along the bed so the headstock ends up on your left",
