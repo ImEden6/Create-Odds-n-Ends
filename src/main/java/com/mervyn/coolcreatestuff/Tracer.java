@@ -2,6 +2,7 @@ package com.mervyn.coolcreatestuff;
 
 import org.slf4j.Logger;
 
+import com.mervyn.coolcreatestuff.jacquard.Jacquard;
 import com.mervyn.coolcreatestuff.lathe.HeadstockBlock;
 import com.mervyn.coolcreatestuff.lathe.HeadstockBlockEntity;
 import com.mervyn.coolcreatestuff.lathe.LatheArmPoint;
@@ -119,6 +120,7 @@ public class Tracer {
         MENUS.register(modEventBus);
         ARM_POINTS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
+        Jacquard.register(modEventBus);
         modEventBus.addListener(Tracer::registerPayloads);
         modEventBus.addListener(Tracer::registerCapabilities);
 
