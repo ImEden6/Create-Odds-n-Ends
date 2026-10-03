@@ -122,7 +122,7 @@ public class Tracer {
         modEventBus.addListener(Tracer::registerPayloads);
         modEventBus.addListener(Tracer::registerCapabilities);
 
-        NeoForge.EVENT_BUS.addListener(TracerCommands::register);
+        NeoForge.EVENT_BUS.addListener(CoolStuffsCommands::register);
         NeoForge.EVENT_BUS.addListener(LathePartBlock::keepSlotsClear);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

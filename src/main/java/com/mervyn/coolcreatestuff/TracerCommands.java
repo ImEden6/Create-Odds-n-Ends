@@ -5,6 +5,7 @@ import com.mervyn.coolcreatestuff.lathe.LathePartBlock;
 import com.mervyn.coolcreatestuff.lathe.LatheStructure;
 import com.mervyn.coolcreatestuff.turned.TurnedBlockEntity;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -22,7 +23,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 // debug only, for checking visuals before there's any real way to make a profile
 public final class TracerCommands {
@@ -32,10 +32,8 @@ public final class TracerCommands {
 
     private TracerCommands() {}
 
-    static void register(RegisterCommandsEvent event) {
-        CommandBuildContext context = event.getBuildContext();
-        event.getDispatcher().register(Commands.literal("tracer")
-                .requires(source -> source.hasPermission(2))
+    static LiteralArgumentBuilder<CommandSourceStack> node(CommandBuildContext context) {
+        return Commands.literal("tracer")
                 .then(Commands.literal("preview")
                         .then(Commands.argument("radii", StringArgumentType.word())
                                 .then(Commands.argument("block", BlockStateArgument.block(context))
@@ -43,7 +41,7 @@ public final class TracerCommands {
                 .then(Commands.literal("lathe")
                         .then(Commands.argument("radii", StringArgumentType.word())
                                 .then(Commands.argument("block", BlockStateArgument.block(context))
-                                        .executes(TracerCommands::lathe)))));
+                                        .executes(TracerCommands::lathe))));
     }
 
     private static int preview(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {

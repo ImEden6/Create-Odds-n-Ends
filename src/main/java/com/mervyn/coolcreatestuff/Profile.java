@@ -41,7 +41,7 @@ public record Profile(List<Byte> radii) {
         return new Profile(radii.reversed());
     }
 
-    // same 16 digits /tracer takes, foot first
+    // same 16 digits /coolstuffs tracer takes, foot first
     public String digits() {
         StringBuilder out = new StringBuilder(LAYERS);
         for (byte b : radii)
