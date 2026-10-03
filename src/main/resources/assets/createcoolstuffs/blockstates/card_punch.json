@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=south": {
+      "model": "createcoolstuffs:block/card_punch"
+    },
+    "facing=west": {
+      "model": "createcoolstuffs:block/card_punch",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "createcoolstuffs:block/card_punch",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "createcoolstuffs:block/card_punch",
+      "y": 270
+    }
+  }
+}

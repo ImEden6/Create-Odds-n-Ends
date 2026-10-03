@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=south,formed=false": {
+      "model": "createcoolstuffs:block/jacquard_head"
+    },
+    "facing=south,formed=true": {
+      "model": "createcoolstuffs:block/jacquard_head_formed"
+    },
+    "facing=west,formed=false": {
+      "model": "createcoolstuffs:block/jacquard_head",
+      "y": 90
+    },
+    "facing=west,formed=true": {
+      "model": "createcoolstuffs:block/jacquard_head_formed",
+      "y": 90
+    },
+    "facing=north,formed=false": {
+      "model": "createcoolstuffs:block/jacquard_head",
+      "y": 180
+    },
+    "facing=north,formed=true": {
+      "model": "createcoolstuffs:block/jacquard_head_formed",
+      "y": 180
+    },
+    "facing=east,formed=false": {
+      "model": "createcoolstuffs:block/jacquard_head",
+      "y": 270
+    },
+    "facing=east,formed=true": {
+      "model": "createcoolstuffs:block/jacquard_head_formed",
+      "y": 270
+    }
+  }
+}

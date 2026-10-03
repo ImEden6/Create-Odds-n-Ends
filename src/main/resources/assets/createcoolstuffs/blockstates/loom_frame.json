@@ -1,0 +1,424 @@
+{
+  "variants": {
+    "facing=south,formed=false,position=bottom_back_left": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=bottom_back_middle": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=bottom_back_right": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=bottom_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=bottom_front_right": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=middle_back_left": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=middle_back_right": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=middle_front_left": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=middle_front_right": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=top_back_left": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=top_back_right": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=top_front_left": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=top_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=false,position=top_front_right": {
+      "model": "createcoolstuffs:block/loom_frame"
+    },
+    "facing=south,formed=true,position=bottom_back_left": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_back_left"
+    },
+    "facing=south,formed=true,position=bottom_back_middle": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_back_middle"
+    },
+    "facing=south,formed=true,position=bottom_back_right": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_back_right"
+    },
+    "facing=south,formed=true,position=bottom_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_front_middle"
+    },
+    "facing=south,formed=true,position=bottom_front_right": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_front_right"
+    },
+    "facing=south,formed=true,position=middle_back_left": {
+      "model": "createcoolstuffs:block/loom_frame/middle_back_left"
+    },
+    "facing=south,formed=true,position=middle_back_right": {
+      "model": "createcoolstuffs:block/loom_frame/middle_back_right"
+    },
+    "facing=south,formed=true,position=middle_front_left": {
+      "model": "createcoolstuffs:block/loom_frame/middle_front_left"
+    },
+    "facing=south,formed=true,position=middle_front_right": {
+      "model": "createcoolstuffs:block/loom_frame/middle_front_right"
+    },
+    "facing=south,formed=true,position=top_back_left": {
+      "model": "createcoolstuffs:block/loom_frame/top_back_left"
+    },
+    "facing=south,formed=true,position=top_back_right": {
+      "model": "createcoolstuffs:block/loom_frame/top_back_right"
+    },
+    "facing=south,formed=true,position=top_front_left": {
+      "model": "createcoolstuffs:block/loom_frame/top_front_left"
+    },
+    "facing=south,formed=true,position=top_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame/top_front_middle"
+    },
+    "facing=south,formed=true,position=top_front_right": {
+      "model": "createcoolstuffs:block/loom_frame/top_front_right"
+    },
+    "facing=west,formed=false,position=bottom_back_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=bottom_back_middle": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=bottom_back_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=bottom_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=bottom_front_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=middle_back_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=middle_back_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=middle_front_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=middle_front_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=top_back_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=top_back_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=top_front_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=top_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=false,position=top_front_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 90
+    },
+    "facing=west,formed=true,position=bottom_back_left": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_back_left",
+      "y": 90
+    },
+    "facing=west,formed=true,position=bottom_back_middle": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_back_middle",
+      "y": 90
+    },
+    "facing=west,formed=true,position=bottom_back_right": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_back_right",
+      "y": 90
+    },
+    "facing=west,formed=true,position=bottom_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_front_middle",
+      "y": 90
+    },
+    "facing=west,formed=true,position=bottom_front_right": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_front_right",
+      "y": 90
+    },
+    "facing=west,formed=true,position=middle_back_left": {
+      "model": "createcoolstuffs:block/loom_frame/middle_back_left",
+      "y": 90
+    },
+    "facing=west,formed=true,position=middle_back_right": {
+      "model": "createcoolstuffs:block/loom_frame/middle_back_right",
+      "y": 90
+    },
+    "facing=west,formed=true,position=middle_front_left": {
+      "model": "createcoolstuffs:block/loom_frame/middle_front_left",
+      "y": 90
+    },
+    "facing=west,formed=true,position=middle_front_right": {
+      "model": "createcoolstuffs:block/loom_frame/middle_front_right",
+      "y": 90
+    },
+    "facing=west,formed=true,position=top_back_left": {
+      "model": "createcoolstuffs:block/loom_frame/top_back_left",
+      "y": 90
+    },
+    "facing=west,formed=true,position=top_back_right": {
+      "model": "createcoolstuffs:block/loom_frame/top_back_right",
+      "y": 90
+    },
+    "facing=west,formed=true,position=top_front_left": {
+      "model": "createcoolstuffs:block/loom_frame/top_front_left",
+      "y": 90
+    },
+    "facing=west,formed=true,position=top_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame/top_front_middle",
+      "y": 90
+    },
+    "facing=west,formed=true,position=top_front_right": {
+      "model": "createcoolstuffs:block/loom_frame/top_front_right",
+      "y": 90
+    },
+    "facing=north,formed=false,position=bottom_back_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=bottom_back_middle": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=bottom_back_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=bottom_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=bottom_front_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=middle_back_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=middle_back_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=middle_front_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=middle_front_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=top_back_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=top_back_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=top_front_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=top_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=false,position=top_front_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 180
+    },
+    "facing=north,formed=true,position=bottom_back_left": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_back_left",
+      "y": 180
+    },
+    "facing=north,formed=true,position=bottom_back_middle": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_back_middle",
+      "y": 180
+    },
+    "facing=north,formed=true,position=bottom_back_right": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_back_right",
+      "y": 180
+    },
+    "facing=north,formed=true,position=bottom_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_front_middle",
+      "y": 180
+    },
+    "facing=north,formed=true,position=bottom_front_right": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_front_right",
+      "y": 180
+    },
+    "facing=north,formed=true,position=middle_back_left": {
+      "model": "createcoolstuffs:block/loom_frame/middle_back_left",
+      "y": 180
+    },
+    "facing=north,formed=true,position=middle_back_right": {
+      "model": "createcoolstuffs:block/loom_frame/middle_back_right",
+      "y": 180
+    },
+    "facing=north,formed=true,position=middle_front_left": {
+      "model": "createcoolstuffs:block/loom_frame/middle_front_left",
+      "y": 180
+    },
+    "facing=north,formed=true,position=middle_front_right": {
+      "model": "createcoolstuffs:block/loom_frame/middle_front_right",
+      "y": 180
+    },
+    "facing=north,formed=true,position=top_back_left": {
+      "model": "createcoolstuffs:block/loom_frame/top_back_left",
+      "y": 180
+    },
+    "facing=north,formed=true,position=top_back_right": {
+      "model": "createcoolstuffs:block/loom_frame/top_back_right",
+      "y": 180
+    },
+    "facing=north,formed=true,position=top_front_left": {
+      "model": "createcoolstuffs:block/loom_frame/top_front_left",
+      "y": 180
+    },
+    "facing=north,formed=true,position=top_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame/top_front_middle",
+      "y": 180
+    },
+    "facing=north,formed=true,position=top_front_right": {
+      "model": "createcoolstuffs:block/loom_frame/top_front_right",
+      "y": 180
+    },
+    "facing=east,formed=false,position=bottom_back_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=bottom_back_middle": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=bottom_back_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=bottom_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=bottom_front_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=middle_back_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=middle_back_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=middle_front_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=middle_front_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=top_back_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=top_back_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=top_front_left": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=top_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=false,position=top_front_right": {
+      "model": "createcoolstuffs:block/loom_frame",
+      "y": 270
+    },
+    "facing=east,formed=true,position=bottom_back_left": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_back_left",
+      "y": 270
+    },
+    "facing=east,formed=true,position=bottom_back_middle": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_back_middle",
+      "y": 270
+    },
+    "facing=east,formed=true,position=bottom_back_right": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_back_right",
+      "y": 270
+    },
+    "facing=east,formed=true,position=bottom_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_front_middle",
+      "y": 270
+    },
+    "facing=east,formed=true,position=bottom_front_right": {
+      "model": "createcoolstuffs:block/loom_frame/bottom_front_right",
+      "y": 270
+    },
+    "facing=east,formed=true,position=middle_back_left": {
+      "model": "createcoolstuffs:block/loom_frame/middle_back_left",
+      "y": 270
+    },
+    "facing=east,formed=true,position=middle_back_right": {
+      "model": "createcoolstuffs:block/loom_frame/middle_back_right",
+      "y": 270
+    },
+    "facing=east,formed=true,position=middle_front_left": {
+      "model": "createcoolstuffs:block/loom_frame/middle_front_left",
+      "y": 270
+    },
+    "facing=east,formed=true,position=middle_front_right": {
+      "model": "createcoolstuffs:block/loom_frame/middle_front_right",
+      "y": 270
+    },
+    "facing=east,formed=true,position=top_back_left": {
+      "model": "createcoolstuffs:block/loom_frame/top_back_left",
+      "y": 270
+    },
+    "facing=east,formed=true,position=top_back_right": {
+      "model": "createcoolstuffs:block/loom_frame/top_back_right",
+      "y": 270
+    },
+    "facing=east,formed=true,position=top_front_left": {
+      "model": "createcoolstuffs:block/loom_frame/top_front_left",
+      "y": 270
+    },
+    "facing=east,formed=true,position=top_front_middle": {
+      "model": "createcoolstuffs:block/loom_frame/top_front_middle",
+      "y": 270
+    },
+    "facing=east,formed=true,position=top_front_right": {
+      "model": "createcoolstuffs:block/loom_frame/top_front_right",
+      "y": 270
+    }
+  }
+}
