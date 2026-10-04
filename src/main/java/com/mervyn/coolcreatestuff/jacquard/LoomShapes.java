@@ -10,24 +10,22 @@ final class LoomShapes {
 
     static final VoxelShape HEAD = Shapes.or(Block.box(0, 2, 8, 16, 3, 16),
                 Block.box(0, 4, 0, 16, 8, 4),
-                Block.box(0, 8, 6, 8, 15, 16),
-                Block.box(8, 8, 6, 16, 15, 16));
-    static final VoxelShape DRIVE = Shapes.or(Block.box(0, 0, 4, 4, 2, 12),
-                Block.box(0, 0, 12, 4, 12, 16),
+                Block.box(0, 6, 5, 16, 16, 16));
+    static final VoxelShape DRIVE = Shapes.or(Block.box(0, 0, 12, 4, 12, 16),
                 Block.box(0, 2, 0, 4, 5, 12),
-                Block.box(0, 5, 4, 4, 10, 12),
                 Block.box(0, 12, 12, 4, 16, 16),
-                Block.box(4, 0, 4, 8, 10, 12),
-                Block.box(4, 3, 0, 16, 5, 1));
-    static final VoxelShape PUNCH = Shapes.or(Block.box(0, 0, 0, 16, 8, 16),
-                Block.box(0, 8, 0, 16, 9, 16),
-                Block.box(0, 9, 5, 3, 18, 11),
-                Block.box(0, 16, 4.5, 3, 18, 5),
-                Block.box(0, 16, 11, 3, 18, 11.5),
-                Block.box(3, 16, 4.5, 13, 18, 11.5),
-                Block.box(13, 9, 5, 16, 18, 11),
-                Block.box(13, 16, 4.5, 16, 18, 5),
-                Block.box(13, 16, 11, 16, 18, 11.5));
+                Block.box(0.75, 5, 5, 1, 11, 11),
+                Block.box(1, 0, 4.5, 4, 2, 11.5),
+                Block.box(1, 5, 4.5, 4, 11, 11.5),
+                Block.box(1, 11, 4.5, 8, 12, 11.5),
+                Block.box(1, 12, 6, 5, 12.25, 10),
+                Block.box(4, 0, 4.5, 8, 11, 11.5),
+                Block.box(4, 3, 0, 16, 5, 1),
+                Block.box(8, 4, 6, 8.25, 8, 10));
+    static final VoxelShape PUNCH = Shapes.or(Block.box(0, 0, 0, 16, 9, 16),
+                Block.box(0, 16, 4, 16, 18.5, 12),
+                Block.box(0.5, 9, 4.5, 3, 16, 11.5),
+                Block.box(13, 9, 4.5, 15.5, 16, 11.5));
 
     static VoxelShape frame(String position) {
         return switch (position) {
@@ -63,21 +61,21 @@ final class LoomShapes {
                 Block.box(0, 4, 4, 4, 8, 16),
                 Block.box(4, 2, 8, 16, 3, 16),
                 Block.box(4, 4, 0, 16, 8, 4),
-                Block.box(8, 8, 6, 16, 15, 16));
+                Block.box(7, 6, 5, 16, 16, 16));
             case "top_back_right" -> Shapes.or(Block.box(0, 2, 8, 12, 3, 16),
                 Block.box(0, 4, 0, 12, 8, 4),
-                Block.box(0, 8, 6, 8, 15, 16),
+                Block.box(0, 6, 5, 9, 16, 16),
                 Block.box(8, 10, 7, 15, 14, 16),
                 Block.box(12, 0, 0, 16, 8, 4),
                 Block.box(12, 4, 4, 16, 8, 6));
             case "top_front_left" -> Shapes.or(Block.box(0, 0, 12, 4, 8, 16),
                 Block.box(0, 4, 0, 4, 8, 12),
                 Block.box(0, 8, 4, 4, 10, 11),
+                Block.box(1, 3.75, 6, 5, 4, 10),
                 Block.box(4, 4, 4, 8, 10, 11),
-                Block.box(8, 8, 0, 16, 15, 4));
-            case "top_front_middle" -> Shapes.or(Block.box(0, 8, 0, 8, 15, 4),
-                Block.box(8, 8, 0, 16, 15, 4));
-            case "top_front_right" -> Shapes.or(Block.box(0, 8, 0, 8, 15, 4),
+                Block.box(7, 6, 0, 16, 16, 5));
+            case "top_front_middle" -> Block.box(0, 6, 0, 16, 16, 5);
+            case "top_front_right" -> Shapes.or(Block.box(0, 6, 0, 9, 16, 5),
                 Block.box(8, 10, 0, 15, 14, 3),
                 Block.box(12, 0, 12, 16, 8, 16),
                 Block.box(12, 4, 4, 16, 8, 12));

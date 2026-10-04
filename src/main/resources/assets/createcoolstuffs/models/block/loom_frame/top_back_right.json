@@ -6,8 +6,7 @@
     "t0": "minecraft:block/spruce_log",
     "t1": "minecraft:block/stripped_spruce_log",
     "t2": "minecraft:block/spruce_planks",
-    "t3": "create:block/andesite_casing",
-    "t4": "create:block/brass_block"
+    "t3": "create:block/brass_block"
   },
   "elements": [
     {
@@ -284,74 +283,6 @@
     },
     {
       "from": [
-        0,
-        8,
-        6
-      ],
-      "to": [
-        8,
-        15,
-        16
-      ],
-      "faces": {
-        "up": {
-          "uv": [
-            8,
-            1,
-            16,
-            11
-          ],
-          "texture": "#t3"
-        },
-        "down": {
-          "uv": [
-            8,
-            1,
-            16,
-            11
-          ],
-          "texture": "#t3"
-        },
-        "north": {
-          "uv": [
-            8,
-            4.5,
-            16,
-            11.5
-          ],
-          "texture": "#t3"
-        },
-        "south": {
-          "uv": [
-            8,
-            4.5,
-            16,
-            11.5
-          ],
-          "texture": "#t3"
-        },
-        "east": {
-          "uv": [
-            1,
-            4.5,
-            11,
-            11.5
-          ],
-          "texture": "#t3"
-        },
-        "west": {
-          "uv": [
-            1,
-            4.5,
-            11,
-            11.5
-          ],
-          "texture": "#t3"
-        }
-      }
-    },
-    {
-      "from": [
         8,
         10,
         7
@@ -369,7 +300,7 @@
             11.5,
             11
           ],
-          "texture": "#t4"
+          "texture": "#t3"
         },
         "down": {
           "uv": [
@@ -378,7 +309,7 @@
             11.5,
             11
           ],
-          "texture": "#t4"
+          "texture": "#t3"
         },
         "north": {
           "uv": [
@@ -387,7 +318,7 @@
             11.5,
             10
           ],
-          "texture": "#t4"
+          "texture": "#t3"
         },
         "south": {
           "uv": [
@@ -396,7 +327,7 @@
             11.5,
             10
           ],
-          "texture": "#t4"
+          "texture": "#t3"
         },
         "east": {
           "uv": [
@@ -405,7 +336,7 @@
             11,
             10
           ],
-          "texture": "#t4"
+          "texture": "#t3"
         },
         "west": {
           "uv": [
@@ -414,7 +345,7 @@
             11,
             10
           ],
-          "texture": "#t4"
+          "texture": "#t3"
         }
       }
     }
