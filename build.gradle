@@ -45,6 +45,14 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
+        // drops straight into a copy of the dev world, builds the Jacquard showcase, saves
+        // screenshots to run/screenshots/showcase_*.png and quits
+        clientShowcase {
+            client()
+            programArguments.addAll '--quickPlaySingleplayer', 'Showcase', '--width', '1600', '--height', '900'
+            systemProperty 'createcoolstuffs.showcase', 'true'
+        }
+
         server {
             server()
             programArgument '--nogui'

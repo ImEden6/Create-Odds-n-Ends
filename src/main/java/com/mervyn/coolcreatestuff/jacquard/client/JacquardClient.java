@@ -27,6 +27,8 @@ public final class JacquardClient {
             if (++ticks % 20 == 0)
                 DesignTextures.releaseUnused();
         });
+        if (Showcase.ENABLED)
+            NeoForge.EVENT_BUS.addListener(Showcase::tick);
         NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut e) -> {
             DesignSync.clearClient();
             DesignTextures.clear();
