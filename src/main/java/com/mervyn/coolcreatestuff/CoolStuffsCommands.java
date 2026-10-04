@@ -1,5 +1,7 @@
 package com.mervyn.coolcreatestuff;
 
+import com.mervyn.coolcreatestuff.jacquard.JacquardCommands;
+
 import net.minecraft.commands.Commands;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
@@ -10,6 +12,7 @@ public final class CoolStuffsCommands {
     static void register(RegisterCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("coolstuffs")
                 .requires(source -> source.hasPermission(2))
-                .then(TracerCommands.node(event.getBuildContext())));
+                .then(TracerCommands.node(event.getBuildContext()))
+                .then(JacquardCommands.node()));
     }
 }
