@@ -6,16 +6,23 @@ import com.simibubi.create.foundation.block.IBE;
 import net.createmod.catnip.math.VoxelShaper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 // Facing is the front, where punched cards come out; the shaft goes in on the left.
 public class CardPunchBlock extends HorizontalKineticBlock implements IBE<CardPunchBlockEntity> {
+    private static final Component TITLE = Component.translatable("container.createcoolstuffs.card_punch");
     private static final VoxelShaper SHAPE = VoxelShaper.forHorizontal(LoomShapes.PUNCH, Direction.SOUTH);
 
     public CardPunchBlock(Properties properties) {
@@ -39,6 +46,13 @@ public class CardPunchBlock extends HorizontalKineticBlock implements IBE<CardPu
     @Override
     public boolean hasShaftTowards(LevelReader level, BlockPos pos, BlockState state, Direction face) {
         return face == input(state);
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof CardPunchBlockEntity be)
+            player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new CardPunchMenu(id, inventory, be), TITLE), buf -> buf.writeBlockPos(pos));
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override

@@ -52,6 +52,10 @@ public record Design(int width, int height, byte[] pixels) {
         return pixels[y * pixelWidth() + x];
     }
 
+    public boolean valid() {
+        return check(this).isSuccess();
+    }
+
     private static DataResult<Design> check(Design d) {
         if (d.width < 1 || d.width > MAX_WIDTH || d.height < 1 || d.height > MAX_HEIGHT)
             return DataResult.error(() -> "design size " + d.width + "x" + d.height + " is outside 1-" + MAX_WIDTH + " x 1-" + MAX_HEIGHT);

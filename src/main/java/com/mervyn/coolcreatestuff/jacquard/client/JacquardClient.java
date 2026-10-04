@@ -13,6 +13,7 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 @EventBusSubscriber(modid = Tracer.MODID, value = Dist.CLIENT)
@@ -42,6 +43,11 @@ public final class JacquardClient {
         event.registerBlockEntityRenderer(Jacquard.LOOM_DRIVE_BE.get(), LoomDriveRenderer::new);
         event.registerBlockEntityRenderer(Jacquard.CARD_PUNCH_BE.get(), CardPunchRenderer::new);
         event.registerEntityRenderer(Jacquard.TAPESTRY_ENTITY.get(), TapestryRenderer::new);
+    }
+
+    @SubscribeEvent
+    static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(Jacquard.CARD_PUNCH_MENU.get(), CardPunchScreen::new);
     }
 
     @SubscribeEvent
