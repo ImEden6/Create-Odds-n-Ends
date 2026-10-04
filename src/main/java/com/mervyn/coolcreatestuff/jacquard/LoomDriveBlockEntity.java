@@ -12,6 +12,12 @@ public class LoomDriveBlockEntity extends KineticBlockEntity {
     }
 
     @Override
+    public float calculateStressApplied() {
+        lastStressApplied = JacquardWork.LOOM_STRESS;
+        return JacquardWork.LOOM_STRESS;
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if (level.isClientSide || !getBlockState().getValue(LoomPartBlock.FORMED))
