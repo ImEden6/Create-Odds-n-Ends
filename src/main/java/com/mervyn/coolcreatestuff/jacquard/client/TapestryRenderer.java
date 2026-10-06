@@ -47,18 +47,19 @@ public class TapestryRenderer extends EntityRenderer<TapestryEntity> {
         boolean rug = face == Direction.UP;
         Mesh m = new Mesh(ms, buffer.getBuffer(RenderType.entitySolid(InventoryMenu.BLOCK_ATLAS)), light, true);
         TextureAtlasSprite linen = Mesh.sprite("createcoolstuffs:block/linen");
-        float front = rug ? z + 0.55f : z + 0.6f;
-        m.box(linen, x0, y0, z, x1, y1, rug ? z + 0.5f : z + 0.55f);
+        float front = z + 1;
+        m.box(linen, x0, y0, z, x1, y1, z + 0.95f);
         if (rug) {
-            for (float x = x0 + 1; x < x1; x += 1.5f) {
-                m.thread(new Vector3f(x, y1, z + 0.4f), new Vector3f(x + 0.3f, y1 + 2.2f, z + 0.1f), new Vector3f(1, 0, 0), 0.4f, LINEN);
-                m.thread(new Vector3f(x, y0, z + 0.4f), new Vector3f(x - 0.3f, y0 - 2.2f, z + 0.1f), new Vector3f(1, 0, 0), 0.4f, LINEN);
+            TextureAtlasSprite white = Mesh.sprite("createcoolstuffs:item/white");
+            for (int i = 0; i < Wp; i += 2) {
+                m.box(white, LINEN, x0 + i, y1, z, x0 + i + 1, y1 + 2, z + 1);
+                m.box(white, LINEN, x1 - i - 1, y0 - 2, z, x1 - i, y0, z + 1);
             }
         } else {
             TextureAtlasSprite brass = Mesh.sprite("create:block/brass_block");
-            m.box(brass, x0 - 1.5f, y1 - 0.2f, z + 0.1f, x1 + 1.5f, y1 + 0.8f, z + 1.1f);
-            m.box(brass, x0 - 2.5f, y1 - 0.7f, z - 0.2f, x0 - 1.2f, y1 + 1.3f, z + 1.4f);
-            m.box(brass, x1 + 1.2f, y1 - 0.7f, z - 0.2f, x1 + 2.5f, y1 + 1.3f, z + 1.4f);
+            m.box(brass, x0 - 1, y1, z, x1 + 1, y1 + 1, z + 1);
+            m.box(brass, x0 - 2, y1 - 1, z, x0 - 1, y1 + 2, z + 2);
+            m.box(brass, x1 + 1, y1 - 1, z, x1 + 2, y1 + 2, z + 2);
         }
 
         ResourceLocation design = DesignTextures.get(entity.designId());
