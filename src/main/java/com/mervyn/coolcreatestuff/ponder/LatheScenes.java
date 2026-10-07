@@ -17,12 +17,10 @@ import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.items.ItemStackHandler;
 
 // All lathe schematics have the headstock at (1, 2, 3) facing east, so the bed runs along +x, the
 // operator side faces the camera and a tracer row sits at z 1. Parts are saved unformed and the
@@ -83,7 +81,7 @@ public final class LatheScenes {
         scene.idle(15);
         scene.overlay().showControls(util.vector().topOf(headstock), Pointing.DOWN, 30).rightClick().withItem(AllItems.WRENCH.asStack());
         scene.idle(10);
-        form(scene, lathe, headstock);
+        Scenes.form(scene, lathe, FORMED, headstock);
         scene.effects().indicateSuccess(headstock);
         scene.overlay().showText(60)
                 .attachKeyFrame()
@@ -116,7 +114,7 @@ public final class LatheScenes {
         BlockPos headstock = util.grid().at(1, 2, 3);
         BlockPos slot = util.grid().at(2, 2, 3);
         Selection kinetics = util.select().position(0, 2, 3).add(util.select().position(headstock));
-        form(scene, util.select().fromTo(1, 1, 3, 3, 2, 3), headstock);
+        Scenes.form(scene, util.select().fromTo(1, 1, 3, 3, 2, 3), FORMED, headstock);
         scene.world().setKineticSpeed(kinetics, 0);
         scene.showBasePlate();
         scene.idle(5);
@@ -128,7 +126,7 @@ public final class LatheScenes {
         Vec3 front = util.vector().blockSurface(slot, Direction.SOUTH);
         scene.overlay().showControls(front, Pointing.DOWN, 40).rightClick().withItem(template);
         scene.idle(7);
-        put(scene, util, headstock, "Template", template);
+        Scenes.put(scene, util, headstock, HeadstockBlockEntity.class, "Template", template);
         scene.overlay().showText(60)
                 .attachKeyFrame()
                 .text("Right-click the lathe with a written profile template")
@@ -139,7 +137,7 @@ public final class LatheScenes {
         ItemStack log = new ItemStack(Blocks.OAK_LOG);
         scene.overlay().showControls(front, Pointing.DOWN, 40).rightClick().withItem(log);
         scene.idle(7);
-        put(scene, util, headstock, "Input", log);
+        Scenes.put(scene, util, headstock, HeadstockBlockEntity.class, "Input", log);
         scene.overlay().showText(60)
                 .text("Then with the block you want turned. Most full blocks work")
                 .pointAt(util.vector().centerOf(slot))
@@ -184,7 +182,7 @@ public final class LatheScenes {
         Selection lathe = util.select().fromTo(0, 1, 3, 3, 2, 3);
         Selection tracerRow = util.select().fromTo(1, 1, 1, 3, 2, 1);
         Selection kinetics = util.select().position(0, 2, 3).add(util.select().position(headstock));
-        form(scene, util.select().fromTo(1, 1, 3, 3, 2, 3), headstock);
+        Scenes.form(scene, util.select().fromTo(1, 1, 3, 3, 2, 3), FORMED, headstock);
         scene.world().setKineticSpeed(kinetics, 0);
         scene.showBasePlate();
         scene.idle(5);
@@ -204,7 +202,7 @@ public final class LatheScenes {
 
         scene.overlay().showControls(util.vector().topOf(headstock), Pointing.DOWN, 30).rightClick().withItem(AllItems.WRENCH.asStack());
         scene.idle(10);
-        form(scene, tracerRow, headstock);
+        Scenes.form(scene, tracerRow, FORMED, headstock);
         scene.world().modifyBlockEntityNBT(util.select().position(headstock), HeadstockBlockEntity.class, nbt -> nbt.putBoolean("Tracer", true));
         scene.effects().indicateSuccess(holder);
         scene.overlay().showText(60)
@@ -216,7 +214,7 @@ public final class LatheScenes {
         ItemStack master = TurnedBlockItem.of(Profile.VASE, Blocks.SPRUCE_PLANKS);
         scene.overlay().showControls(util.vector().topOf(holder), Pointing.DOWN, 40).rightClick().withItem(master);
         scene.idle(7);
-        put(scene, util, headstock, "Master", master);
+        Scenes.put(scene, util, headstock, HeadstockBlockEntity.class, "Master", master);
         scene.overlay().showText(80)
                 .attachKeyFrame()
                 .text("Right-click a holder with any turned piece to load it as the master. It wins over the template")
@@ -228,7 +226,7 @@ public final class LatheScenes {
         ItemStack stone = new ItemStack(Blocks.STONE);
         scene.overlay().showControls(front, Pointing.DOWN, 40).rightClick().withItem(stone);
         scene.idle(7);
-        put(scene, util, headstock, "Input", stone);
+        Scenes.put(scene, util, headstock, HeadstockBlockEntity.class, "Input", stone);
         scene.world().setKineticSpeed(kinetics, 64);
         startCut(scene, util, headstock);
         scene.overlay().showText(80)
@@ -294,20 +292,6 @@ public final class LatheScenes {
         scene.idle(80);
     }
 
-    // Ponder keeps the old block entity when a state changes, along with its cached state
-    private static void form(CreateSceneBuilder scene, Selection parts, BlockPos headstock) {
-        scene.world().modifyBlocks(parts, state -> state.hasProperty(FORMED) ? state.setValue(FORMED, true) : state, false);
-        scene.world().modifyBlockEntity(headstock, HeadstockBlockEntity.class, be -> be.setBlockState(be.getLevel().getBlockState(headstock)));
-    }
-
-    private static void put(CreateSceneBuilder scene, SceneBuildingUtil util, BlockPos headstock, String slot, ItemStack stack) {
-        HolderLookup.Provider registries = scene.world().getHolderLookupProvider();
-        ItemStackHandler handler = new ItemStackHandler(1);
-        handler.setStackInSlot(0, stack.copy());
-        scene.world().modifyBlockEntityNBT(util.select().position(headstock), HeadstockBlockEntity.class,
-                nbt -> nbt.put(slot, handler.serializeNBT(registries)));
-    }
-
     // Ponder runs the client side of the block entity, which counts progress along but never finishes
     private static void startCut(CreateSceneBuilder scene, SceneBuildingUtil util, BlockPos headstock) {
         scene.world().modifyBlockEntityNBT(util.select().position(headstock), HeadstockBlockEntity.class, nbt -> {
@@ -317,8 +301,8 @@ public final class LatheScenes {
     }
 
     private static void finishCut(CreateSceneBuilder scene, SceneBuildingUtil util, BlockPos headstock, Profile profile, Block source) {
-        put(scene, util, headstock, "Input", ItemStack.EMPTY);
-        put(scene, util, headstock, "Output", TurnedBlockItem.of(profile, source));
+        Scenes.put(scene, util, headstock, HeadstockBlockEntity.class, "Input", ItemStack.EMPTY);
+        Scenes.put(scene, util, headstock, HeadstockBlockEntity.class, "Output", TurnedBlockItem.of(profile, source));
         scene.world().modifyBlockEntityNBT(util.select().position(headstock), HeadstockBlockEntity.class, nbt -> {
             nbt.putBoolean("Cutting", false);
             nbt.putFloat("Progress", 0);
