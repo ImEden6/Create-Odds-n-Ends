@@ -1,0 +1,215 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "createoddsnends:block/organ/cabinet",
+    "cabinet": "createoddsnends:block/organ/cabinet",
+    "gold": "createoddsnends:block/organ/gold"
+  },
+  "elements": [
+    {
+      "from": [
+        -13,
+        11,
+        2
+      ],
+      "to": [
+        0,
+        12,
+        14
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            4,
+            13,
+            5
+          ],
+          "texture": "#cabinet"
+        },
+        "south": {
+          "uv": [
+            3,
+            4,
+            16,
+            5
+          ],
+          "texture": "#cabinet"
+        },
+        "east": {
+          "uv": [
+            2,
+            4,
+            14,
+            5
+          ],
+          "texture": "#cabinet"
+        },
+        "west": {
+          "uv": [
+            2,
+            4,
+            14,
+            5
+          ],
+          "texture": "#cabinet"
+        },
+        "up": {
+          "uv": [
+            3,
+            2,
+            16,
+            14
+          ],
+          "texture": "#cabinet"
+        },
+        "down": {
+          "uv": [
+            3,
+            2,
+            16,
+            14
+          ],
+          "texture": "#cabinet"
+        }
+      }
+    },
+    {
+      "from": [
+        -13,
+        8,
+        2
+      ],
+      "to": [
+        -12,
+        11,
+        3
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            12,
+            5,
+            13,
+            8
+          ],
+          "texture": "#gold"
+        },
+        "south": {
+          "uv": [
+            3,
+            5,
+            4,
+            8
+          ],
+          "texture": "#gold"
+        },
+        "east": {
+          "uv": [
+            13,
+            5,
+            14,
+            8
+          ],
+          "texture": "#gold"
+        },
+        "west": {
+          "uv": [
+            2,
+            5,
+            3,
+            8
+          ],
+          "texture": "#gold"
+        },
+        "up": {
+          "uv": [
+            3,
+            2,
+            4,
+            3
+          ],
+          "texture": "#gold"
+        },
+        "down": {
+          "uv": [
+            3,
+            13,
+            4,
+            14
+          ],
+          "texture": "#gold"
+        }
+      }
+    },
+    {
+      "from": [
+        -13,
+        8,
+        13
+      ],
+      "to": [
+        -12,
+        11,
+        14
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            12,
+            5,
+            13,
+            8
+          ],
+          "texture": "#gold"
+        },
+        "south": {
+          "uv": [
+            3,
+            5,
+            4,
+            8
+          ],
+          "texture": "#gold"
+        },
+        "east": {
+          "uv": [
+            2,
+            5,
+            3,
+            8
+          ],
+          "texture": "#gold"
+        },
+        "west": {
+          "uv": [
+            13,
+            5,
+            14,
+            8
+          ],
+          "texture": "#gold"
+        },
+        "up": {
+          "uv": [
+            3,
+            13,
+            4,
+            14
+          ],
+          "texture": "#gold"
+        },
+        "down": {
+          "uv": [
+            3,
+            2,
+            4,
+            3
+          ],
+          "texture": "#gold"
+        }
+      }
+    }
+  ]
+}

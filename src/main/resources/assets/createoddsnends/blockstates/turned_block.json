@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "createoddsnends:block/turned_block"
+    },
+    "axis=y": {
+      "model": "createoddsnends:block/turned_block"
+    },
+    "axis=z": {
+      "model": "createoddsnends:block/turned_block"
+    }
+  }
+}

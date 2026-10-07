@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=south": {
+      "model": "createoddsnends:block/card_punch"
+    },
+    "facing=west": {
+      "model": "createoddsnends:block/card_punch",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "createoddsnends:block/card_punch",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "createoddsnends:block/card_punch",
+      "y": 270
+    }
+  }
+}

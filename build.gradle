@@ -51,7 +51,7 @@ neoForge {
         clientShowcase {
             client()
             programArguments.addAll '--quickPlaySingleplayer', 'Showcase', '--width', '1600', '--height', '900'
-            systemProperty 'createcoolstuffs.showcase', 'true'
+            systemProperty 'createoddsnends.showcase', 'true'
         }
 
         server {
