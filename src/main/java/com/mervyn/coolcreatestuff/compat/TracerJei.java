@@ -1,9 +1,12 @@
 package com.mervyn.coolcreatestuff.compat;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import com.mervyn.coolcreatestuff.Profile;
 import com.mervyn.coolcreatestuff.Tracer;
+import com.mervyn.coolcreatestuff.jacquard.Jacquard;
+import com.mervyn.coolcreatestuff.jacquard.JacquardHeadBlockEntity;
 import com.mervyn.coolcreatestuff.turned.TurnedBlockItem;
 
 import mezz.jei.api.IModPlugin;
@@ -29,7 +32,9 @@ public class TracerJei implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
-        registration.addRecipeCategories(new TurningCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new TurningCategory(registration.getJeiHelpers().getGuiHelper()),
+                new PunchingCategory(registration.getJeiHelpers().getGuiHelper()),
+                new WeavingCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -42,10 +47,19 @@ public class TracerJei implements IModPlugin {
                 new TurningCategory.Turning(master, Profile.VASE, EXAMPLES, "createcoolstuffs.jei.master")));
 
         registration.addIngredientInfo(Tracer.TEMPLATE_TABLE_ITEM.get(), Component.translatable("createcoolstuffs.jei.template_table"));
+
+        registration.addRecipes(PunchingCategory.TYPE, List.of(
+                new PunchingCategory.Punching(List.of(), "createcoolstuffs.jei.punch_editor"),
+                new PunchingCategory.Punching(List.of(new ItemStack(Jacquard.PUNCHED_CARD_CHAIN.get()), new ItemStack(Jacquard.TAPESTRY.get())),
+                        "createcoolstuffs.jei.punch_copy")));
+        List<ItemStack> wool = IntStream.range(0, 16).mapToObj(c -> new ItemStack(JacquardHeadBlockEntity.wool(c))).toList();
+        registration.addRecipes(WeavingCategory.TYPE, List.of(new WeavingCategory.Weaving(wool)));
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalysts(TurningCategory.TYPE, Tracer.LATHE_HEADSTOCK_ITEM.get(), Tracer.LATHE_BED_ITEM.get(), Tracer.LATHE_TAILSTOCK_ITEM.get());
+        registration.addRecipeCatalysts(PunchingCategory.TYPE, Jacquard.CARD_PUNCH_ITEM.get());
+        registration.addRecipeCatalysts(WeavingCategory.TYPE, Jacquard.JACQUARD_HEAD_ITEM.get(), Jacquard.LOOM_FRAME_ITEM.get(), Jacquard.LOOM_DRIVE_ITEM.get());
     }
 }
