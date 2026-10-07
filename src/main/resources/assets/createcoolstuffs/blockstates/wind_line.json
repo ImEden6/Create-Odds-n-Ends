@@ -1,0 +1,168 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "OR": [
+          {
+            "north": "true",
+            "east": "true"
+          },
+          {
+            "north": "true",
+            "west": "true"
+          },
+          {
+            "north": "true",
+            "up": "true"
+          },
+          {
+            "north": "true",
+            "down": "true"
+          },
+          {
+            "south": "true",
+            "east": "true"
+          },
+          {
+            "south": "true",
+            "west": "true"
+          },
+          {
+            "south": "true",
+            "up": "true"
+          },
+          {
+            "south": "true",
+            "down": "true"
+          },
+          {
+            "east": "true",
+            "up": "true"
+          },
+          {
+            "east": "true",
+            "down": "true"
+          },
+          {
+            "west": "true",
+            "up": "true"
+          },
+          {
+            "west": "true",
+            "down": "true"
+          },
+          {
+            "north": "false",
+            "south": "false",
+            "east": "false",
+            "west": "false",
+            "up": "false",
+            "down": "false"
+          },
+          {
+            "north": "true",
+            "south": "false",
+            "east": "false",
+            "west": "false",
+            "up": "false",
+            "down": "false"
+          },
+          {
+            "north": "false",
+            "south": "true",
+            "east": "false",
+            "west": "false",
+            "up": "false",
+            "down": "false"
+          },
+          {
+            "north": "false",
+            "south": "false",
+            "east": "true",
+            "west": "false",
+            "up": "false",
+            "down": "false"
+          },
+          {
+            "north": "false",
+            "south": "false",
+            "east": "false",
+            "west": "true",
+            "up": "false",
+            "down": "false"
+          },
+          {
+            "north": "false",
+            "south": "false",
+            "east": "false",
+            "west": "false",
+            "up": "true",
+            "down": "false"
+          },
+          {
+            "north": "false",
+            "south": "false",
+            "east": "false",
+            "west": "false",
+            "up": "false",
+            "down": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "createcoolstuffs:block/wind_line/core"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "createcoolstuffs:block/wind_line/side"
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "createcoolstuffs:block/wind_line/side",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "createcoolstuffs:block/wind_line/side",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "createcoolstuffs:block/wind_line/side",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "createcoolstuffs:block/wind_line/up"
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "createcoolstuffs:block/wind_line/down"
+      }
+    }
+  ]
+}

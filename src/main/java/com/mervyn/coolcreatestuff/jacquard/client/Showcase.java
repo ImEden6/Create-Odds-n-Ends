@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mervyn.coolcreatestuff.jacquard.JacquardCommands;
 import com.mervyn.coolcreatestuff.jacquard.JacquardHeadBlockEntity;
+import com.mervyn.coolcreatestuff.organ.OrganCommands;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
@@ -50,8 +51,18 @@ final class Showcase {
             view("race_left_1", 940, 2.6, -1, 2.1, 4.45, -1.25, 1.2),
             again("race_left_2", 944),
             again("race_left_3", 948),
-            view("front_woven", 1600, 0.5, 0, 1.4, 4.5, 0, 1.5));
-    private static final int QUIT = 1660;
+            view("organ_front", 1000, 2, 13, 1.6, 5, 13, 1.1),
+            again("organ_front_later", 1010),
+            view("organ_close", 1080, 3.6, 13, 2.4, 5, 13, 1.3),
+            view("organ_crank_side", 1160, 5, 16.5, 1.7, 5, 13, 1.1),
+            view("organ_back", 1240, 8.5, 14.8, 2.2, 5, 13, 1),
+            view("organ_wind", 1320, 0.5, 12, 5.5, 5, 19, 1),
+            view("organ_pipes", 1400, 3.4, 12.2, 2.8, 5, 13, 1.8),
+            view("organ_preview_angle", 1480, 2, 15.5, 4.2, 5, 13, 1.2),
+            view("chest_close", 1540, 2.2, 18.2, 1.9, 4, 19.5, 0.7),
+            view("front_woven", 1600, 0.5, 0, 1.4, 4.5, 0, 1.5),
+            view("loose_parts", 1700, 1.5, -11, 2.2, 4.5, -8, 0.5));
+    private static final int QUIT = 1760;
 
     private static int tick;
     private static BlockPos anchor;
@@ -69,15 +80,21 @@ final class Showcase {
             mc.options.hideGui = true;
             anchor = mc.player.blockPosition();
             ahead = mc.player.getDirection();
-            server.execute(() -> JacquardCommands.showcase(player(server), anchor, ahead));
+            server.execute(() -> {
+                JacquardCommands.showcase(player(server), anchor, ahead);
+                OrganCommands.showcase(player(server), anchor.relative(ahead, 5).relative(ahead.getClockWise(), 13), ahead.getOpposite());
+            });
         }
         if (anchor == null)
             return;
         for (View view : VIEWS) {
             if (tick == view.at - 50 && view.move)
                 server.execute(() -> moveTo(player(server), view));
-            if (tick == view.at - 20 && view.move && mc.level.getBlockEntity(anchor.relative(ahead, 5).above(2)) instanceof JacquardHeadBlockEntity head)
-                head.showcaseJump(0.55);
+            if (tick == view.at - 20 && view.move)
+                server.execute(() -> {
+                    if (player(server).level().getBlockEntity(anchor.relative(ahead, 5).above(2)) instanceof JacquardHeadBlockEntity head)
+                        head.showcaseJump(0.55);
+                });
             if (tick == view.at)
                 Screenshot.grab(mc.gameDirectory, "showcase_" + view.name + ".png", mc.getMainRenderTarget(), message -> {});
         }
