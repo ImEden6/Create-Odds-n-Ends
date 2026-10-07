@@ -1,0 +1,66 @@
+{
+  "organ.melody.low": {
+    "sounds": [
+      {
+        "name": "createcoolstuffs:organ/melody_low",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "organ.melody.high": {
+    "sounds": [
+      {
+        "name": "createcoolstuffs:organ/melody_high",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "organ.bass.low": {
+    "sounds": [
+      {
+        "name": "createcoolstuffs:organ/bass_low",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "organ.bass.high": {
+    "sounds": [
+      {
+        "name": "createcoolstuffs:organ/bass_high",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "organ.chord.low": {
+    "sounds": [
+      {
+        "name": "createcoolstuffs:organ/chord_low",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "organ.chord.high": {
+    "sounds": [
+      {
+        "name": "createcoolstuffs:organ/chord_high",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "organ.kick": {
+    "sounds": [
+      {
+        "name": "createcoolstuffs:organ/kick",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "organ.snare": {
+    "sounds": [
+      {
+        "name": "createcoolstuffs:organ/snare",
+        "attenuation_distance": 64
+      }
+    ]
+  }
+}

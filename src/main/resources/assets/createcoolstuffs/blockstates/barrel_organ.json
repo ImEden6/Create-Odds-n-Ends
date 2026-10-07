@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=south": {
+      "model": "createcoolstuffs:block/barrel_organ/lower"
+    },
+    "facing=west": {
+      "model": "createcoolstuffs:block/barrel_organ/lower",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "createcoolstuffs:block/barrel_organ/lower",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "createcoolstuffs:block/barrel_organ/lower",
+      "y": 270
+    }
+  }
+}

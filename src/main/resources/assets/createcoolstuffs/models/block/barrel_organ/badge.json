@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "createcoolstuffs:block/organ/badge",
+    "badge": "createcoolstuffs:block/organ/badge"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        7,
+        15.9
+      ],
+      "to": [
+        10,
+        11,
+        16.05
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            6,
+            5,
+            10,
+            9
+          ],
+          "texture": "#badge"
+        },
+        "south": {
+          "uv": [
+            6,
+            5,
+            10,
+            9
+          ],
+          "texture": "#badge"
+        },
+        "east": {
+          "uv": [
+            0,
+            5,
+            0.15,
+            9
+          ],
+          "texture": "#badge"
+        },
+        "west": {
+          "uv": [
+            0,
+            5,
+            0.15,
+            9
+          ],
+          "texture": "#badge"
+        },
+        "up": {
+          "uv": [
+            6,
+            0,
+            10,
+            0.15
+          ],
+          "texture": "#badge"
+        },
+        "down": {
+          "uv": [
+            6,
+            0,
+            10,
+            0.15
+          ],
+          "texture": "#badge"
+        }
+      }
+    }
+  ]
+}

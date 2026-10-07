@@ -7,6 +7,7 @@ import com.mervyn.coolcreatestuff.client.TemplateModel;
 import com.mervyn.coolcreatestuff.client.TemplateTableScreen;
 import com.mervyn.coolcreatestuff.client.TurnedModel;
 import com.mervyn.coolcreatestuff.client.TurnedQuads;
+import com.mervyn.coolcreatestuff.organ.client.OrganPartials;
 
 import com.mervyn.coolcreatestuff.ponder.TracerPonder;
 import com.mervyn.coolcreatestuff.turned.TurnedBlockEntity;
@@ -40,6 +41,7 @@ public class TracerClient {
     public TracerClient(ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
         LathePartials.init();
+        OrganPartials.init();
         PonderIndex.addPlugin(new TracerPonder());
     }
 
