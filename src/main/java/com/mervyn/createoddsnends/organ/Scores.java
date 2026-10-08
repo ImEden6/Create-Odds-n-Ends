@@ -11,15 +11,27 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 
 public class Scores extends SavedData {
     private static final String NAME = "createoddsnends_scores";
+    // the file a world saved before the mod was renamed
+    private static final String OLD_NAME = "createcoolstuffs_scores";
 
     private final Int2ObjectMap<Score> scores = new Int2ObjectOpenHashMap<>();
     private int nextId;
 
     public static Scores get(MinecraftServer server) {
-        return server.overworld().getDataStorage().computeIfAbsent(new Factory<>(Scores::new, Scores::load), NAME);
+        DimensionDataStorage storage = server.overworld().getDataStorage();
+        Factory<Scores> factory = new Factory<>(Scores::new, Scores::load);
+        if (storage.get(factory, NAME) == null) {
+            Scores old = storage.get(factory, OLD_NAME);
+            if (old != null) {
+                old.setDirty();
+                storage.set(NAME, old);
+            }
+        }
+        return storage.computeIfAbsent(factory, NAME);
     }
 
     @Nullable

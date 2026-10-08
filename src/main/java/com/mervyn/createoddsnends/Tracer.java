@@ -23,6 +23,7 @@ import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPointTyp
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.world.flag.FeatureFlags;
@@ -113,7 +114,15 @@ public class Tracer {
                 output.accept(PROFILE_TEMPLATE.get());
             }).build());
 
+    // worlds made before the rename still hold everything under the old mod id
+    public static void keepOldIds(DeferredRegister<?>... registers) {
+        for (DeferredRegister<?> register : registers)
+            for (var entry : register.getEntries())
+                register.addAlias(ResourceLocation.fromNamespaceAndPath("createcoolstuffs", entry.getId().getPath()), entry.getId());
+    }
+
     public Tracer(IEventBus modEventBus, ModContainer modContainer) {
+        keepOldIds(BLOCKS, ITEMS, BLOCK_ENTITIES, COMPONENTS, MENUS, ARM_POINTS);
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);

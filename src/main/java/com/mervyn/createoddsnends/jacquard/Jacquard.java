@@ -84,6 +84,7 @@ public final class Jacquard {
     private Jacquard() {}
 
     public static void register(IEventBus modBus) {
+        Tracer.keepOldIds(BLOCKS, ITEMS, BLOCK_ENTITIES, ENTITIES, COMPONENTS);
         BLOCKS.register(modBus);
         ITEMS.register(modBus);
         BLOCK_ENTITIES.register(modBus);
