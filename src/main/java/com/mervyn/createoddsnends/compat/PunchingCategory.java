@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 public class PunchingCategory extends AbstractRecipeCategory<PunchingCategory.Punching> {
     public static final RecipeType<Punching> TYPE = RecipeType.create(Tracer.MODID, "punching", Punching.class);
 
-    public record Punching(List<ItemStack> copyFrom, String hint) {}
+    public record Punching(List<ItemStack> copyFrom, ItemStack blanks, String blanksHint, ItemStack output, String hint) {}
 
     public PunchingCategory(IGuiHelper gui) {
         super(TYPE, Component.translatable("createoddsnends.jei.punching"), gui.createDrawableItemLike(Jacquard.CARD_PUNCH_ITEM.get()), 112, 40);
@@ -34,12 +34,12 @@ public class PunchingCategory extends AbstractRecipeCategory<PunchingCategory.Pu
 
         builder.addInputSlot(1, 22)
                 .setStandardSlotBackground()
-                .addItemStack(new ItemStack(Jacquard.BLANK_CARD.get(), 32))
-                .addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable("createoddsnends.jei.blanks").withStyle(ChatFormatting.GRAY)));
+                .addItemStack(recipe.blanks())
+                .addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable(recipe.blanksHint()).withStyle(ChatFormatting.GRAY)));
 
         builder.addOutputSlot(91, 12)
                 .setOutputSlotBackground()
-                .addItemStack(new ItemStack(Jacquard.PUNCHED_CARD_CHAIN.get()))
+                .addItemStack(recipe.output())
                 .addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable(recipe.hint()).withStyle(ChatFormatting.GRAY)));
     }
 
