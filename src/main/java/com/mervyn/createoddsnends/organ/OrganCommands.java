@@ -89,7 +89,7 @@ public final class OrganCommands {
             level.setBlock(chest, Organ.WIND_CHEST.get().defaultBlockState().setValue(WindChestBlock.FACING, front), Block.UPDATE_ALL);
             if (pc >= 6 && pc < 9 && level.getBlockEntity(chest) instanceof WindChestBlockEntity be)
                 be.voice.setFilter(new ItemStack(pc == 6 ? Items.BLUE_DYE : pc == 7 ? Items.GREEN_DYE : Items.RED_DYE));
-            level.setBlock(chest.above(), AllBlocks.STEAM_WHISTLE.getDefaultState(), Block.UPDATE_ALL);
+            level.setBlock(chest.above(), AllBlocks.STEAM_WHISTLE.getDefaultState().setValue(WhistleBlock.FACING, front), Block.UPDATE_ALL);
             for (int grow = 0; grow < (11 - pc) / 2; grow++)
                 WhistleBlock.incrementSize(level, chest.above());
         }

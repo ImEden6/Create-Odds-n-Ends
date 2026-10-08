@@ -103,6 +103,11 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
     public Score gridScore;
     public int[] grid;
 
+    private List<BlockPos> chests = List.of();
+    private int networkVersion = -1;
+    private int mutedVoices;
+    private int chestCount;
+
     public BarrelOrganBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
@@ -172,6 +177,11 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
             OrganPlayback.tick(this, score);
             return;
         }
+        advance(score);
+        feedChests(score);
+    }
+
+    private void advance(@Nullable Score score) {
         if (pulse > 0 && --pulse == 0)
             level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
         boolean run = score != null && getSpeed() != 0 && !finished && !powered();
@@ -194,6 +204,44 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
             level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
         }
         notifyUpdate();
+    }
+
+    private void feedChests(@Nullable Score score) {
+        if (networkVersion != WindNetwork.version() || level.getGameTime() % 40 == 0)
+            rebuildNetwork();
+        if (!running || score == null || chests.isEmpty())
+            return;
+        if (gridScore != score) {
+            gridScore = score;
+            grid = score.grid();
+        }
+        int offset = Math.min(score.rowCount() - 1, (int) row) * Score.COLUMNS;
+        for (BlockPos pos : chests)
+            if (level.isLoaded(pos) && level.getBlockEntity(pos) instanceof WindChestBlockEntity chest)
+                chest.feed(grid, offset);
+    }
+
+    private void rebuildNetwork() {
+        networkVersion = WindNetwork.version();
+        List<BlockPos> found = WindNetwork.walk(level, worldPosition);
+        int muted = 0;
+        for (BlockPos pos : found)
+            if (level.getBlockEntity(pos) instanceof WindChestBlockEntity chest && chest.voiceColour() != null)
+                muted |= 1 << chest.voiceColour().getId();
+        boolean differs = muted != mutedVoices || found.size() != chests.size();
+        chests = found;
+        chestCount = found.size();
+        mutedVoices = muted;
+        if (differs)
+            sendData();
+    }
+
+    public boolean mutes(int voice) {
+        return (mutedVoices >> voice & 1) != 0;
+    }
+
+    public int chestCount() {
+        return chestCount;
     }
 
     // the client's count, moved on to the frame being drawn
@@ -269,6 +317,8 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
             String state = finished ? "finished" : running ? "playing" : "paused";
             lang().translate("organ.goggles." + state).style(finished ? ChatFormatting.GOLD : ChatFormatting.GRAY).forGoggles(tooltip, 1);
         }
+        if (chestCount > 0)
+            lang().translate("organ.goggles.chests", chestCount).style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
         super.addToGoggleTooltip(tooltip, isPlayerSneaking);
         return true;
     }
@@ -285,6 +335,10 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
         tag.putBoolean("Finished", finished);
         tag.putBoolean("Running", running);
         tag.putInt("Pulse", pulse);
+        if (clientPacket) {
+            tag.putInt("Muted", mutedVoices);
+            tag.putInt("Chests", chestCount);
+        }
     }
 
     @Override
@@ -295,6 +349,10 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
         finished = tag.getBoolean("Finished");
         running = tag.getBoolean("Running");
         pulse = tag.getInt("Pulse");
+        if (clientPacket) {
+            mutedVoices = tag.getInt("Muted");
+            chestCount = tag.getInt("Chests");
+        }
     }
 
     private static class ModeSlot extends ValueBoxTransform.Sided {
