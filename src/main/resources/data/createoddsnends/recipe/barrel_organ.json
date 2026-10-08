@@ -1,0 +1,32 @@
+{
+  "type": "create:mechanical_crafting",
+  "accept_mirrored": false,
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "create:brass_casing"
+    },
+    "M": {
+      "item": "create:precision_mechanism"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "item": "create:shaft"
+    },
+    "W": {
+      "item": "create:steam_whistle"
+    }
+  },
+  "pattern": [
+    " WWW ",
+    "PMCMP",
+    "PPSPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createoddsnends:barrel_organ"
+  },
+  "show_notification": false
+}
