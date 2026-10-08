@@ -14,6 +14,7 @@ public final class OrganPartials {
     public static final PartialModel SHAFT = of("shaft");
     public static final PartialModel SHELF = of("shelf");
     public static final PartialModel BADGE = of("badge");
+    public static final PartialModel[] BORES = {of("bore_small"), of("bore_medium"), of("bore_large")};
 
     static {
         for (int i = 0; i < 9; i++) {
