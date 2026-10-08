@@ -20,7 +20,7 @@ public record Score(int rowCount, int barLength, int key, List<Note> notes) {
     public static final int ROWS_PER_PAGE = 8;
 
     public record Note(int row, int column, int length, int voice) {
-        int packed() {
+        public int packed() {
             return row | column << 10 | voice << 16 | (length - 1) << 20;
         }
 
@@ -69,7 +69,7 @@ public record Score(int rowCount, int barLength, int key, List<Note> notes) {
         return s;
     }, s -> s);
 
-    private static DataResult<Score> check(Score s) {
+    public static DataResult<Score> check(Score s) {
         if (s.rowCount < 1 || s.rowCount > MAX_ROWS)
             return DataResult.error(() -> "score has " + s.rowCount + " rows");
         if (s.barLength < 1 || s.key < 0 || s.key > 11)

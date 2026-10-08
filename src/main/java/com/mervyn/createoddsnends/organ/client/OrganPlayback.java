@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
 
 // Client side of playback: plays the notes that start on each new row, holds and releases them,
 // and keeps the facade pipes and the drum beater in step. updateOrgan() and onRow() in the preview.
@@ -70,21 +71,31 @@ public final class OrganPlayback {
         for (int i = score.firstAt(row); i < notes.size() && notes.get(i).row() == row; i++) {
             Score.Note note = notes.get(i);
             Timbre t = Timbre.of(note.voice(), note.column());
-            if (t.drum()) {
+            if (t.drum())
                 be.drumHit = be.getLevel().getGameTime();
-                be.getLevel().playLocalSound(pos.getX() + .5, pos.getY() + 1, pos.getZ() + .5,
-                        (t == Timbre.KICK ? Organ.KICK : Organ.SNARE).get(), SoundSource.RECORDS, 1, 1, false);
-                continue;
-            }
-            if (t == Timbre.MELODY || t == Timbre.CHORD)
+            else if (t == Timbre.MELODY || t == Timbre.CHORD)
                 be.pipeLit[(note.column() * 7) % 9] = 1;
-            boolean low = note.midi() < 60;
-            float pitch = (float) Math.pow(2, (note.midi() - (low ? LOW_SAMPLE : HIGH_SAMPLE)) / 12.0);
-            int ticks = Math.max(1, Math.round(note.length() / be.rowsPerTick()));
-            OrganNoteSound sound = new OrganNoteSound(sample(t, low), pos, pitch, ticks);
-            held.add(sound);
-            Minecraft.getInstance().getSoundManager().play(sound);
+            if (be.mutes(note.voice()))
+                continue;
+            OrganNoteSound sound = sound(be.getLevel(), pos, note, be.rowsPerTick());
+            if (sound != null)
+                held.add(sound);
         }
+    }
+
+    // plays one note at this spot, null for drums since those are fire and forget
+    @Nullable
+    public static OrganNoteSound sound(Level level, BlockPos pos, Score.Note note, float rowsPerTick) {
+        Timbre t = Timbre.of(note.voice(), note.column());
+        if (t.drum()) {
+            level.playLocalSound(pos.getX() + .5, pos.getY() + 1, pos.getZ() + .5, (t == Timbre.KICK ? Organ.KICK : Organ.SNARE).get(), SoundSource.RECORDS, 1, 1, false);
+            return null;
+        }
+        boolean low = note.midi() < 60;
+        float pitch = (float) Math.pow(2, (note.midi() - (low ? LOW_SAMPLE : HIGH_SAMPLE)) / 12.0);
+        OrganNoteSound sound = new OrganNoteSound(sample(t, low), pos, pitch, Math.max(1, Math.round(note.length() / rowsPerTick)));
+        Minecraft.getInstance().getSoundManager().play(sound);
+        return sound;
     }
 
     private static SoundEvent sample(Timbre t, boolean low) {

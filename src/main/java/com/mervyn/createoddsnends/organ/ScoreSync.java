@@ -63,6 +63,7 @@ public final class ScoreSync {
     static void register(RegisterPayloadHandlersEvent event) {
         event.registrar("1")
                 .playToServer(Request.TYPE, Request.STREAM_CODEC, ScoreSync::answer)
+                .playToServer(SaveScore.TYPE, SaveScore.STREAM_CODEC, SaveScore::handle)
                 .playToClient(Reply.TYPE, Reply.STREAM_CODEC, (reply, ctx) -> {
                     CLIENT.put(reply.id(), reply.score());
                     ASKED.remove(reply.id());
