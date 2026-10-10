@@ -2,6 +2,7 @@ package com.mervyn.createoddsnends.ponder;
 
 import com.mervyn.createoddsnends.Tracer;
 import com.mervyn.createoddsnends.jacquard.Jacquard;
+import com.mervyn.createoddsnends.organ.Organ;
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 
 import net.createmod.ponder.api.registration.PonderPlugin;
@@ -29,8 +30,16 @@ public class TracerPonder implements PonderPlugin {
         helper.forComponents(Jacquard.JACQUARD_HEAD.getId(), Jacquard.LOOM_FRAME.getId(), Jacquard.LOOM_DRIVE.getId())
                 .addStoryBoard("jacquard/loom", JacquardScenes::build)
                 .addStoryBoard("jacquard/loom", JacquardScenes::weaving);
+        helper.forComponents(Jacquard.JACQUARD_HEAD.getId(), Jacquard.LOOM_FRAME.getId(), Jacquard.LOOM_DRIVE.getId())
+                .addStoryBoard("jacquard/loom_funnel", JacquardScenes::automation);
         helper.forComponents(Jacquard.TAPESTRY.getId())
-                .addStoryBoard("jacquard/loom", JacquardScenes::weaving);
+                .addStoryBoard("jacquard/loom", JacquardScenes::weaving)
+                .addStoryBoard("jacquard/tapestry", JacquardScenes::tapestry);
+        helper.forComponents(Organ.BARREL_ORGAN.getId(), Organ.BOOK_MUSIC.getId())
+                .addStoryBoard("organ/organ", OrganScenes::organ);
+        helper.forComponents(Organ.BARREL_ORGAN.getId(), Organ.WIND_CHEST.getId(), Organ.WIND_LINE.getId())
+                .addStoryBoard("organ/wind", OrganScenes::windNetwork)
+                .addStoryBoard("organ/sequencer", OrganScenes::sequencer);
         helper.forComponents(Jacquard.CARD_PUNCH.getId(), Jacquard.BLANK_CARD.getId(), Jacquard.PUNCHED_CARD_CHAIN.getId())
                 .addStoryBoard("jacquard/card_punch", JacquardScenes::punch);
     }
@@ -41,7 +50,7 @@ public class TracerPonder implements PonderPlugin {
                 .addToIndex()
                 .item(Tracer.LATHE_HEADSTOCK.get(), true, false)
                 .title("Create: Odds 'n Ends")
-                .description("The copy lathe, the jacquard loom and the tools that go with them")
+                .description("The copy lathe, the jacquard loom, the barrel organ and the bits that go with them")
                 .register();
         helper.addToTag(TAG)
                 .add(Tracer.LATHE_HEADSTOCK.getId())
@@ -55,11 +64,16 @@ public class TracerPonder implements PonderPlugin {
                 .add(Jacquard.JACQUARD_HEAD.getId())
                 .add(Jacquard.LOOM_FRAME.getId())
                 .add(Jacquard.LOOM_DRIVE.getId())
-                .add(Jacquard.CARD_PUNCH.getId());
+                .add(Jacquard.CARD_PUNCH.getId())
+                .add(Jacquard.TAPESTRY.getId())
+                .add(Organ.BARREL_ORGAN.getId())
+                .add(Organ.WIND_CHEST.getId())
+                .add(Organ.WIND_LINE.getId());
         helper.addToTag(AllCreatePonderTags.KINETIC_APPLIANCES)
                 .add(Tracer.LATHE_HEADSTOCK.getId())
                 .add(Jacquard.LOOM_DRIVE.getId())
-                .add(Jacquard.CARD_PUNCH.getId());
+                .add(Jacquard.CARD_PUNCH.getId())
+                .add(Organ.BARREL_ORGAN.getId());
         helper.addToTag(AllCreatePonderTags.ARM_TARGETS)
                 .add(Tracer.LATHE_HEADSTOCK.getId())
                 .add(Tracer.LATHE_BED.getId())
@@ -69,6 +83,10 @@ public class TracerPonder implements PonderPlugin {
                 .add(Jacquard.JACQUARD_HEAD.getId())
                 .add(Jacquard.LOOM_FRAME.getId())
                 .add(Jacquard.LOOM_DRIVE.getId())
-                .add(Jacquard.CARD_PUNCH.getId());
+                .add(Jacquard.CARD_PUNCH.getId())
+                .add(Organ.BARREL_ORGAN.getId());
+        helper.addToTag(AllCreatePonderTags.REDSTONE)
+                .add(Organ.BARREL_ORGAN.getId())
+                .add(Organ.WIND_CHEST.getId());
     }
 }
