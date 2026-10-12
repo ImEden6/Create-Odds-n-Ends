@@ -1,6 +1,7 @@
 package com.mervyn.createoddsnends.jacquard.client;
 
 import java.util.List;
+import java.util.Map;
 
 import com.mervyn.createoddsnends.jacquard.JacquardCommands;
 import com.mervyn.createoddsnends.jacquard.JacquardHeadBlockEntity;
@@ -35,15 +36,39 @@ final class Showcase {
     }
 
     private static final int SETUP = 60;
-    private static final List<View> VIEWS = List.of(
-            view("lathe_front", 200, -1.5, -11, 3, 4.5, -11, 1.2),
-            view("lathe_angle", 400, 0, -5, 4, 5, -11, 1),
-            view("lathe_close", 600, 2.6, -11, 2.3, 4.5, -11, 1.5),
-            view("lathe_end", 800, 5, -17, 3, 5, -11, 1),
-            view("lathe_back", 1000, 10.5, -8, 4, 5, -11, 1),
-            view("lathe_top", 1200, 5, -11, 9, 5.01, -11, 0),
-            view("lathe_parts", 1350, -4.5, -10, 3.2, -0.5, -10, 0.2));
-    private static final int QUIT = 1450;
+    // ODDSNENDS_SHOWCASE picks which machine the camera visits; everything gets built either way
+    private static final Map<String, List<View>> SETS = Map.of(
+            "lathe", List.of(
+                    view("lathe_front", 200, -1.5, -11, 3, 4.5, -11, 1.2),
+                    view("lathe_angle", 400, 0, -5, 4, 5, -11, 1),
+                    view("lathe_close", 600, 2.6, -11, 2.3, 4.5, -11, 1.5),
+                    view("lathe_end", 800, 5, -17, 3, 5, -11, 1),
+                    view("lathe_back", 1000, 10.5, -8, 4, 5, -11, 1),
+                    view("lathe_top", 1200, 5, -11, 9, 5.01, -11, 0),
+                    view("lathe_parts", 1350, -4.5, -10, 3.2, -0.5, -10, 0.2)),
+            "loom", List.of(
+                    view("front", 200, 0.5, 0, 1.4, 4.5, 0, 1.5),
+                    view("preview_angle", 300, 0.8, -3, 3.2, 4.5, 0, 1.4),
+                    view("harness", 380, 2.2, 0.4, 1.2, 4.6, 0, 1.6),
+                    view("card_chain", 460, 3.5, 4.2, 2.6, 4.8, 1.6, 2.3),
+                    view("top", 540, 3.4, 0, 6.5, 4.6, 0, 1.5),
+                    view("drive_side", 620, 4.2, -4.5, 1.2, 4.5, -1.5, 0.8),
+                    view("back", 700, 9.5, 2, 3, 4.5, 0, 1.2),
+                    view("card_punch", 780, 1.2, -3.4, 1.6, 3, -5, 0.6),
+                    view("tapestries", 860, 1, 1.5, 2.2, 5.5, 5.5, 1.2),
+                    view("race_right_1", 940, 2.6, 1, 2.1, 4.45, 1.25, 1.2),
+                    view("loose_parts", 1020, 4.6, -5.6, 3.4, 4.5, -8, 0.3),
+                    view("front_woven", 1300, 0.5, 0, 1.4, 4.5, 0, 1.5)),
+            "organ", List.of(
+                    view("organ_front", 200, 2, 13, 1.6, 5, 13, 1.1),
+                    view("organ_close", 280, 3.6, 13, 2.4, 5, 13, 1.3),
+                    view("organ_crank_side", 360, 5, 16.5, 1.7, 5, 13, 1.1),
+                    view("organ_back", 440, 8.5, 14.8, 2.2, 5, 13, 1),
+                    view("organ_wind", 520, 0.5, 12, 5.5, 5, 19, 1),
+                    view("organ_pipes", 600, 3.4, 12.2, 2.8, 5, 13, 1.8),
+                    view("chest_close", 680, 2.2, 18.2, 1.9, 4, 19.5, 0.7)));
+    private static final List<View> VIEWS = SETS.getOrDefault(System.getenv().getOrDefault("ODDSNENDS_SHOWCASE", "lathe"), SETS.get("lathe"));
+    private static final int QUIT = VIEWS.get(VIEWS.size() - 1).at + 100;
 
     private static int tick;
     private static BlockPos anchor;
