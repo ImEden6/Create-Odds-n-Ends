@@ -179,9 +179,9 @@ public final class LatheStructure {
     public static void showcase(ServerPlayer player, BlockPos head, Direction facing) {
         Level level = player.serverLevel();
         Direction back = back(facing), front = back.getOpposite();
-        BlockPos.betweenClosed(head.relative(facing, -2).relative(front, 4).below(), head.relative(facing, 4).relative(back, 3).above(3))
+        BlockPos.betweenClosed(head.relative(facing, -2).relative(front, 6).below(), head.relative(facing, 4).relative(back, 3).above(3))
                 .forEach(pos -> level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL));
-        BlockPos.betweenClosed(head.relative(facing, -2).relative(front, 4).below(2), head.relative(facing, 4).relative(back, 3).below(2))
+        BlockPos.betweenClosed(head.relative(facing, -2).relative(front, 6).below(2), head.relative(facing, 4).relative(back, 3).below(2))
                 .forEach(pos -> level.setBlock(pos, Blocks.GRASS_BLOCK.defaultBlockState(), Block.UPDATE_ALL));
 
         for (Spot spot : Stream.concat(LATHE.stream(), TRACER.stream()).toList())
@@ -210,6 +210,10 @@ public final class LatheStructure {
             if (level.getBlockEntity(pos) instanceof TurnedBlockEntity be)
                 be.setShape(shapes[i], woods[i]);
         }
+
+        List<Supplier<? extends Block>> loose = List.of(Tracer.LATHE_HEADSTOCK, Tracer.LATHE_BED, Tracer.LATHE_TAILSTOCK, Tracer.TRACER_HOLDER, Tracer.TRACER_RAIL);
+        for (int i = 0; i < loose.size(); i++)
+            level.setBlock(head.relative(facing, i - 1).relative(front, 5).below(), loose.get(i).get().defaultBlockState().setValue(FACING, facing), Block.UPDATE_ALL);
     }
 
     public static void showcaseRefill(Level level, BlockPos head) {
