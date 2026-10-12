@@ -5,6 +5,7 @@ import static com.mervyn.createoddsnends.lathe.LathePartBlock.FORMED;
 import com.mervyn.createoddsnends.Tracer;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
+import net.createmod.catnip.math.VoxelShaper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,13 +18,19 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class HeadstockBlock extends HorizontalKineticBlock implements IBE<HeadstockBlockEntity> {
+    private static final VoxelShaper SHAPE = VoxelShaper.forHorizontal(Shapes.or(
+            box(1, 0, 4, 15, 2, 15), box(2, 2, 1, 14, 14, 14), box(1, 1, 14, 15, 15, 16)), Direction.NORTH);
 
     public HeadstockBlock(Properties properties) {
         super(properties);
@@ -34,6 +41,11 @@ public class HeadstockBlock extends HorizontalKineticBlock implements IBE<Headst
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FORMED);
         super.createBlockStateDefinition(builder);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE.get(state.getValue(HORIZONTAL_FACING));
     }
 
     @Override
