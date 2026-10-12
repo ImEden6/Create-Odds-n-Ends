@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mervyn.createoddsnends.jacquard.JacquardCommands;
 import com.mervyn.createoddsnends.jacquard.JacquardHeadBlockEntity;
+import com.mervyn.createoddsnends.lathe.LatheStructure;
 import com.mervyn.createoddsnends.organ.OrganCommands;
 
 import net.minecraft.client.Minecraft;
@@ -35,11 +36,13 @@ final class Showcase {
 
     private static final int SETUP = 60;
     private static final List<View> VIEWS = List.of(
-            view("organ_wind", 130, 0.5, 12, 5.5, 5, 19, 1),
-            again("organ_wind_2", 700),
-            again("organ_wind_3", 1300),
-            again("organ_wind_4", 1900));
-    private static final int QUIT = 2160;
+            view("lathe_front", 200, -1.5, -11, 3, 4.5, -11, 1.2),
+            view("lathe_angle", 400, 0, -5, 4, 5, -11, 1),
+            view("lathe_close", 600, 2.6, -11, 2.3, 4.5, -11, 1.5),
+            view("lathe_end", 800, 5, -17, 3, 5, -11, 1),
+            view("lathe_back", 1000, 10.5, -8, 4, 5, -11, 1),
+            view("lathe_top", 1200, 5, -11, 9, 5.01, -11, 0));
+    private static final int QUIT = 1300;
 
     private static int tick;
     private static BlockPos anchor;
@@ -60,6 +63,7 @@ final class Showcase {
             server.execute(() -> {
                 JacquardCommands.showcase(player(server), anchor, ahead);
                 OrganCommands.showcase(player(server), anchor.relative(ahead, 5).relative(ahead.getClockWise(), 13), ahead.getOpposite());
+                LatheStructure.showcase(player(server), lathe(), ahead.getClockWise());
             });
         }
         if (anchor == null)
@@ -67,6 +71,8 @@ final class Showcase {
         for (View view : VIEWS) {
             if (tick == view.at - 50 && view.move)
                 server.execute(() -> moveTo(player(server), view));
+            if (tick == view.at - 130)
+                server.execute(() -> LatheStructure.showcaseRefill(player(server).level(), lathe()));
             if (tick == view.at - 20 && view.move)
                 server.execute(() -> {
                     if (player(server).level().getBlockEntity(anchor.relative(ahead, 5).above(2)) instanceof JacquardHeadBlockEntity head)
@@ -81,6 +87,10 @@ final class Showcase {
 
     private static ServerPlayer player(IntegratedServer server) {
         return server.getPlayerList().getPlayers().get(0);
+    }
+
+    private static BlockPos lathe() {
+        return anchor.relative(ahead, 4).relative(ahead.getCounterClockWise(), 12).above();
     }
 
     private static Vec3 point(double a, double r, double u) {

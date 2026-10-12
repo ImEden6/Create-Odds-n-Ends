@@ -9,15 +9,24 @@ import java.util.stream.Stream;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.mervyn.createoddsnends.Profile;
 import com.mervyn.createoddsnends.Tracer;
+import com.mervyn.createoddsnends.turned.TurnedBlockEntity;
+import com.mervyn.createoddsnends.turned.TurnedBlockItem;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
+import com.simibubi.create.content.kinetics.motor.CreativeMotorBlock;
+import com.simibubi.create.content.kinetics.motor.CreativeMotorBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -164,5 +173,50 @@ public final class LatheStructure {
                 })
                 .findFirst()
                 .orElse(null);
+    }
+
+    // dev showcase: a formed lathe with its tracer row, copying a vase master, and a few finished pieces out front
+    public static void showcase(ServerPlayer player, BlockPos head, Direction facing) {
+        Level level = player.serverLevel();
+        Direction back = back(facing), front = back.getOpposite();
+        BlockPos.betweenClosed(head.relative(facing, -2).relative(front, 4).below(), head.relative(facing, 4).relative(back, 3).above(3))
+                .forEach(pos -> level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL));
+        BlockPos.betweenClosed(head.relative(facing, -2).relative(front, 4).below(2), head.relative(facing, 4).relative(back, 3).below(2))
+                .forEach(pos -> level.setBlock(pos, Blocks.GRASS_BLOCK.defaultBlockState(), Block.UPDATE_ALL));
+
+        for (Spot spot : Stream.concat(LATHE.stream(), TRACER.stream()).toList())
+            if (spot.block != null)
+                level.setBlock(at(head, facing, spot), spot.block.get().defaultBlockState().setValue(FACING, facing), Block.UPDATE_ALL);
+        assemble(level, head, player);
+
+        BlockPos motor = head.relative(facing.getOpposite());
+        level.setBlock(motor, AllBlocks.CREATIVE_MOTOR.get().defaultBlockState().setValue(CreativeMotorBlock.FACING, facing), Block.UPDATE_ALL);
+        if (level.getBlockEntity(motor) instanceof CreativeMotorBlockEntity be)
+            be.generatedSpeed.setValue(32);
+
+        if (level.getBlockEntity(head) instanceof HeadstockBlockEntity be) {
+            ItemStack template = new ItemStack(Tracer.PROFILE_TEMPLATE.get());
+            template.set(Tracer.PROFILE.get(), Profile.BALUSTER);
+            be.template.setStackInSlot(0, template);
+            be.master.setStackInSlot(0, TurnedBlockItem.of(Profile.VASE, Blocks.DARK_OAK_PLANKS));
+        }
+        showcaseRefill(level, head);
+
+        Profile[] shapes = {Profile.BALUSTER, Profile.VASE, Profile.BALUSTER, Profile.VASE};
+        Block[] woods = {Blocks.OAK_PLANKS, Blocks.DARK_OAK_PLANKS, Blocks.BIRCH_PLANKS, Blocks.SPRUCE_PLANKS};
+        for (int i = 0; i < shapes.length; i++) {
+            BlockPos pos = head.relative(facing, i - 1).relative(front, 3).below();
+            level.setBlock(pos, Tracer.TURNED_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
+            if (level.getBlockEntity(pos) instanceof TurnedBlockEntity be)
+                be.setShape(shapes[i], woods[i]);
+        }
+    }
+
+    public static void showcaseRefill(Level level, BlockPos head) {
+        if (level.getBlockEntity(head) instanceof HeadstockBlockEntity be) {
+            be.output.setStackInSlot(0, ItemStack.EMPTY);
+            if (be.input.getStackInSlot(0).isEmpty())
+                be.input.setStackInSlot(0, new ItemStack(Blocks.SPRUCE_PLANKS));
+        }
     }
 }
