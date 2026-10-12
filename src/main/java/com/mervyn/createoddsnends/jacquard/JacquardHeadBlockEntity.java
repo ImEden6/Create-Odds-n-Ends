@@ -377,7 +377,7 @@ public class JacquardHeadBlockEntity extends SmartBlockEntity implements IHaveGo
 
     // loomPhase() on the real pick, moved on by partialTick while weaving. Changed from the
     // preview: it steps per pick instead of per row, a row lands on the cloth when its last pick
-    // is beaten in, and the shuttle travels to +-19.5 so it parks in a shuttle box. With no chain
+    // is beaten in, and the shuttle travels to +-25.5 so it parks in a shuttle box. With no chain
     // the loom rests with nothing on it.
     public Phase phase(float partialTick) {
         Picks picks = picks();
@@ -399,7 +399,7 @@ public class JacquardHeadBlockEntity extends SmartBlockEntity implements IHaveGo
         double R = idle ? 0 : row + (lastOfRow ? Mth.clamp((t - 0.55) / 0.13, 0, 1) : 0);
         int dir = p % 2 == 0 ? 1 : -1;
         double sp = t < 0.2 ? 0 : t < 0.55 ? ease((t - 0.2) / 0.35) : 1;
-        double sx = dir > 0 ? Mth.lerp(sp, -19.5, 19.5) : Mth.lerp(sp, 19.5, -19.5);
+        double sx = dir > 0 ? Mth.lerp(sp, -25.5, 25.5) : Mth.lerp(sp, 25.5, -25.5);
         double cardStep = ease(Mth.clamp((t - 0.85) / 0.15, 0, 1));
         double boxShift = ease(Mth.clamp(t / 0.2, 0, 1));
         return new Phase(shed, beater, R, sx, dir, sp, t >= 0.2 && t < 0.55, p + cardStep, row,
