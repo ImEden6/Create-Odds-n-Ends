@@ -2,7 +2,78 @@
   "parent": "minecraft:block/block",
   "ambientocclusion": false,
   "textures": {
-    "particle": "minecraft:block/spruce_log"
+    "particle": "createoddsnends:block/loom_timber_h5",
+    "t0": "createoddsnends:block/loom_timber_h5",
+    "t1": "createoddsnends:block/loom_timber_end"
   },
-  "elements": []
+  "elements": [
+    {
+      "from": [
+        0,
+        3,
+        10
+      ],
+      "to": [
+        16,
+        8,
+        15
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            0,
+            5,
+            16,
+            10
+          ],
+          "texture": "#t0"
+        },
+        "down": {
+          "uv": [
+            0,
+            5,
+            16,
+            10
+          ],
+          "texture": "#t0"
+        },
+        "north": {
+          "uv": [
+            0,
+            5,
+            16,
+            10
+          ],
+          "texture": "#t0"
+        },
+        "south": {
+          "uv": [
+            0,
+            5,
+            16,
+            10
+          ],
+          "texture": "#t0"
+        },
+        "east": {
+          "uv": [
+            5,
+            5,
+            10,
+            10
+          ],
+          "texture": "#t1"
+        },
+        "west": {
+          "uv": [
+            5,
+            5,
+            10,
+            10
+          ],
+          "texture": "#t1"
+        }
+      }
+    }
+  ]
 }

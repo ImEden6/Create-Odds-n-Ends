@@ -74,6 +74,29 @@ final class Mesh {
         face(s, new Vector3f(x0, y1, z1), new Vector3f(0, 0, -1), dz, new Vector3f(0, -1, 0), dy, new Vector3f(-1, 0, 0), rgb);
     }
 
+    // A timber in one of the loom's woods ("post" or "timber") with its grain along an axis (0 x,
+    // 1 y, 2 z). Each face picks its texture the way tools/jacquard.py's face_tex does: the strip
+    // drawn for that width, turned to follow the grain, or end grain across it.
+    void beam(String wood, int grain, float x0, float y0, float z0, float x1, float y1, float z1) {
+        float[] d = {x1 - x0, y1 - y0, z1 - z0};
+        TextureAtlasSprite top = wood(wood, grain, 1, 0, 2, d), front = wood(wood, grain, 2, 0, 1, d), side = wood(wood, grain, 0, 2, 1, d);
+        face(top, new Vector3f(x0, y1, z1), new Vector3f(1, 0, 0), d[0], new Vector3f(0, 0, -1), d[2], new Vector3f(0, 1, 0), WHITE);
+        face(top, new Vector3f(x0, y0, z0), new Vector3f(1, 0, 0), d[0], new Vector3f(0, 0, 1), d[2], new Vector3f(0, -1, 0), WHITE);
+        face(front, new Vector3f(x1, y1, z1), new Vector3f(-1, 0, 0), d[0], new Vector3f(0, -1, 0), d[1], new Vector3f(0, 0, 1), WHITE);
+        face(front, new Vector3f(x0, y1, z0), new Vector3f(1, 0, 0), d[0], new Vector3f(0, -1, 0), d[1], new Vector3f(0, 0, -1), WHITE);
+        face(side, new Vector3f(x1, y1, z0), new Vector3f(0, 0, 1), d[2], new Vector3f(0, -1, 0), d[1], new Vector3f(1, 0, 0), WHITE);
+        face(side, new Vector3f(x0, y1, z1), new Vector3f(0, 0, -1), d[2], new Vector3f(0, -1, 0), d[1], new Vector3f(-1, 0, 0), WHITE);
+    }
+
+    private static TextureAtlasSprite wood(String wood, int grain, int normal, int u, int v, float[] d) {
+        String name = "createoddsnends:block/loom_" + wood + "_";
+        if (normal == grain)
+            return sprite(name + "end");
+        float across = d[u == grain ? v : u];
+        int size = Math.round(across);
+        return sprite(name + (u == grain ? "h" : "v") + (Math.abs(across - size) < 1e-3f && size >= 2 && size <= 8 ? String.valueOf(size) : ""));
+    }
+
     // tiles are centred on the face, the same way tools/jacquard.py lays out the baked parts
     private void face(TextureAtlasSprite s, Vector3f o, Vector3f u, float uLen, Vector3f v, float vLen, Vector3f n, int rgb) {
         float uStart = start(uLen), vStart = start(vLen);
@@ -87,7 +110,7 @@ final class Mesh {
 
     private static float start(float len) {
         int tiles = Math.max(1, (int) Math.ceil(len / 16 - 1e-4f));
-        return -(tiles * 16 - len) / 2;
+        return -(float) Math.floor((tiles * 16 - len) / 2);
     }
 
     // A shaft along one axis (0 x, 1 y, 2 z), textured the way Create's shaft model is: the 4 px
