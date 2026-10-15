@@ -73,10 +73,12 @@ public final class OrganCommands {
 
         level.setBlock(at, Organ.BARREL_ORGAN.get().defaultBlockState().setValue(HorizontalKineticBlock.HORIZONTAL_FACING, front), Block.UPDATE_ALL);
         level.setBlock(at.above(), Organ.BARREL_ORGAN_TOP.get().defaultBlockState().setValue(BarrelOrganTopBlock.FACING, front), Block.UPDATE_ALL);
-        BlockPos motor = at.relative(back);
-        level.setBlock(motor, AllBlocks.CREATIVE_MOTOR.get().defaultBlockState().setValue(CreativeMotorBlock.FACING, front), Block.UPDATE_ALL);
-        if (level.getBlockEntity(motor) instanceof CreativeMotorBlockEntity be)
-            be.generatedSpeed.setValue(96);
+        if (!Boolean.getBoolean("createoddsnends.nocabinet")) {
+            BlockPos motor = at.relative(back);
+            level.setBlock(motor, AllBlocks.CREATIVE_MOTOR.get().defaultBlockState().setValue(CreativeMotorBlock.FACING, front), Block.UPDATE_ALL);
+            if (level.getBlockEntity(motor) instanceof CreativeMotorBlockEntity be)
+                be.generatedSpeed.setValue(96);
+        }
 
         BlockState line = Organ.WIND_LINE.get().defaultBlockState();
         for (int i = 1; i <= 9; i++) {
