@@ -45,7 +45,9 @@ final class Showcase {
                     view("lathe_end", 800, 5, -17, 3, 5, -11, 1),
                     view("lathe_back", 1000, 10.5, -8, 4, 5, -11, 1),
                     view("lathe_top", 1200, 5, -11, 9, 5.01, -11, 0),
-                    view("lathe_parts", 1350, -4.5, -10, 3.2, -0.5, -10, 0.2)),
+                    view("lathe_parts", 1350, -4.5, -10, 3.2, -0.5, -10, 0.2),
+                    view("lathe_end_far", 1500, 5, -5, 3, 5, -11, 1),
+                    view("lathe_end_high", 1650, 7, -15.5, 4, 5, -11, 1)),
             "loom", List.of(
                     view("front", 200, 0.5, 0, 1.4, 4.5, 0, 1.5),
                     view("preview_angle", 300, 0.8, -3, 3.2, 4.5, 0, 1.4),
