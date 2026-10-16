@@ -1,5 +1,7 @@
 package com.mervyn.createoddsnends.organ;
 
+import java.util.List;
+
 import com.mervyn.createoddsnends.Tracer;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.api.registry.CreateRegistries;
@@ -50,6 +52,18 @@ public final class Organ {
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2f).sound(SoundType.WOOD).noOcclusion()));
     public static final DeferredBlock<WindLineBlock> WIND_LINE = BLOCKS.register("wind_line", () -> new WindLineBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(1.5f).sound(SoundType.COPPER).noOcclusion()));
+    public static final DeferredBlock<InstrumentBlock> KICK_DRUM = instrument("kick_drum", Instrument.KICK_DRUM, SoundType.WOOD);
+    public static final DeferredBlock<InstrumentBlock> SNARE_DRUM = instrument("snare_drum", Instrument.SNARE_DRUM, SoundType.WOOD);
+    public static final DeferredBlock<InstrumentBlock> REED_PIPE = instrument("reed_pipe", Instrument.REED_PIPE, SoundType.COPPER);
+    public static final DeferredBlock<InstrumentBlock> WOOD_PIPE = instrument("wood_pipe", Instrument.WOOD_PIPE, SoundType.WOOD);
+    public static final DeferredBlock<InstrumentBlock> REED_BOX = instrument("reed_box", Instrument.REED_BOX, SoundType.WOOD);
+
+    private static DeferredBlock<InstrumentBlock> instrument(String name, Instrument instrument, SoundType sound) {
+        DeferredBlock<InstrumentBlock> block = BLOCKS.register(name, () -> new InstrumentBlock(instrument,
+                BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(1f).sound(sound).noOcclusion().pushReaction(PushReaction.DESTROY)));
+        ITEMS.registerSimpleBlockItem(block);
+        return block;
+    }
 
     public static final DeferredItem<BlockItem> BARREL_ORGAN_ITEM = ITEMS.registerSimpleBlockItem(BARREL_ORGAN);
     public static final DeferredItem<BlockItem> WIND_CHEST_ITEM = ITEMS.registerSimpleBlockItem(WIND_CHEST);
@@ -60,6 +74,9 @@ public final class Organ {
             () -> BlockEntityType.Builder.of((pos, state) -> new BarrelOrganBlockEntity(Organ.BARREL_ORGAN_BE.get(), pos, state), BARREL_ORGAN.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WindChestBlockEntity>> WIND_CHEST_BE = BLOCK_ENTITIES.register("wind_chest",
             () -> BlockEntityType.Builder.of((pos, state) -> new WindChestBlockEntity(Organ.WIND_CHEST_BE.get(), pos, state), WIND_CHEST.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InstrumentBlockEntity>> INSTRUMENT_BE = BLOCK_ENTITIES.register("instrument",
+            () -> BlockEntityType.Builder.of((pos, state) -> new InstrumentBlockEntity(Organ.INSTRUMENT_BE.get(), pos, state),
+                    KICK_DRUM.get(), SNARE_DRUM.get(), REED_PIPE.get(), WOOD_PIPE.get(), REED_BOX.get()).build(null));
 
     public static final DeferredHolder<ArmInteractionPointType, OrganArmPoint.Type> ORGAN_ARM_POINT = ARM_POINTS.register("barrel_organ", OrganArmPoint.Type::new);
 
@@ -106,5 +123,7 @@ public final class Organ {
         event.accept(BARREL_ORGAN_ITEM.get());
         event.accept(WIND_CHEST_ITEM.get());
         event.accept(WIND_LINE_ITEM.get());
+        for (DeferredBlock<InstrumentBlock> block : List.of(KICK_DRUM, SNARE_DRUM, REED_PIPE, WOOD_PIPE, REED_BOX))
+            event.accept(block.get());
     }
 }

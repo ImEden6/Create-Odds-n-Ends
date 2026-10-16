@@ -8,9 +8,11 @@ import java.util.WeakHashMap;
 import org.jetbrains.annotations.Nullable;
 
 import com.mervyn.createoddsnends.organ.BarrelOrganBlockEntity;
+import com.mervyn.createoddsnends.organ.InstrumentBlockEntity;
 import com.mervyn.createoddsnends.organ.Organ;
 import com.mervyn.createoddsnends.organ.Score;
 import com.mervyn.createoddsnends.organ.Timbre;
+import com.mervyn.createoddsnends.organ.WindChestBlockEntity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -81,12 +83,21 @@ public final class OrganPlayback {
             if (sound != null)
                 held.add(sound);
         }
+        Level level = be.getLevel();
+        for (BlockPos chestPos : be.clientChests())
+            if (level.getBlockEntity(chestPos) instanceof WindChestBlockEntity chest && level.getBlockEntity(chestPos.above()) instanceof InstrumentBlockEntity instrument)
+                for (int i = score.firstAt(row); i < notes.size() && notes.get(i).row() == row; i++)
+                    InstrumentPlayback.play(instrument, chest.voiceColour(), notes.get(i), be.rowsPerTick());
     }
 
     // plays one note at this spot, null for drums since those are fire and forget
     @Nullable
     public static OrganNoteSound sound(Level level, BlockPos pos, Score.Note note, float rowsPerTick) {
-        Timbre t = Timbre.of(note.voice(), note.column());
+        return sound(level, pos, Timbre.of(note.voice(), note.column()), note, rowsPerTick);
+    }
+
+    @Nullable
+    static OrganNoteSound sound(Level level, BlockPos pos, Timbre t, Score.Note note, float rowsPerTick) {
         if (t.drum()) {
             level.playLocalSound(pos.getX() + .5, pos.getY() + 1, pos.getZ() + .5, (t == Timbre.KICK ? Organ.KICK : Organ.SNARE).get(), SoundSource.RECORDS, 1, 1, false);
             return null;
