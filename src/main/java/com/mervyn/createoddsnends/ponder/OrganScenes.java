@@ -1,6 +1,8 @@
 package com.mervyn.createoddsnends.ponder;
 
 import com.mervyn.createoddsnends.organ.BarrelOrganBlockEntity;
+import com.mervyn.createoddsnends.organ.InstrumentBlock;
+import com.mervyn.createoddsnends.organ.InstrumentBlockEntity;
 import com.mervyn.createoddsnends.organ.Organ;
 import com.mervyn.createoddsnends.organ.ScoreSync;
 import com.mervyn.createoddsnends.organ.WindChestBlockEntity;
@@ -15,6 +17,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
@@ -136,7 +140,7 @@ public final class OrganScenes {
 
     public static void windNetwork(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
-        scene.title("wind_network", "Wind Chests and Whistles");
+        scene.title("wind_network", "Wind Chests, Whistles and Instruments");
         scene.configureBasePlate(0, 0, 7);
         Selection kinetics = util.select().fromTo(3, 1, 5, 3, 1, 6);
         scene.world().setKineticSpeed(kinetics, 0);
@@ -218,6 +222,57 @@ public final class OrganScenes {
             scene.idle(8);
         }
         scene.idle(30);
+
+        Selection tops = util.select().fromTo(1, 2, 2, 5, 4, 2);
+        scene.world().hideSection(tops, Direction.UP);
+        scene.idle(15);
+        scene.world().setBlocks(tops, Blocks.AIR.defaultBlockState(), false);
+        mount(scene, small, Organ.KICK_DRUM.get());
+        mount(scene, medium, Organ.REED_PIPE.get());
+        mount(scene, large, Organ.REED_BOX.get());
+        scene.world().showSection(util.select().fromTo(1, 2, 2, 5, 2, 2), Direction.DOWN);
+        scene.idle(10);
+        scene.overlay().showText(90)
+                .attachKeyFrame()
+                .text("Pipes and the reed box go on chests too. They play every note the filter lets through, at its real pitch, up to 6 at once")
+                .pointAt(util.vector().topOf(medium.above()))
+                .placeNearTarget();
+        for (int i = 0; i < 4; i++) {
+            strike(scene, medium.above(), 8);
+            strike(scene, large.above(), 8);
+            scene.idle(10);
+            strike(scene, small.above(), 0);
+            scene.idle(10);
+        }
+        scene.idle(20);
+
+        scene.world().hideSection(util.select().position(small.above()), Direction.UP);
+        scene.world().hideSection(util.select().position(large.above()), Direction.UP);
+        scene.idle(15);
+        mount(scene, small, Organ.SNARE_DRUM.get());
+        mount(scene, large, Organ.WOOD_PIPE.get());
+        scene.world().showSection(util.select().position(small.above()), Direction.DOWN);
+        scene.world().showSection(util.select().position(large.above()), Direction.DOWN);
+        scene.idle(10);
+        scene.overlay().showText(90)
+                .attachKeyFrame()
+                .text("Kick and snare drums only play their own lane of the score, whatever the filter says")
+                .pointAt(util.vector().topOf(small.above()))
+                .placeNearTarget();
+        for (int i = 0; i < 4; i++) {
+            strike(scene, small.above(), 0);
+            strike(scene, large.above(), 12);
+            scene.idle(20);
+        }
+        scene.idle(20);
+    }
+
+    private static void mount(CreateSceneBuilder scene, BlockPos chest, Block instrument) {
+        scene.world().setBlock(chest.above(), instrument.defaultBlockState().setValue(InstrumentBlock.FACING, Direction.SOUTH), false);
+    }
+
+    private static void strike(CreateSceneBuilder scene, BlockPos pos, int ticks) {
+        scene.world().modifyBlockEntity(pos, InstrumentBlockEntity.class, be -> be.strike(ticks));
     }
 
     public static void sequencer(SceneBuilder builder, SceneBuildingUtil util) {

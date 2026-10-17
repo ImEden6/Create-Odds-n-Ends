@@ -40,6 +40,8 @@ public class TracerPonder implements PonderPlugin {
         helper.forComponents(Organ.BARREL_ORGAN.getId(), Organ.WIND_CHEST.getId(), Organ.WIND_LINE.getId())
                 .addStoryBoard("organ/wind", OrganScenes::windNetwork)
                 .addStoryBoard("organ/sequencer", OrganScenes::sequencer);
+        helper.forComponents(Organ.KICK_DRUM.getId(), Organ.SNARE_DRUM.getId(), Organ.REED_PIPE.getId(), Organ.WOOD_PIPE.getId(), Organ.REED_BOX.getId())
+                .addStoryBoard("organ/wind", OrganScenes::windNetwork);
         helper.forComponents(Jacquard.CARD_PUNCH.getId(), Jacquard.BLANK_CARD.getId(), Jacquard.PUNCHED_CARD_CHAIN.getId())
                 .addStoryBoard("jacquard/card_punch", JacquardScenes::punch);
     }
