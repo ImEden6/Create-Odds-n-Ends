@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "B": {
+      "tag": "c:plates/brass"
+    }
+  },
+  "pattern": [
+    "LLL",
+    "PBP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createoddsnends:reed_box"
+  }
+}

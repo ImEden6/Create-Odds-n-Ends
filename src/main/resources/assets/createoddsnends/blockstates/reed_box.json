@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=south": {
+      "model": "createoddsnends:block/instrument/reed_box"
+    },
+    "facing=west": {
+      "model": "createoddsnends:block/instrument/reed_box",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "createoddsnends:block/instrument/reed_box",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "createoddsnends:block/instrument/reed_box",
+      "y": 270
+    }
+  }
+}

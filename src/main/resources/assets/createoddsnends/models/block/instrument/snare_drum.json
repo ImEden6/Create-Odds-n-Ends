@@ -1,0 +1,747 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "createoddsnends:block/organ/gold",
+    "drum_head": "createoddsnends:block/organ/drum_head",
+    "drum_shell": "createoddsnends:block/organ/drum_shell",
+    "gold": "createoddsnends:block/organ/gold",
+    "iron": "minecraft:block/iron_block"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        5
+      ],
+      "to": [
+        12,
+        1,
+        13
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            4,
+            15,
+            12,
+            16
+          ],
+          "texture": "#gold"
+        },
+        "south": {
+          "uv": [
+            4,
+            15,
+            12,
+            16
+          ],
+          "texture": "#gold"
+        },
+        "east": {
+          "uv": [
+            3,
+            15,
+            11,
+            16
+          ],
+          "texture": "#gold"
+        },
+        "west": {
+          "uv": [
+            5,
+            15,
+            13,
+            16
+          ],
+          "texture": "#gold"
+        },
+        "up": {
+          "uv": [
+            4,
+            5,
+            12,
+            13
+          ],
+          "texture": "#gold"
+        },
+        "down": {
+          "uv": [
+            4,
+            3,
+            12,
+            11
+          ],
+          "texture": "#gold"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        1,
+        8.5
+      ],
+      "to": [
+        8.5,
+        6,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            7.5,
+            10,
+            8.5,
+            15
+          ],
+          "texture": "#iron"
+        },
+        "south": {
+          "uv": [
+            7.5,
+            10,
+            8.5,
+            15
+          ],
+          "texture": "#iron"
+        },
+        "east": {
+          "uv": [
+            6.5,
+            10,
+            7.5,
+            15
+          ],
+          "texture": "#iron"
+        },
+        "west": {
+          "uv": [
+            8.5,
+            10,
+            9.5,
+            15
+          ],
+          "texture": "#iron"
+        },
+        "up": {
+          "uv": [
+            7.5,
+            8.5,
+            8.5,
+            9.5
+          ],
+          "texture": "#iron"
+        },
+        "down": {
+          "uv": [
+            7.5,
+            6.5,
+            8.5,
+            7.5
+          ],
+          "texture": "#iron"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        6,
+        7.906
+      ],
+      "to": [
+        13.5,
+        10,
+        10.094
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2.5,
+            6,
+            13.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "south": {
+          "uv": [
+            2.5,
+            6,
+            13.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "east": {
+          "uv": [
+            5.906,
+            6,
+            8.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "west": {
+          "uv": [
+            7.906,
+            6,
+            10.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "up": {
+          "uv": [
+            2.5,
+            7.906,
+            13.5,
+            10.094
+          ],
+          "texture": "#drum_head"
+        },
+        "down": {
+          "uv": [
+            2.5,
+            5.906,
+            13.5,
+            8.094
+          ],
+          "texture": "#drum_head"
+        }
+      }
+    },
+    {
+      "from": [
+        6.906,
+        6,
+        3.5
+      ],
+      "to": [
+        9.094,
+        9.99,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            6.906,
+            6.01,
+            9.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "south": {
+          "uv": [
+            6.906,
+            6.01,
+            9.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "east": {
+          "uv": [
+            1.5,
+            6.01,
+            12.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "west": {
+          "uv": [
+            3.5,
+            6.01,
+            14.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "up": {
+          "uv": [
+            6.906,
+            3.5,
+            9.094,
+            14.5
+          ],
+          "texture": "#drum_head"
+        },
+        "down": {
+          "uv": [
+            6.906,
+            1.5,
+            9.094,
+            12.5
+          ],
+          "texture": "#drum_head"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        6,
+        7.906
+      ],
+      "to": [
+        13.5,
+        9.98,
+        10.094
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2.5,
+            6.02,
+            13.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "south": {
+          "uv": [
+            2.5,
+            6.02,
+            13.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "east": {
+          "uv": [
+            5.906,
+            6.02,
+            8.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "west": {
+          "uv": [
+            7.906,
+            6.02,
+            10.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "up": {
+          "uv": [
+            2.5,
+            7.906,
+            13.5,
+            10.094
+          ],
+          "texture": "#drum_head"
+        },
+        "down": {
+          "uv": [
+            2.5,
+            5.906,
+            13.5,
+            8.094
+          ],
+          "texture": "#drum_head"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          9
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        6.906,
+        6,
+        3.5
+      ],
+      "to": [
+        9.094,
+        9.97,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            6.906,
+            6.03,
+            9.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "south": {
+          "uv": [
+            6.906,
+            6.03,
+            9.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "east": {
+          "uv": [
+            1.5,
+            6.03,
+            12.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "west": {
+          "uv": [
+            3.5,
+            6.03,
+            14.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "up": {
+          "uv": [
+            6.906,
+            3.5,
+            9.094,
+            14.5
+          ],
+          "texture": "#drum_head"
+        },
+        "down": {
+          "uv": [
+            6.906,
+            1.5,
+            9.094,
+            12.5
+          ],
+          "texture": "#drum_head"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          9
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        2.5,
+        6,
+        7.906
+      ],
+      "to": [
+        13.5,
+        9.96,
+        10.094
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2.5,
+            6.04,
+            13.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "south": {
+          "uv": [
+            2.5,
+            6.04,
+            13.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "east": {
+          "uv": [
+            5.906,
+            6.04,
+            8.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "west": {
+          "uv": [
+            7.906,
+            6.04,
+            10.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "up": {
+          "uv": [
+            2.5,
+            7.906,
+            13.5,
+            10.094
+          ],
+          "texture": "#drum_head"
+        },
+        "down": {
+          "uv": [
+            2.5,
+            5.906,
+            13.5,
+            8.094
+          ],
+          "texture": "#drum_head"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          9
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        6.906,
+        6,
+        3.5
+      ],
+      "to": [
+        9.094,
+        9.95,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            6.906,
+            6.05,
+            9.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "south": {
+          "uv": [
+            6.906,
+            6.05,
+            9.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "east": {
+          "uv": [
+            1.5,
+            6.05,
+            12.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "west": {
+          "uv": [
+            3.5,
+            6.05,
+            14.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "up": {
+          "uv": [
+            6.906,
+            3.5,
+            9.094,
+            14.5
+          ],
+          "texture": "#drum_head"
+        },
+        "down": {
+          "uv": [
+            6.906,
+            1.5,
+            9.094,
+            12.5
+          ],
+          "texture": "#drum_head"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          9
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        2.5,
+        6,
+        7.906
+      ],
+      "to": [
+        13.5,
+        9.94,
+        10.094
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2.5,
+            6.06,
+            13.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "south": {
+          "uv": [
+            2.5,
+            6.06,
+            13.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "east": {
+          "uv": [
+            5.906,
+            6.06,
+            8.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "west": {
+          "uv": [
+            7.906,
+            6.06,
+            10.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "up": {
+          "uv": [
+            2.5,
+            7.906,
+            13.5,
+            10.094
+          ],
+          "texture": "#drum_head"
+        },
+        "down": {
+          "uv": [
+            2.5,
+            5.906,
+            13.5,
+            8.094
+          ],
+          "texture": "#drum_head"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          9
+        ],
+        "axis": "y",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        6.906,
+        6,
+        3.5
+      ],
+      "to": [
+        9.094,
+        9.93,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            6.906,
+            6.07,
+            9.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "south": {
+          "uv": [
+            6.906,
+            6.07,
+            9.094,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "east": {
+          "uv": [
+            1.5,
+            6.07,
+            12.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "west": {
+          "uv": [
+            3.5,
+            6.07,
+            14.5,
+            10
+          ],
+          "texture": "#drum_shell"
+        },
+        "up": {
+          "uv": [
+            6.906,
+            3.5,
+            9.094,
+            14.5
+          ],
+          "texture": "#drum_head"
+        },
+        "down": {
+          "uv": [
+            6.906,
+            1.5,
+            9.094,
+            12.5
+          ],
+          "texture": "#drum_head"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          9
+        ],
+        "axis": "y",
+        "angle": -22.5
+      }
+    }
+  ]
+}

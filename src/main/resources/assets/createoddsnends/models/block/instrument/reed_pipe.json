@@ -1,0 +1,146 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "createoddsnends:block/organ/gold",
+    "gold": "createoddsnends:block/organ/gold"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        0,
+        4.5
+      ],
+      "to": [
+        11.5,
+        1,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            4.5,
+            15,
+            11.5,
+            16
+          ],
+          "texture": "#gold"
+        },
+        "south": {
+          "uv": [
+            4.5,
+            15,
+            11.5,
+            16
+          ],
+          "texture": "#gold"
+        },
+        "east": {
+          "uv": [
+            4.5,
+            15,
+            11.5,
+            16
+          ],
+          "texture": "#gold"
+        },
+        "west": {
+          "uv": [
+            4.5,
+            15,
+            11.5,
+            16
+          ],
+          "texture": "#gold"
+        },
+        "up": {
+          "uv": [
+            4.5,
+            4.5,
+            11.5,
+            11.5
+          ],
+          "texture": "#gold"
+        },
+        "down": {
+          "uv": [
+            4.5,
+            4.5,
+            11.5,
+            11.5
+          ],
+          "texture": "#gold"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        1,
+        5.5
+      ],
+      "to": [
+        10.5,
+        2,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            5.5,
+            14,
+            10.5,
+            15
+          ],
+          "texture": "#gold"
+        },
+        "south": {
+          "uv": [
+            5.5,
+            14,
+            10.5,
+            15
+          ],
+          "texture": "#gold"
+        },
+        "east": {
+          "uv": [
+            5.5,
+            14,
+            10.5,
+            15
+          ],
+          "texture": "#gold"
+        },
+        "west": {
+          "uv": [
+            5.5,
+            14,
+            10.5,
+            15
+          ],
+          "texture": "#gold"
+        },
+        "up": {
+          "uv": [
+            5.5,
+            5.5,
+            10.5,
+            10.5
+          ],
+          "texture": "#gold"
+        },
+        "down": {
+          "uv": [
+            5.5,
+            5.5,
+            10.5,
+            10.5
+          ],
+          "texture": "#gold"
+        }
+      }
+    }
+  ]
+}
