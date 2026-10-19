@@ -4,9 +4,9 @@
   "textures": {
     "particle": "createoddsnends:block/organ/gold",
     "drum_head": "createoddsnends:block/organ/drum_head",
-    "drum_shell": "createoddsnends:block/organ/drum_shell",
     "gold": "createoddsnends:block/organ/gold",
     "iron": "minecraft:block/iron_block",
+    "snare_shell": "createoddsnends:block/organ/snare_shell",
     "spruce": "minecraft:block/spruce_planks"
   },
   "elements": [
@@ -165,7 +165,7 @@
             13.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "south": {
           "uv": [
@@ -174,7 +174,7 @@
             13.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "east": {
           "uv": [
@@ -183,7 +183,7 @@
             8.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "west": {
           "uv": [
@@ -192,7 +192,7 @@
             10.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "up": {
           "uv": [
@@ -233,7 +233,7 @@
             9.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "south": {
           "uv": [
@@ -242,7 +242,7 @@
             9.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "east": {
           "uv": [
@@ -251,7 +251,7 @@
             12.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "west": {
           "uv": [
@@ -260,7 +260,7 @@
             14.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "up": {
           "uv": [
@@ -301,7 +301,7 @@
             13.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "south": {
           "uv": [
@@ -310,7 +310,7 @@
             13.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "east": {
           "uv": [
@@ -319,7 +319,7 @@
             8.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "west": {
           "uv": [
@@ -328,7 +328,7 @@
             10.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "up": {
           "uv": [
@@ -378,7 +378,7 @@
             9.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "south": {
           "uv": [
@@ -387,7 +387,7 @@
             9.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "east": {
           "uv": [
@@ -396,7 +396,7 @@
             12.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "west": {
           "uv": [
@@ -405,7 +405,7 @@
             14.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "up": {
           "uv": [
@@ -455,7 +455,7 @@
             13.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "south": {
           "uv": [
@@ -464,7 +464,7 @@
             13.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "east": {
           "uv": [
@@ -473,7 +473,7 @@
             8.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "west": {
           "uv": [
@@ -482,7 +482,7 @@
             10.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "up": {
           "uv": [
@@ -532,7 +532,7 @@
             9.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "south": {
           "uv": [
@@ -541,7 +541,7 @@
             9.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "east": {
           "uv": [
@@ -550,7 +550,7 @@
             12.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "west": {
           "uv": [
@@ -559,7 +559,7 @@
             14.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "up": {
           "uv": [
@@ -609,7 +609,7 @@
             13.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "south": {
           "uv": [
@@ -618,7 +618,7 @@
             13.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "east": {
           "uv": [
@@ -627,7 +627,7 @@
             8.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "west": {
           "uv": [
@@ -636,7 +636,7 @@
             10.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "up": {
           "uv": [
@@ -686,7 +686,7 @@
             9.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "south": {
           "uv": [
@@ -695,7 +695,7 @@
             9.094,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "east": {
           "uv": [
@@ -704,7 +704,7 @@
             12.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "west": {
           "uv": [
@@ -713,7 +713,7 @@
             14.5,
             10
           ],
-          "texture": "#drum_shell"
+          "texture": "#snare_shell"
         },
         "up": {
           "uv": [
