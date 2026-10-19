@@ -77,7 +77,7 @@ public final class OrganPlayback {
                 be.drumHit = be.getLevel().getGameTime();
             else if (t == Timbre.MELODY || t == Timbre.CHORD)
                 be.pipeLit[(note.column() * 7) % 9] = 1;
-            if (be.mutes(note.voice()))
+            if (be.mutes(note))
                 continue;
             OrganNoteSound sound = sound(be.getLevel(), pos, note, be.rowsPerTick());
             if (sound != null)
