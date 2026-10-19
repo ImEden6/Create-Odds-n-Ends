@@ -1,6 +1,7 @@
 package com.mervyn.createoddsnends.organ;
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.decoration.steamWhistle.WhistleBlock;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.registries.DeferredBlock;
 
 // debug only: /oddsnends organ score <seed> <style> <bars> <voices> <transpose>
 public final class OrganCommands {
@@ -64,7 +66,9 @@ public final class OrganCommands {
     }
 
     // dev showcase: a looping organ facing the camera, fed by a motor at the back, with a wind line
-    // out to twelve chests with whistles, like the preview's wind chest view
+    // out to twelve chests, the front row carrying the five instruments, the rest whistles
+    private static final List<DeferredBlock<InstrumentBlock>> INSTRUMENTS = List.of(Organ.REED_PIPE, Organ.WOOD_PIPE, Organ.REED_BOX, Organ.KICK_DRUM, Organ.SNARE_DRUM);
+
     public static void showcase(ServerPlayer player, BlockPos at, Direction front) {
         ServerLevel level = player.serverLevel();
         Direction back = front.getOpposite(), left = front.getClockWise(), right = front.getCounterClockWise();
@@ -91,6 +95,10 @@ public final class OrganCommands {
             level.setBlock(chest, Organ.WIND_CHEST.get().defaultBlockState().setValue(WindChestBlock.FACING, front), Block.UPDATE_ALL);
             if (pc >= 6 && pc < 9 && level.getBlockEntity(chest) instanceof WindChestBlockEntity be)
                 be.voice.setFilter(new ItemStack(pc == 6 ? Items.BLUE_DYE : pc == 7 ? Items.GREEN_DYE : Items.RED_DYE));
+            if (pc >= 6 && pc < 11) {
+                level.setBlock(chest.above(), INSTRUMENTS.get(pc - 6).get().defaultBlockState().setValue(InstrumentBlock.FACING, front), Block.UPDATE_ALL);
+                continue;
+            }
             level.setBlock(chest.above(), AllBlocks.STEAM_WHISTLE.getDefaultState().setValue(WhistleBlock.FACING, front), Block.UPDATE_ALL);
             for (int grow = 0; grow < (11 - pc) / 2; grow++)
                 WhistleBlock.incrementSize(level, chest.above());
