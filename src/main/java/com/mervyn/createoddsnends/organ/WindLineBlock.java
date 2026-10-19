@@ -67,14 +67,14 @@ public class WindLineBlock extends Block {
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         if (!level.isClientSide)
-            WindNetwork.changed();
+            WindNetwork.changed(level);
     }
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         super.onRemove(state, level, pos, newState, movedByPiston);
         if (!level.isClientSide)
-            WindNetwork.changed();
+            WindNetwork.changed(level);
     }
 
     @Override

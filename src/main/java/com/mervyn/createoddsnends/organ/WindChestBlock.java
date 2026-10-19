@@ -41,14 +41,20 @@ public class WindChestBlock extends HorizontalDirectionalBlock implements IBE<Wi
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         if (!level.isClientSide)
-            WindNetwork.changed();
+            WindNetwork.changed(level);
     }
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         IBE.onRemove(state, level, pos, newState);
         if (!level.isClientSide)
-            WindNetwork.changed();
+            WindNetwork.changed(level);
+    }
+
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos from, boolean movedByPiston) {
+        if (!level.isClientSide && from.equals(pos.above()) && level.getBlockEntity(pos) instanceof WindChestBlockEntity chest && chest.topChanged())
+            WindNetwork.changed(level);
     }
 
     @Override

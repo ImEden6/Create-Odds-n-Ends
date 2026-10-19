@@ -22,6 +22,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -37,6 +38,8 @@ public class WindChestBlockEntity extends SmartBlockEntity {
     FilteringBehaviour voice;
     ScrollOptionBehaviour<MatchMode> match;
     private boolean blowing;
+    @Nullable
+    private Block top;
     private long fedAt, wantedAt;
 
     public WindChestBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -46,7 +49,10 @@ public class WindChestBlockEntity extends SmartBlockEntity {
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         voice = new FilteringBehaviour(this, new VoiceSlot()).withPredicate(stack -> stack.getItem() instanceof DyeItem)
-                .withCallback(stack -> WindNetwork.changed());
+                .withCallback(stack -> {
+                    if (level != null)
+                        WindNetwork.changed(level);
+                });
         behaviours.add(voice);
         match = new ScrollOptionBehaviour<>(MatchMode.class, Component.translatable("createoddsnends.organ.match"), this, new MatchSlot());
         behaviours.add(match);
@@ -61,7 +67,7 @@ public class WindChestBlockEntity extends SmartBlockEntity {
     public void initialize() {
         super.initialize();
         if (!level.isClientSide) {
-            WindNetwork.changed();
+            WindNetwork.changed(level);
             level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
         }
     }
@@ -70,7 +76,7 @@ public class WindChestBlockEntity extends SmartBlockEntity {
     public void invalidate() {
         super.invalidate();
         if (level != null && !level.isClientSide)
-            WindNetwork.changed();
+            WindNetwork.changed(level);
     }
 
     @Override
@@ -102,6 +108,15 @@ public class WindChestBlockEntity extends SmartBlockEntity {
             above = level.getBlockState(top.above());
         }
         return top.getY() + rim / 16f;
+    }
+
+    // what sits on top for the organ's count and cover: one of ours, a whistle, or nothing that plays
+    boolean topChanged() {
+        BlockState state = level.getBlockState(worldPosition.above());
+        Block now = state.getBlock() instanceof InstrumentBlock || WindChestBlock.whistleOnTop(state) ? state.getBlock() : null;
+        boolean changed = now != top;
+        top = now;
+        return changed;
     }
 
     public boolean isBlowing() {

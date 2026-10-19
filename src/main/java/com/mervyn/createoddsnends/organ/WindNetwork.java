@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,16 +17,28 @@ import net.minecraft.world.level.block.state.BlockState;
 
 final class WindNetwork {
     static final int MAX_BLOCKS = 256, MAX_CHESTS = 64;
-    private static int version;
+    private static final Map<Level, Set<BarrelOrganBlockEntity>> ORGANS = new WeakHashMap<>();
 
     private WindNetwork() {}
 
-    static int version() {
-        return version;
+    static void track(BarrelOrganBlockEntity organ) {
+        ORGANS.computeIfAbsent(organ.getLevel(), k -> new HashSet<>()).add(organ);
     }
 
-    static void changed() {
-        version++;
+    static void untrack(BarrelOrganBlockEntity organ) {
+        Set<BarrelOrganBlockEntity> organs = ORGANS.get(organ.getLevel());
+        if (organs != null)
+            organs.remove(organ);
+    }
+
+    // something on some network in this level changed, every organ there walks its lines again
+    // once, next server tick
+    static void changed(Level level) {
+        if (level.isClientSide)
+            return;
+        Set<BarrelOrganBlockEntity> organs = ORGANS.get(level);
+        if (organs != null)
+            organs.forEach(BarrelOrganBlockEntity::queueRebuild);
     }
 
     private static boolean lineOpenTowards(BlockState state, Direction side) {
