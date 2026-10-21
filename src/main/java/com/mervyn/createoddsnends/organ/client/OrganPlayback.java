@@ -1,9 +1,6 @@
 package com.mervyn.createoddsnends.organ.client;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -20,23 +17,21 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 
-// Client side of playback: plays the notes that start on each new row, holds and releases them,
-// and keeps the facade pipes and the drum beater in step. updateOrgan() and onRow() in the preview.
+// Client side of playback. The cabinet has no voice of its own: notes play at the instruments on
+// its wind chests, and the facade pipes and the beater only move for what those cover.
+// updateOrgan() and onRow() in the preview.
 public final class OrganPlayback {
     private static final int LOW_SAMPLE = 48, HIGH_SAMPLE = 72;
-    private static final Map<BarrelOrganBlockEntity, List<OrganNoteSound>> HELD = new WeakHashMap<>();
 
     private OrganPlayback() {}
 
     public static void tick(BarrelOrganBlockEntity be, @Nullable Score score) {
         for (int i = 0; i < be.pipeLit.length; i++)
             be.pipeLit[i] = Math.max(0, be.pipeLit[i] - 0.05f * 3);
-        List<OrganNoteSound> held = HELD.computeIfAbsent(be, k -> new ArrayList<>());
-        held.removeIf(OrganNoteSound::isStopped);
         int rows = score == null ? 0 : score.rowCount();
         int cur = score == null || be.isFinished() ? -1 : Math.min(rows - 1, (int) Math.floor(be.shownRow(0)));
         if (!be.isRunning() || cur < 0) {
-            held.forEach(OrganNoteSound::release);
+            stop(be);
             be.lastRow = be.shownRow(0) == 0 ? -1 : cur;
             return;
         }
@@ -44,10 +39,10 @@ public final class OrganPlayback {
             int from = be.lastRow, step = Math.floorMod(cur - from, rows), near = (int) Math.ceil(be.rowsPerTick()) + 1;
             if (from < 0 || step <= near || Math.floorMod(from - cur, rows) > near) {
                 if (from < 0 || step > near)
-                    onRow(be, score, cur, held);
+                    onRow(be, score, cur);
                 else
                     for (int k = 1; k <= step; k++)
-                        onRow(be, score, (from + k) % rows, held);
+                        onRow(be, score, (from + k) % rows);
                 be.lastRow = cur;
             }
         }
@@ -58,7 +53,7 @@ public final class OrganPlayback {
         int[] grid = be.grid;
         for (int c = 2; c < Score.COLUMNS; c++) {
             int cell = grid[cur * Score.COLUMNS + c];
-            if (cell == 0)
+            if (cell == 0 || !be.covers(cell - 1))
                 continue;
             Timbre t = Timbre.of(cell - 1, c);
             if (t == Timbre.MELODY || t == Timbre.CHORD)
@@ -66,28 +61,24 @@ public final class OrganPlayback {
         }
     }
 
-    // onRow(): every note starting on this row, held ones don't retrigger
-    private static void onRow(BarrelOrganBlockEntity be, Score score, int row, List<OrganNoteSound> held) {
-        BlockPos pos = be.getBlockPos();
+    // onRow(): every note starting on this row goes to the instruments, held ones don't retrigger
+    private static void onRow(BarrelOrganBlockEntity be, Score score, int row) {
+        Level level = be.getLevel();
         List<Score.Note> notes = score.notes();
         for (int i = score.firstAt(row); i < notes.size() && notes.get(i).row() == row; i++) {
             Score.Note note = notes.get(i);
             Timbre t = Timbre.of(note.voice(), note.column());
-            if (t.drum())
-                be.drumHit = be.getLevel().getGameTime();
-            else if (t == Timbre.MELODY || t == Timbre.CHORD)
+            if (be.drums(note.column()))
+                be.drumHit = level.getGameTime();
+            else if ((t == Timbre.MELODY || t == Timbre.CHORD) && be.covers(note.voice()))
                 be.pipeLit[(note.column() * 7) % 9] = 1;
-            if (be.mutes(note))
-                continue;
-            OrganNoteSound sound = sound(be.getLevel(), pos, note, be.rowsPerTick());
-            if (sound != null)
-                held.add(sound);
         }
-        Level level = be.getLevel();
-        for (BlockPos chestPos : be.clientChests())
-            if (level.getBlockEntity(chestPos) instanceof WindChestBlockEntity chest && level.getBlockEntity(chestPos.above()) instanceof InstrumentBlockEntity instrument)
+        for (BlockPos chestPos : be.chests())
+            if (level.getBlockEntity(chestPos) instanceof WindChestBlockEntity chest && level.getBlockEntity(chestPos.above()) instanceof InstrumentBlockEntity instrument) {
+                be.sounding = true;
                 for (int i = score.firstAt(row); i < notes.size() && notes.get(i).row() == row; i++)
                     InstrumentPlayback.play(instrument, chest.voiceColour(), notes.get(i), be.rowsPerTick());
+            }
     }
 
     // plays one note at this spot, null for drums since those are fire and forget
@@ -117,9 +108,14 @@ public final class OrganPlayback {
         };
     }
 
+    // cuts the held notes off once when playback stops, not every tick it stays stopped
     public static void stop(BarrelOrganBlockEntity be) {
-        List<OrganNoteSound> held = HELD.remove(be);
-        if (held != null)
-            held.forEach(OrganNoteSound::release);
+        if (!be.sounding)
+            return;
+        be.sounding = false;
+        Level level = be.getLevel();
+        for (BlockPos chestPos : be.chests())
+            if (level.getBlockEntity(chestPos.above()) instanceof InstrumentBlockEntity instrument)
+                InstrumentPlayback.release(instrument);
     }
 }
