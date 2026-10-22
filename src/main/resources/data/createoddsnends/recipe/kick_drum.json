@@ -8,8 +8,8 @@
     "L": {
       "item": "minecraft:leather"
     },
-    "B": {
-      "tag": "c:nuggets/brass"
+    "A": {
+      "item": "create:andesite_alloy"
     },
     "S": {
       "item": "minecraft:stick"
@@ -17,7 +17,7 @@
   },
   "pattern": [
     "PLP",
-    "BSB"
+    "ASA"
   ],
   "result": {
     "count": 1,

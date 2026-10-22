@@ -8,13 +8,13 @@
     "L": {
       "item": "minecraft:leather"
     },
-    "B": {
-      "tag": "c:plates/brass"
+    "A": {
+      "item": "create:andesite_alloy"
     }
   },
   "pattern": [
     "LLL",
-    "PBP"
+    "PAP"
   ],
   "result": {
     "count": 1,

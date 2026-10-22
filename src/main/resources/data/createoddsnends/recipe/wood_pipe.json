@@ -5,14 +5,14 @@
     "P": {
       "tag": "minecraft:planks"
     },
-    "N": {
-      "tag": "c:nuggets/brass"
+    "A": {
+      "item": "create:andesite_alloy"
     }
   },
   "pattern": [
     "P",
     "P",
-    "N"
+    "A"
   ],
   "result": {
     "count": 1,
