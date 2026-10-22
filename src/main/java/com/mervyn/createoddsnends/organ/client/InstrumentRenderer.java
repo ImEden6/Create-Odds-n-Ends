@@ -36,7 +36,9 @@ public class InstrumentRenderer extends SafeBlockEntityRenderer<InstrumentBlockE
                 draw(OrganPartials.KICK_BEATER, state, ms, vc, light);
             }
             case SNARE_DRUM -> {
-                ms.translate(0, hit / 16f, 0);
+                ms.translate(0, 10.5f / 16, 2f / 16);
+                ms.mulPose(Axis.XP.rotation(-0.35f * (1 - hit)));
+                ms.translate(0, -10.5f / 16, -2f / 16);
                 draw(OrganPartials.SNARE_STICKS, state, ms, vc, light);
             }
             case REED_PIPE -> draw(be.held > 0 ? OrganPartials.REED_BODY_LIT : OrganPartials.REED_BODY, state, ms, vc, light);
