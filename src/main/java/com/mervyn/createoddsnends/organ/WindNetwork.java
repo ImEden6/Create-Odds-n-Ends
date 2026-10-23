@@ -2,6 +2,7 @@ package com.mervyn.createoddsnends.organ;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +23,7 @@ final class WindNetwork {
     private WindNetwork() {}
 
     static void track(BarrelOrganBlockEntity organ) {
-        ORGANS.computeIfAbsent(organ.getLevel(), k -> new HashSet<>()).add(organ);
+        ORGANS.computeIfAbsent(organ.getLevel(), k -> Collections.newSetFromMap(new WeakHashMap<>())).add(organ);
     }
 
     static void untrack(BarrelOrganBlockEntity organ) {
