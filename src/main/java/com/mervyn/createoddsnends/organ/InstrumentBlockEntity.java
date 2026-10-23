@@ -2,6 +2,9 @@ package com.mervyn.createoddsnends.organ;
 
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
+import com.mervyn.createoddsnends.organ.client.InstrumentPlayback;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
@@ -14,6 +17,9 @@ import net.minecraft.world.level.block.state.BlockState;
 public class InstrumentBlockEntity extends SmartBlockEntity {
     public float hit, lastHit;
     public int held;
+    @Nullable
+    private BlockPos owner;
+    private long claimedAt;
 
     public InstrumentBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -30,6 +36,23 @@ public class InstrumentBlockEntity extends SmartBlockEntity {
     public void strike(int ticks) {
         hit = 1;
         held = Math.max(held, ticks);
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if (level != null && level.isClientSide)
+            InstrumentPlayback.release(this);
+    }
+
+    // with two organs on one network, the first to play through an instrument keeps it until it
+    // goes quiet for a few seconds, so the scores don't pile up on top of each other
+    public boolean claim(BlockPos organ, long now) {
+        if (owner != null && !owner.equals(organ) && now - claimedAt < 100)
+            return false;
+        owner = organ;
+        claimedAt = now;
+        return true;
     }
 
     @Override
