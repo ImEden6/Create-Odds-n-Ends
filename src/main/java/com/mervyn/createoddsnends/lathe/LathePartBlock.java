@@ -51,7 +51,7 @@ public class LathePartBlock extends Block implements IWrenchable {
             Shapes.or(box(3, 0, 4, 13, 5, 12), box(1, 5, 0, 15, 13, 16), box(5, 13, 0, 11, 16, 16)));
     public static final Outline HOLDER = Outline.of(
             Shapes.or(box(3, 0, 3, 13, 3, 13), box(5, 3, 5, 11, 12, 11)),
-            Shapes.or(box(3, 0, 3, 13, 3, 13), box(5, 3, 5, 11, 12, 11), box(6.5, 6.5, 0, 9.5, 9.5, 16)));
+            Shapes.or(box(2, 0, 2, 14, 2, 14), box(4, 2, 3, 12, 11, 13), box(3, 11, 2, 13, 12, 14), box(6.5, 6.5, 0, 9.5, 9.5, 16)));
 
     private final Outline outline;
 
