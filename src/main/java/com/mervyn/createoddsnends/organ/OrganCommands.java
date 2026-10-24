@@ -79,11 +79,11 @@ public final class OrganCommands {
         return new Score(100, 12, 0, notes);
     }
 
+    // builds the showcase rig a few blocks ahead, facing back at you, playing it on loop
     private static int birthday(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
-        ItemStack book = new ItemStack(Organ.BOOK_MUSIC.get());
-        book.set(Organ.SCORE.get(), Scores.get(player.server).add(birthdayScore()));
-        player.getInventory().placeItemBackInInventory(book);
+        Direction look = player.getDirection();
+        showcase(player, player.blockPosition().relative(look, 6).relative(look.getCounterClockWise(), 5), look.getOpposite(), true);
         return 1;
     }
 
@@ -106,7 +106,14 @@ public final class OrganCommands {
     // out to twelve chests, the front row carrying the five instruments, the rest whistles
     private static final List<DeferredBlock<InstrumentBlock>> INSTRUMENTS = List.of(Organ.REED_PIPE, Organ.WOOD_PIPE, Organ.REED_BOX, Organ.KICK_DRUM, Organ.SNARE_DRUM);
 
+    // semitones down from a small whistle's F#5 for G A B C D E, then F on the last front chest
+    private static final int[] WHISTLE_STEPS = {11, 9, 7, 6, 4, 2, 0, 0, 0, 0, 0, 1};
+
     public static void showcase(ServerPlayer player, BlockPos at, Direction front) {
+        showcase(player, at, front, Boolean.getBoolean("createoddsnends.birthday"));
+    }
+
+    public static void showcase(ServerPlayer player, BlockPos at, Direction front, boolean birthday) {
         ServerLevel level = player.serverLevel();
         Direction back = front.getOpposite(), left = front.getClockWise(), right = front.getCounterClockWise();
         BlockPos.betweenClosed(at.relative(front, 3).relative(left, 4), at.relative(back, 4).relative(right, 11).above(5))
@@ -136,12 +143,18 @@ public final class OrganCommands {
                 level.setBlock(chest.above(), INSTRUMENTS.get(pc - 6).get().defaultBlockState().setValue(InstrumentBlock.FACING, front), Block.UPDATE_ALL);
                 continue;
             }
-            level.setBlock(chest.above(), AllBlocks.STEAM_WHISTLE.getDefaultState().setValue(WhistleBlock.FACING, front), Block.UPDATE_ALL);
-            for (int grow = 0; grow < (11 - pc) / 2; grow++)
+            BlockState whistle = AllBlocks.STEAM_WHISTLE.getDefaultState().setValue(WhistleBlock.FACING, front);
+            level.setBlock(chest.above(), birthday ? whistle.setValue(WhistleBlock.SIZE, WhistleBlock.WhistleSize.SMALL) : whistle, Block.UPDATE_ALL);
+            if (birthday && level.getBlockEntity(chest) instanceof WindChestBlockEntity be) {
+                be.voice.setFilter(new ItemStack(Items.BLUE_DYE));
+                be.match.setValue(MatchMode.OCTAVE.ordinal());
+            }
+            int steps = birthday ? WHISTLE_STEPS[pc] : (11 - pc) / 2;
+            for (int grow = 0; grow < steps; grow++)
                 WhistleBlock.incrementSize(level, chest.above());
         }
 
-        Score score = Boolean.getBoolean("createoddsnends.birthday") ? birthdayScore() : ScoreGen.generate(5, "march", 8, 4, 0);
+        Score score = birthday ? birthdayScore() : ScoreGen.generate(5, "march", 8, 4, 0);
         ItemStack book = new ItemStack(Organ.BOOK_MUSIC.get());
         book.set(Organ.SCORE.get(), Scores.get(player.server).add(score));
         if (level.getBlockEntity(at) instanceof BarrelOrganBlockEntity organ) {
