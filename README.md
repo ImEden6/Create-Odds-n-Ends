@@ -1,3 +1,11 @@
+Notes
+=======
+
+**Sound pauses with the game.** In singleplayer, any screen that pauses the game (Ponder, the
+Esc menu) also pauses every sound that's playing, and they pick back up when you close it. Without
+that, a held organ note or a whistle on a wind chest kept going the whole time Ponder was open,
+since paused sounds don't tick and nothing was there to stop them. This covers all sounds, not
+just the organ's. Multiplayer never pauses, so it doesn't change anything there.
 
 Installation information
 =======
