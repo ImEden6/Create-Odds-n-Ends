@@ -23,7 +23,7 @@ public class OrganNoteSound extends AbstractTickableSoundInstance {
 
     @Override
     public void tick() {
-        if (--remaining > 0)
+        if (isStopped() || --remaining > 0)
             return;
         volume -= 0.5f;
         if (volume <= 0)
