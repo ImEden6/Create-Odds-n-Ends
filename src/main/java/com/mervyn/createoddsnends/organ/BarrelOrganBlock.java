@@ -25,6 +25,11 @@ import net.minecraft.world.phys.BlockHitResult;
 // The lower half: the kinetic controller with the shaft going in at the back. The upper half is
 // BarrelOrganTopBlock and only forwards to this one.
 public class BarrelOrganBlock extends HorizontalKineticBlock implements IBE<BarrelOrganBlockEntity> {
+    // the one side wind lines join, where the copper port is: the organ's right, across from the book shelf
+    public static Direction windSide(BlockState state) {
+        return state.getValue(HORIZONTAL_FACING).getCounterClockWise();
+    }
+
     public BarrelOrganBlock(Properties properties) {
         super(properties);
     }

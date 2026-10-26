@@ -22,7 +22,8 @@ import net.minecraft.world.level.block.state.BlockState;
 // coordinates moved to the block (x + 8, z + 8, +z the front), so the pivots below are the
 // preview's plus 8 on x and z.
 public class BarrelOrganRenderer extends SafeBlockEntityRenderer<BarrelOrganBlockEntity> {
-    private static final int MAX_STACK = 32;
+    // the shelf's stack tops out level with the reading head, the pile under it stays under it
+    private static final int IN_STACK = 12, OUT_STACK = 16;
 
     public BarrelOrganRenderer(BlockEntityRendererProvider.Context context) {}
 
@@ -60,6 +61,7 @@ public class BarrelOrganRenderer extends SafeBlockEntityRenderer<BarrelOrganBloc
         pivot(ms, Axis.ZP, angle * facing.getAxisDirection().getStep(), 8, 8, 0);
         draw(OrganPartials.SHAFT, state, ms, vc, light);
         ms.popPose();
+        draw(OrganPartials.WIND_PORT, state, ms, vc, light);
 
         Score score = be.hasBook() ? be.score() : null;
         if (score != null)
@@ -67,8 +69,8 @@ public class BarrelOrganRenderer extends SafeBlockEntityRenderer<BarrelOrganBloc
         ms.popPose();
     }
 
-    // the book: shelf, input stack, the page going through the reading head, the stack folding up
-    // behind and the page dropping onto it
+    // the book: shelf, input stack, the page going through the reading head, then out the slot at
+    // the foot of the same side onto the pile under the shelf
     private static void book(BarrelOrganBlockEntity be, Score score, float partialTicks, BlockState state, PoseStack ms, VertexConsumer vc, int light) {
         draw(OrganPartials.SHELF, state, ms, vc, light);
         int pages = score.pages();
@@ -84,17 +86,18 @@ public class BarrelOrganRenderer extends SafeBlockEntityRenderer<BarrelOrganBloc
             f = (pos % Score.ROWS_PER_PAGE) / Score.ROWS_PER_PAGE;
             remain = pages - played - 1;
         }
-        for (int i = 0; i < Math.min(remain, MAX_STACK); i++)
-            page(i, -15 + (i % 2 != 0 ? 0.3f : -0.3f), 12 + i * 0.35f, 0, state, ms, vc, light);
-        for (int i = 0; i < Math.min(played, MAX_STACK); i++)
-            page(i, i % 2 != 0 ? 0.3f : -0.3f, i * 0.35f, -16, state, ms, vc, light);
+        for (int i = 0; i < Math.min(remain, IN_STACK); i++)
+            page(i, -15 + (i % 2 != 0 ? 0.3f : -0.3f), 8 + i * 0.35f, 0, state, ms, vc, light);
+        float pile = Math.min(played, OUT_STACK) * 0.35f;
+        for (int i = 0; i < Math.min(played, OUT_STACK); i++)
+            page(i, -14.5f + (i % 2 != 0 ? 0.3f : -0.3f), i * 0.35f, 0, state, ms, vc, light);
         if (be.isFinished())
             return;
-        float top = Math.min(Math.max(0, remain), MAX_STACK) * 0.35f;
-        page(played, Mth.lerp(f, -14, -1), 12 + top, 0, state, ms, vc, light);
+        float top = 8 + Math.min(Math.max(0, remain), IN_STACK) * 0.35f;
+        page(played, Mth.lerp(f, -14, -1), Mth.lerp(Math.min(f * 4, 1), top, 12.2f), 0, state, ms, vc, light);
         if (f > 0.6f) {
             float ff = (f - 0.6f) / 0.4f;
-            page(played + 5, 0, Mth.lerp(ff, 11.5f, Math.min(played, MAX_STACK) * 0.35f), Mth.lerp(ff, -5.5f, -16), state, ms, vc, light);
+            page(played + 5, Mth.lerp(ff, 0, -14.5f), Math.max(pile, 0.6f), 0, state, ms, vc, light);
         }
     }
 

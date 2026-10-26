@@ -1,0 +1,216 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "createoddsnends:block/organ/copper",
+    "copper": "createoddsnends:block/organ/copper",
+    "gold": "createoddsnends:block/organ/gold",
+    "mouth": "createoddsnends:block/organ/mouth"
+  },
+  "elements": [
+    {
+      "from": [
+        16,
+        1.5,
+        5.5
+      ],
+      "to": [
+        16.6,
+        6.5,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            15.4,
+            9.5,
+            16,
+            14.5
+          ],
+          "texture": "#copper"
+        },
+        "south": {
+          "uv": [
+            0,
+            9.5,
+            0.6,
+            14.5
+          ],
+          "texture": "#copper"
+        },
+        "east": {
+          "uv": [
+            5.5,
+            9.5,
+            10.5,
+            14.5
+          ],
+          "texture": "#copper"
+        },
+        "west": {
+          "uv": [
+            5.5,
+            9.5,
+            10.5,
+            14.5
+          ],
+          "texture": "#copper"
+        },
+        "up": {
+          "uv": [
+            0,
+            5.5,
+            0.6,
+            10.5
+          ],
+          "texture": "#copper"
+        },
+        "down": {
+          "uv": [
+            0,
+            5.5,
+            0.6,
+            10.5
+          ],
+          "texture": "#copper"
+        }
+      }
+    },
+    {
+      "from": [
+        16.6,
+        2,
+        6
+      ],
+      "to": [
+        16.9,
+        6,
+        10
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            15.1,
+            10,
+            15.4,
+            14
+          ],
+          "texture": "#gold"
+        },
+        "south": {
+          "uv": [
+            0.6,
+            10,
+            0.9,
+            14
+          ],
+          "texture": "#gold"
+        },
+        "east": {
+          "uv": [
+            6,
+            10,
+            10,
+            14
+          ],
+          "texture": "#gold"
+        },
+        "west": {
+          "uv": [
+            6,
+            10,
+            10,
+            14
+          ],
+          "texture": "#gold"
+        },
+        "up": {
+          "uv": [
+            0.6,
+            6,
+            0.9,
+            10
+          ],
+          "texture": "#gold"
+        },
+        "down": {
+          "uv": [
+            0.6,
+            6,
+            0.9,
+            10
+          ],
+          "texture": "#gold"
+        }
+      }
+    },
+    {
+      "from": [
+        16.9,
+        3,
+        7
+      ],
+      "to": [
+        16.95,
+        5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            15.05,
+            11,
+            15.1,
+            13
+          ],
+          "texture": "#mouth"
+        },
+        "south": {
+          "uv": [
+            0.9,
+            11,
+            0.95,
+            13
+          ],
+          "texture": "#mouth"
+        },
+        "east": {
+          "uv": [
+            7,
+            11,
+            9,
+            13
+          ],
+          "texture": "#mouth"
+        },
+        "west": {
+          "uv": [
+            7,
+            11,
+            9,
+            13
+          ],
+          "texture": "#mouth"
+        },
+        "up": {
+          "uv": [
+            0.9,
+            7,
+            0.95,
+            9
+          ],
+          "texture": "#mouth"
+        },
+        "down": {
+          "uv": [
+            0.9,
+            7,
+            0.95,
+            9
+          ],
+          "texture": "#mouth"
+        }
+      }
+    }
+  ]
+}
