@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": {
+      "item": "create:electron_tube"
+    },
+    "P": {
+      "item": "create:precision_mechanism"
+    },
+    "B": {
+      "item": "create:brass_casing"
+    },
+    "G": {
+      "tag": "c:glass_panes"
+    }
+  },
+  "pattern": [
+    "EGE",
+    "BPB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createoddsnends:cnc_pendant"
+  }
+}

@@ -2,6 +2,7 @@ package com.mervyn.createoddsnends;
 
 import org.slf4j.Logger;
 
+import com.mervyn.createoddsnends.cnc.Cnc;
 import com.mervyn.createoddsnends.jacquard.Jacquard;
 import com.mervyn.createoddsnends.organ.Organ;
 import com.mervyn.createoddsnends.lathe.HeadstockBlock;
@@ -131,6 +132,7 @@ public class Tracer {
         CREATIVE_MODE_TABS.register(modEventBus);
         Jacquard.register(modEventBus);
         Organ.register(modEventBus);
+        Cnc.register(modEventBus);
         modEventBus.addListener(Tracer::registerPayloads);
         modEventBus.addListener(Tracer::registerCapabilities);
 
