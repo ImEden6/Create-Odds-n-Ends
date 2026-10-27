@@ -87,7 +87,7 @@ public final class OrganScenes {
         scene.idle(10);
         scene.overlay().showText(80)
                 .attachKeyFrame()
-                .text("The cabinet makes no sound of its own. Run a wind line to a wind chest with an instrument or whistle on it, that's what plays")
+                .text("The cabinet makes no sound of its own. Run a wind line from the copper port on its right side to a wind chest with an instrument or whistle on it, that's what plays")
                 .pointAt(util.vector().topOf(chest.above()))
                 .placeNearTarget();
         scene.idle(90);
@@ -168,12 +168,12 @@ public final class OrganScenes {
         Scenes.put(scene, util, NET_ORGAN, BarrelOrganBlockEntity.class, "Book", book());
         scene.idle(15);
 
-        scene.world().showSection(util.select().fromTo(1, 1, 3, 5, 1, 4), Direction.DOWN);
+        scene.world().showSection(util.select().fromTo(1, 1, 3, 5, 1, 4).add(util.select().position(2, 1, 5)), Direction.DOWN);
         scene.idle(10);
         scene.overlay().showText(70)
                 .attachKeyFrame()
                 .text("Wind lines carry the music from the organ. They join up with each other on their own")
-                .pointAt(util.vector().centerOf(3, 1, 4))
+                .pointAt(util.vector().centerOf(2, 1, 4))
                 .placeNearTarget();
         scene.idle(80);
 
@@ -312,7 +312,7 @@ public final class OrganScenes {
         scene.world().showSection(util.select().fromTo(3, 1, 5, 3, 2, 6), Direction.DOWN);
         Scenes.put(scene, util, NET_ORGAN, BarrelOrganBlockEntity.class, "Book", book());
         scene.idle(5);
-        scene.world().showSection(util.select().fromTo(0, 1, 2, 6, 1, 4), Direction.DOWN);
+        scene.world().showSection(util.select().fromTo(0, 1, 2, 6, 1, 4).add(util.select().position(2, 1, 5)), Direction.DOWN);
         scene.idle(10);
         for (int i = 0; i < chests.length; i++)
             scene.world().setFilterData(util.select().position(chests[i]), WindChestBlockEntity.class, dyes[i]);
