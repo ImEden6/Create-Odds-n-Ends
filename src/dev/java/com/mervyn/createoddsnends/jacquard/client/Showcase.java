@@ -84,6 +84,13 @@ final class Showcase {
                     view("chest_close", 680, 2.2, 18.2, 1.9, 4, 19.5, 0.7),
                     view("instruments", 760, 1.2, 18, 2.2, 4, 18, 1.2),
                     view("snare_close", 840, 2.4, 20, 2.1, 4, 20, 1.1)),
+            "cnc", List.of(
+                    view("cnc_front", 200, 0, -26.5, 2.2, 7.5, -26.5, 1.6),
+                    view("cnc_angle", 300, 1, -21, 4.5, 7.5, -26.5, 1.4),
+                    view("cnc_close", 400, 4, -25.5, 1.9, 7.5, -26, 1),
+                    view("cnc_pendant", 500, 3, -20.5, 2.2, 6.5, -24.5, 1.6),
+                    view("cnc_top", 600, 7.5, -26.5, 9, 7.51, -26.5, 0),
+                    view("cnc_back", 700, 14, -22, 4, 7.5, -26.5, 1.5)),
             "organ_nomotor", List.of(
                     view("organ_back", 440, 8.5, 14.8, 2.2, 5, 13, 1),
                     view("organ_crank_side", 360, 5, 16.5, 1.7, 5, 13, 1.1),
@@ -112,6 +119,7 @@ final class Showcase {
                 JacquardCommands.showcase(player(server), anchor, ahead);
                 OrganCommands.showcase(player(server), anchor.relative(ahead, 5).relative(ahead.getClockWise(), 13), ahead.getOpposite());
                 LatheStructure.showcase(player(server), lathe(), ahead.getClockWise());
+                CncMockup.place(player(server).serverLevel(), cnc(), ahead.getOpposite(), 0);
             });
         }
         if (anchor == null)
@@ -126,6 +134,8 @@ final class Showcase {
                     if (player(server).level().getBlockEntity(anchor.relative(ahead, 5).above(2)) instanceof JacquardHeadBlockEntity head)
                         head.showcaseJump(0.55);
                 });
+            if (tick == view.at - 30 && view.name.startsWith("cnc"))
+                server.execute(() -> CncMockup.place(player(server).serverLevel(), cnc(), ahead.getOpposite(), VIEWS.indexOf(view) % 4));
             if (tick == view.at)
                 Screenshot.grab(mc.gameDirectory, "showcase_" + view.name + ".png", mc.getMainRenderTarget(), message -> {});
         }
@@ -139,6 +149,10 @@ final class Showcase {
 
     private static BlockPos lathe() {
         return anchor.relative(ahead, 4).relative(ahead.getCounterClockWise(), 12).above();
+    }
+
+    private static BlockPos cnc() {
+        return anchor.relative(ahead, 6).relative(ahead.getCounterClockWise(), 24);
     }
 
     private static Vec3 point(double a, double r, double u) {
