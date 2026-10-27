@@ -1,6 +1,8 @@
 package com.mervyn.createoddsnends;
 
+import com.mervyn.createoddsnends.client.CncRenderer;
 import com.mervyn.createoddsnends.client.HeadstockRenderer;
+import com.mervyn.createoddsnends.cnc.Cnc;
 import com.mervyn.createoddsnends.client.LathePartials;
 import com.mervyn.createoddsnends.client.LatheVisual;
 import com.mervyn.createoddsnends.client.TemplateModel;
@@ -46,6 +48,7 @@ import net.neoforged.neoforge.common.NeoForge;
 public class TracerClient {
     public TracerClient(ModContainer container) {
         LathePartials.init();
+        CncRenderer.init();
         OrganPartials.init();
         PonderIndex.addPlugin(new TracerPonder());
         if (PonderShots.ENABLED)
@@ -71,6 +74,7 @@ public class TracerClient {
     @SubscribeEvent
     static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(Tracer.LATHE_HEADSTOCK_BE.get(), HeadstockRenderer::new);
+        event.registerBlockEntityRenderer(Cnc.CNC_BE.get(), CncRenderer::new);
     }
 
     @SubscribeEvent
