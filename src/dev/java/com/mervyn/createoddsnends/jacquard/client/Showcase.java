@@ -3,6 +3,7 @@ package com.mervyn.createoddsnends.jacquard.client;
 import java.util.List;
 import java.util.Map;
 
+import com.mervyn.createoddsnends.Tracer;
 import com.mervyn.createoddsnends.jacquard.JacquardCommands;
 import com.mervyn.createoddsnends.jacquard.JacquardHeadBlockEntity;
 import com.mervyn.createoddsnends.lathe.LatheStructure;
@@ -15,13 +16,25 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 // Dev only, switched on by the createoddsnends.showcase system property that the clientShowcase
 // run sets. Once in the world it builds the showcase, flies the camera through fixed views,
 // saves a screenshot at each into run/screenshots/showcase_*.png and quits.
+@EventBusSubscriber(modid = Tracer.MODID, value = Dist.CLIENT)
 final class Showcase {
     static final boolean ENABLED = Boolean.getBoolean("createoddsnends.showcase");
+
+    @SubscribeEvent
+    static void clientSetup(FMLClientSetupEvent event) {
+        if (ENABLED)
+            NeoForge.EVENT_BUS.addListener(Showcase::tick);
+    }
 
     // eye position and target, in blocks: ahead of the starting spot, to its right, and up.
     // move is false for a follow-up shot from the same spot.
