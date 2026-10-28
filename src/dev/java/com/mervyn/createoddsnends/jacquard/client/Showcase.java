@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mervyn.createoddsnends.Tracer;
+import com.mervyn.createoddsnends.cnc.CncStructure;
 import com.mervyn.createoddsnends.jacquard.JacquardCommands;
 import com.mervyn.createoddsnends.jacquard.JacquardHeadBlockEntity;
 import com.mervyn.createoddsnends.lathe.LatheStructure;
@@ -119,7 +120,7 @@ final class Showcase {
                 JacquardCommands.showcase(player(server), anchor, ahead);
                 OrganCommands.showcase(player(server), anchor.relative(ahead, 5).relative(ahead.getClockWise(), 13), ahead.getOpposite());
                 LatheStructure.showcase(player(server), lathe(), ahead.getClockWise());
-                CncMockup.place(player(server).serverLevel(), cnc(), ahead.getOpposite(), 0);
+                CncStructure.showcase(player(server), cnc().above(), ahead.getOpposite());
             });
         }
         if (anchor == null)
@@ -134,8 +135,6 @@ final class Showcase {
                     if (player(server).level().getBlockEntity(anchor.relative(ahead, 5).above(2)) instanceof JacquardHeadBlockEntity head)
                         head.showcaseJump(0.55);
                 });
-            if (tick == view.at - 30 && view.name.startsWith("cnc"))
-                server.execute(() -> CncMockup.place(player(server).serverLevel(), cnc(), ahead.getOpposite(), VIEWS.indexOf(view) % 4));
             if (tick == view.at)
                 Screenshot.grab(mc.gameDirectory, "showcase_" + view.name + ".png", mc.getMainRenderTarget(), message -> {});
         }
