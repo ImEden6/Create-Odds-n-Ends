@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.mervyn.createoddsnends.Tracer;
 import com.mervyn.createoddsnends.jacquard.Jacquard;
+import com.mervyn.createoddsnends.cnc.Cnc;
 import com.mervyn.createoddsnends.organ.Organ;
 
 import net.createmod.ponder.foundation.PonderScene;
@@ -37,7 +38,7 @@ public final class PonderShots {
         if (components == null)
             components = List.of(Tracer.LATHE_HEADSTOCK.getId(), Tracer.TRACER_HOLDER.getId(), Tracer.TEMPLATE_TABLE.getId(),
                     Jacquard.JACQUARD_HEAD.getId(), Jacquard.TAPESTRY.getId(), Jacquard.CARD_PUNCH.getId(),
-                    Organ.BARREL_ORGAN.getId(), Organ.WIND_CHEST.getId());
+                    Organ.BARREL_ORGAN.getId(), Organ.WIND_CHEST.getId(), Cnc.CNC_PENDANT.getId());
         if (ui == null || mc.screen != ui) {
             if (component >= components.size()) {
                 mc.stop();

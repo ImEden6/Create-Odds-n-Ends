@@ -34,7 +34,7 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class CncBlockEntity extends KineticBlockEntity {
-    static final int SLOTS = 9;
+    public static final int SLOTS = 9;
     static final float STRESS_IMPACT = 8;
 
     final ItemStackHandler input = new ItemStackHandler(SLOTS) {

@@ -1,6 +1,7 @@
 package com.mervyn.createoddsnends.ponder;
 
 import com.mervyn.createoddsnends.Tracer;
+import com.mervyn.createoddsnends.cnc.Cnc;
 import com.mervyn.createoddsnends.jacquard.Jacquard;
 import com.mervyn.createoddsnends.organ.Organ;
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
@@ -42,6 +43,9 @@ public class TracerPonder implements PonderPlugin {
                 .addStoryBoard("organ/sequencer", OrganScenes::sequencer);
         helper.forComponents(Organ.KICK_DRUM.getId(), Organ.SNARE_DRUM.getId(), Organ.REED_PIPE.getId(), Organ.WOOD_PIPE.getId(), Organ.REED_BOX.getId())
                 .addStoryBoard("organ/wind", OrganScenes::windNetwork);
+        helper.forComponents(Cnc.CNC_PENDANT.getId(), Cnc.CNC_FRAME.getId())
+                .addStoryBoard("cnc/cnc", CncScenes::build)
+                .addStoryBoard("cnc/cnc", CncScenes::machining);
         helper.forComponents(Jacquard.CARD_PUNCH.getId(), Jacquard.BLANK_CARD.getId(), Jacquard.PUNCHED_CARD_CHAIN.getId())
                 .addStoryBoard("jacquard/card_punch", JacquardScenes::punch);
     }
@@ -55,6 +59,8 @@ public class TracerPonder implements PonderPlugin {
                 .description("The copy lathe, the jacquard loom, the barrel organ and the bits that go with them")
                 .register();
         helper.addToTag(TAG)
+                .add(Cnc.CNC_PENDANT.getId())
+                .add(Cnc.CNC_FRAME.getId())
                 .add(Tracer.LATHE_HEADSTOCK.getId())
                 .add(Tracer.LATHE_BED.getId())
                 .add(Tracer.LATHE_TAILSTOCK.getId())
