@@ -8,7 +8,6 @@ import org.jetbrains.annotations.Nullable;
 
 import com.mervyn.createoddsnends.Tracer;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
-import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;
@@ -126,12 +125,14 @@ public class CncBlockEntity extends KineticBlockEntity {
     }
 
     private boolean fits(CncJob job) {
-        ItemStackHandler copy = new ItemStackHandler(SLOTS);
-        for (int i = 0; i < SLOTS; i++)
-            copy.setStackInSlot(i, output.getStackInSlot(i).copy());
-        for (ProcessingOutput out : job.results())
-            if (!ItemHandlerHelper.insertItemStacked(copy, out.getStack().copy(), false).isEmpty())
-                return false;
+        for (List<ItemStack> stacks : job.possible()) {
+            ItemStackHandler copy = new ItemStackHandler(SLOTS);
+            for (int i = 0; i < SLOTS; i++)
+                copy.setStackInSlot(i, output.getStackInSlot(i).copy());
+            for (ItemStack stack : stacks)
+                if (!ItemHandlerHelper.insertItemStacked(copy, stack, false).isEmpty())
+                    return false;
+        }
         return true;
     }
 
@@ -143,11 +144,8 @@ public class CncBlockEntity extends KineticBlockEntity {
             stale = true;
             return;
         }
-        for (ProcessingOutput out : done.results()) {
-            ItemStack rolled = out.rollOutput(level.random);
-            if (!rolled.isEmpty())
-                ItemHandlerHelper.insertItemStacked(output, rolled, false);
-        }
+        for (ItemStack rolled : done.roll(level.random))
+            ItemHandlerHelper.insertItemStacked(output, rolled, false);
         stale = true;
         sendData();
     }
