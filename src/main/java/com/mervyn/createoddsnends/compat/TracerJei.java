@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.mervyn.createoddsnends.Profile;
 import com.mervyn.createoddsnends.Tracer;
+import com.mervyn.createoddsnends.cnc.Cnc;
+import com.mervyn.createoddsnends.cnc.CncJob;
+import net.minecraft.client.Minecraft;
 import com.mervyn.createoddsnends.jacquard.Design;
 import com.mervyn.createoddsnends.jacquard.DesignSync;
 import com.mervyn.createoddsnends.jacquard.Jacquard;
@@ -40,7 +43,8 @@ public class TracerJei implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(new TurningCategory(registration.getJeiHelpers().getGuiHelper()),
                 new PunchingCategory(registration.getJeiHelpers().getGuiHelper()),
-                new WeavingCategory(registration.getJeiHelpers().getGuiHelper(), wool(JacquardHeadBlockEntity.DEBUG_DESIGN).size()));
+                new WeavingCategory(registration.getJeiHelpers().getGuiHelper(), wool(JacquardHeadBlockEntity.DEBUG_DESIGN).size()),
+                new CncCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -64,6 +68,9 @@ public class TracerJei implements IModPlugin {
                 new PunchingCategory.Punching(List.of(chain, tapestry), new ItemStack(Jacquard.BLANK_CARD.get(), rows), "createoddsnends.jei.blanks_design", chain, "createoddsnends.jei.punch_copy"),
                 new PunchingCategory.Punching(List.of(), new ItemStack(Jacquard.BLANK_CARD.get(), EXAMPLE_PAGES), "createoddsnends.jei.blanks_score", book, "createoddsnends.jei.punch_score"),
                 new PunchingCategory.Punching(List.of(book), new ItemStack(Jacquard.BLANK_CARD.get(), EXAMPLE_PAGES), "createoddsnends.jei.blanks_score", book, "createoddsnends.jei.punch_copy_score")));
+
+        registration.addRecipes(CncCategory.TYPE, CncJob.recipes(Minecraft.getInstance().level));
+        info(registration, Cnc.CNC_FRAME_ITEM.get(), "cnc");
 
         registration.addRecipes(WeavingCategory.TYPE, List.of(new WeavingCategory.Weaving(chain, wool(design), tapestry)));
 
@@ -100,6 +107,9 @@ public class TracerJei implements IModPlugin {
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalysts(TurningCategory.TYPE, Tracer.LATHE_HEADSTOCK_ITEM.get(), Tracer.LATHE_BED_ITEM.get(), Tracer.LATHE_TAILSTOCK_ITEM.get());
         registration.addRecipeCatalysts(PunchingCategory.TYPE, Jacquard.CARD_PUNCH_ITEM.get());
+        registration.addRecipeCatalysts(CncCategory.TYPE, Cnc.CNC_PENDANT_ITEM.get(), Cnc.CNC_FRAME_ITEM.get());
+        registration.getJeiHelpers().getRecipeType(ResourceLocation.fromNamespaceAndPath("create", "sequenced_assembly"))
+                .ifPresent(type -> registration.addRecipeCatalysts(type, Cnc.CNC_PENDANT_ITEM.get()));
         registration.addRecipeCatalysts(WeavingCategory.TYPE, Jacquard.JACQUARD_HEAD_ITEM.get(), Jacquard.LOOM_FRAME_ITEM.get(), Jacquard.LOOM_DRIVE_ITEM.get());
     }
 }
