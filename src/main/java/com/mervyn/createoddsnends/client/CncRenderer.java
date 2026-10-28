@@ -38,6 +38,7 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
     public static final PartialModel RED = of("lamp_red");
 
     private static final float PARK_X = 32, PARK_Y = 26, PARK_HEAD = 36;
+    private static final float PATH_TICKS = 240;
 
     public CncRenderer(BlockEntityRendererProvider.Context context) {}
 
@@ -68,7 +69,7 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
 
         // a made up toolpath: the table sweeps side to side while the saddle steps in and out
         // and the head pecks down, eased in from the parked spot when a job starts
-        float t = be.progress(partialTicks) * Mth.TWO_PI;
+        float t = be.clock(partialTicks) / PATH_TICKS * Mth.TWO_PI;
         float on = be.engaged(partialTicks);
         float tx = Mth.lerp(on, PARK_X, 32 + 10 * Mth.sin(t * 3));
         float sy = Mth.lerp(on, PARK_Y, 27 + 3 * Mth.sin(t * 2 + 1));

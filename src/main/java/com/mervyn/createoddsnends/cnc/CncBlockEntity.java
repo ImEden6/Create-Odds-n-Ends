@@ -62,9 +62,12 @@ public class CncBlockEntity extends KineticBlockEntity {
     private boolean running;
     private ItemStack making = ItemStack.EMPTY;
 
-    // client only: 0 parked, 1 following the toolpath
+    // client only: 0 parked, 1 following the toolpath, and how far along the toolpath it is in ticks.
+    // The toolpath runs on its own clock rather than job progress so it keeps the same pace whatever the recipe length.
     float engaged;
     float lastEngaged;
+    float clock;
+    float lastClock;
 
     public CncBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -96,23 +99,17 @@ public class CncBlockEntity extends KineticBlockEntity {
         if (level.isClientSide) {
             lastEngaged = engaged;
             engaged = Mth.approach(engaged, running ? 1 : 0, .05f);
-            if (running)
+            lastClock = clock;
+            if (running) {
                 progress = Math.min(progress + Math.abs(getSpeed()) / 32, duration);
+                clock += Mth.clamp(Math.abs(getSpeed()) / 64, .5f, 2);
+            }
             return;
         }
 
-        if (stale) {
-            stale = false;
-            CncJob found = getBlockState().getValue(FORMED) ? CncJob.find(level, input) : null;
-            if (found == null || !found.id().equals(jobId))
-                progress = 0;
-            job = found;
-            jobId = found == null ? null : found.id();
-            duration = found == null ? CncJob.DEFAULT_DURATION : found.duration();
-            making = found == null ? ItemStack.EMPTY : found.showcase();
-            sendData();
-        }
-        boolean can = job != null && getSpeed() != 0 && getBlockState().getValue(FORMED) && fits(job);
+        if (stale)
+            refresh();
+        boolean can = canRun();
         if (can != running) {
             running = can;
             sendData();
@@ -122,6 +119,22 @@ public class CncBlockEntity extends KineticBlockEntity {
         progress += Math.abs(getSpeed()) / 32;
         if (progress >= duration)
             finish();
+    }
+
+    private void refresh() {
+        stale = false;
+        CncJob found = getBlockState().getValue(FORMED) ? CncJob.find(level, input) : null;
+        if (found == null || !found.id().equals(jobId))
+            progress = 0;
+        job = found;
+        jobId = found == null ? null : found.id();
+        duration = found == null ? CncJob.DEFAULT_DURATION : found.duration();
+        making = found == null ? ItemStack.EMPTY : found.showcase();
+        sendData();
+    }
+
+    private boolean canRun() {
+        return job != null && getSpeed() != 0 && getBlockState().getValue(FORMED) && fits(job);
     }
 
     private boolean fits(CncJob job) {
@@ -139,14 +152,13 @@ public class CncBlockEntity extends KineticBlockEntity {
     private void finish() {
         CncJob done = job;
         progress = 0;
-        running = false;
-        if (done == null || !done.take(input, false)) {
-            stale = true;
-            return;
-        }
-        for (ItemStack rolled : done.roll(level.random))
-            ItemHandlerHelper.insertItemStacked(output, rolled, false);
-        stale = true;
+        if (done != null && done.take(input, false))
+            for (ItemStack rolled : done.roll(level.random))
+                ItemHandlerHelper.insertItemStacked(output, rolled, false);
+        // pick the next job straight away so the client never sees a stop between two runs
+        jobId = null;
+        refresh();
+        running = canRun();
         sendData();
     }
 
@@ -156,6 +168,10 @@ public class CncBlockEntity extends KineticBlockEntity {
 
     public float progress(float partialTicks) {
         return Math.min(1, (progress + (running ? Math.abs(getSpeed()) / 32 * partialTicks : 0)) / duration);
+    }
+
+    public float clock(float partialTicks) {
+        return Mth.lerp(partialTicks, lastClock, clock);
     }
 
     public float engaged(float partialTicks) {
@@ -252,9 +268,11 @@ public class CncBlockEntity extends KineticBlockEntity {
         super.read(tag, registries, clientPacket);
         input.deserializeNBT(registries, tag.getCompound("Input"));
         output.deserializeNBT(registries, tag.getCompound("Output"));
-        progress = tag.getFloat("Progress");
-        duration = Math.max(1, tag.getInt("Duration"));
+        boolean wasRunning = running;
         running = tag.getBoolean("Running");
+        if (!clientPacket || !running || !wasRunning || tag.getFloat("Progress") < progress - duration / 2f)
+            progress = tag.getFloat("Progress");
+        duration = Math.max(1, tag.getInt("Duration"));
         making = tag.contains("Making") ? ItemStack.parseOptional(registries, tag.getCompound("Making")) : ItemStack.EMPTY;
         jobId = tag.contains("Job") ? ResourceLocation.tryParse(tag.getString("Job")) : null;
         if (!clientPacket) {
