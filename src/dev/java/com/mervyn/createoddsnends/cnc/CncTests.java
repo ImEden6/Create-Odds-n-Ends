@@ -18,6 +18,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -30,7 +31,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 // Dev only, ODDSNENDS_CNCTEST=true. Builds a row of mills away from the showcase, pokes at them and
 // logs one CNCTEST line per check.
 @EventBusSubscriber(modid = Tracer.MODID)
-final class CncTests {
+public final class CncTests {
     static final boolean ENABLED = "true".equals(System.getenv("ODDSNENDS_CNCTEST"));
     private static final int START = 100;
 
@@ -89,6 +90,15 @@ final class CncTests {
     }
 
     private static void setup(ServerPlayer player, ServerLevel level) {
+        ItemStackHandler mix = new ItemStackHandler(CncBlockEntity.SLOTS);
+        mix.setStackInSlot(0, new ItemStack(AllItems.ANDESITE_ALLOY.get()));
+        mix.setStackInSlot(1, new ItemStack(AllItems.IRON_SHEET.get(), 4));
+        CncJob picked = CncJob.find(level, mix);
+        check("most_specific_wins", picked != null && picked.id().getPath().equals("cnc/propeller"), String.valueOf(picked == null ? null : picked.id()));
+        mix.setStackInSlot(1, new ItemStack(AllItems.IRON_SHEET.get(), 3));
+        picked = CncJob.find(level, mix);
+        check("subset_still_found", picked != null && picked.id().getPath().equals("cnc/whisk"), String.valueOf(picked == null ? null : picked.id()));
+
         // 0: a whole precision mechanism assembly in one go
         build(player, 0, Direction.NORTH, 256);
         CncBlockEntity seq = cnc(level, 0);
@@ -209,5 +219,10 @@ final class CncTests {
         check("junk_idle", !junk.isRunning() && junk.input.getStackInSlot(0).getCount() == 3, "");
 
         Tracer.LOGGER.info("CNCTEST DONE {} failures {}", failures.size(), failures);
+    }
+
+    public static void showcaseDoors(ServerLevel level, BlockPos pendant) {
+        if (level.getBlockEntity(pendant) instanceof CncBlockEntity be)
+            be.openDoors();
     }
 }

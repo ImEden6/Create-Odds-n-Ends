@@ -25,12 +25,13 @@ First release. Needs Create 6.0.11 or newer on NeoForge 1.21.1. JEI is optional.
 ### CNC mill
 - cnc frames, cnc drive and pendant make a 4x3x3 mill. wrench the pendant to put it together, it tells you what's missing
 - rotation goes into the drive at the far end from the pendant, faster runs faster
-- `createoddsnends:cnc` recipe type for modpacks, up to 9 inputs and 4 outputs with chances
+- `createoddsnends:cnc` recipe type for modpacks, up to 9 inputs and 4 outputs with chances. a few example recipes for create parts ship with it
+- doors swing open when you load or empty it by hand
 - also runs sequenced assembly recipes without fluid steps, `cnc.sequencedAssembly` server config turns that off
 - the tool follows the part's shape, flat items and blocks both
 
 ### Other
 - recipes for everything that can be crafted, the jacquard head and barrel organ go through the mechanical crafter
-- JEI categories for turning, card punching, weaving and the CNC, plus info pages
+- JEI categories for turning, card punching, weaving and the CNC, the lathe and CNC pages show the machine working, plus info pages
 - Ponder scenes for every machine
 - worlds from before the rename (`createcoolstuffs`) keep their blocks and items

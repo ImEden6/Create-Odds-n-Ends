@@ -63,11 +63,13 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Processin
     }
 
     @Nullable
+    // the recipe that uses the most of what's in there wins, so one whose inputs are a subset of another's can't steal it
     static CncJob find(Level level, IItemHandlerModifiable input) {
+        CncJob best = null;
         for (CncJob job : all(level))
-            if (job.take(input, true))
-                return job;
-        return null;
+            if ((best == null || job.needs().size() > best.needs().size()) && job.take(input, true))
+                best = job;
+        return best;
     }
 
     // Each ingredient takes one item from the first slot that fits it

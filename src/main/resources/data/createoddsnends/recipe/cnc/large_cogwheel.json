@@ -1,0 +1,20 @@
+{
+  "type": "createoddsnends:cnc",
+  "ingredients": [
+    {
+      "item": "create:andesite_alloy"
+    },
+    {
+      "tag": "minecraft:planks"
+    },
+    {
+      "tag": "minecraft:planks"
+    }
+  ],
+  "results": [
+    {
+      "id": "create:large_cogwheel"
+    }
+  ],
+  "processing_time": 200
+}

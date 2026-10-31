@@ -62,7 +62,7 @@ short end at the front, and a CNC drive in the middle of the other short end. Wr
 put it together, or to find out what's missing. Rotation goes into the drive's socket. Right-click
 the machine or use funnels to load it, and the tool follows the shape of whatever it's cutting.
 
-It has no recipes of its own worth speaking of. Modpacks add them with the `createoddsnends:cnc`
+It comes with a few example recipes for Create parts (cogwheels, propeller, whisk, brass hand). Modpacks add their own with the `createoddsnends:cnc`
 recipe type (up to 9 inputs, 4 outputs, chances and a duration), and by default it also runs any
 sequenced assembly recipe that has no fluid steps. `cnc.sequencedAssembly` in the server config
 turns that off.
