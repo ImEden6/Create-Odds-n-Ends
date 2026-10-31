@@ -89,7 +89,7 @@ public final class CncToolpath {
                     height[x][z] = .5f / SIZE;
     }
 
-    // tallest point of the model over each column, in model units 0..1
+    // highest upward face over each column, in model units 0..1
     private static void tops(BakedModel model, float[][] height) {
         RandomSource random = RandomSource.create(42);
         List<BakedQuad> quads = new ArrayList<>(model.getQuads(null, null, random));
@@ -97,6 +97,8 @@ public final class CncToolpath {
             quads.addAll(model.getQuads(null, d, random));
         int stride = DefaultVertexFormat.BLOCK.getVertexSize() / 4;
         for (BakedQuad quad : quads) {
+            if (quad.getDirection() != Direction.UP)
+                continue;
             int[] v = quad.getVertices();
             float minX = 1, maxX = 0, minZ = 1, maxZ = 0, top = 0;
             for (int i = 0; i < 4; i++) {
