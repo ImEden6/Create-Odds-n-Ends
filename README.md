@@ -1,10 +1,10 @@
 # Create: Odds 'n Ends
 
-A Create addon of old workshop machines that do one odd job each: a copy lathe that turns blocks
-into shapes, a jacquard loom that weaves pictures from punched cards, and a barrel organ that plays
-punched music through pipes, drums and whistles.
+A Create addon of workshop machines that do one odd job each: a copy lathe that turns blocks
+into shapes, a jacquard loom that weaves pictures from punched cards, a barrel organ that plays
+punched music through pipes, drums and whistles, and a CNC mill that modpacks can give their own recipes.
 
-For Minecraft 1.21.1 on NeoForge, needs Create 6. JEI shows the lathe, loom and punch recipes, and
+For Minecraft 1.21.1 on NeoForge, needs Create 6. JEI shows the lathe, loom, punch and CNC recipes, and
 every machine has Ponder scenes. Hold W over one in your inventory to see them.
 
 ## Copy lathe
@@ -55,6 +55,18 @@ wind chest kept going the whole time Ponder was open, since paused sounds don't 
 there to stop them. It covers every sound in the game. Multiplayer never pauses, so it
 doesn't change anything there.
 
+## CNC mill
+
+A 4×3×3 brass-framed mill. Build the box from CNC frames, put the pendant against the middle of one
+short end at the front, and a CNC drive in the middle of the other short end. Wrench the pendant to
+put it together, or to find out what's missing. Rotation goes into the drive's socket. Right-click
+the machine or use funnels to load it, and the tool follows the shape of whatever it's cutting.
+
+It has no recipes of its own worth speaking of. Modpacks add them with the `createoddsnends:cnc`
+recipe type (up to 9 inputs, 4 outputs, chances and a duration), and by default it also runs any
+sequenced assembly recipe that has no fluid steps. `cnc.sequencedAssembly` in the server config
+turns that off.
+
 ## Building
 
 ```
@@ -65,4 +77,4 @@ The jar lands in `build/libs`. `./gradlew runClient` starts a dev client.
 
 ## License
 
-All rights reserved.
+Code is MIT, assets are All Rights Reserved. See `LICENSE`. Modpacks can include the jar.

@@ -4,7 +4,7 @@ loaderVersion="${loader_version_range}"
 
 license="${mod_license}"
 
-issueTrackerURL="https://CHANGE-ME.invalid/issues"
+issueTrackerURL="https://github.com/ImEden6/Create-Odds-n-Ends/issues"
 
 [[mods]]
 
@@ -14,7 +14,7 @@ version="${mod_version}"
 
 displayName="${mod_name}"
 
-displayURL="https://CHANGE-ME.invalid/source"
+displayURL="https://github.com/ImEden6/Create-Odds-n-Ends"
 
 logoFile="icon.png"
 
@@ -23,7 +23,7 @@ credits="The Create team, for Create and Ponder"
 authors="Mervyn"
 
 description='''
-A Create addon with three machines. A copy lathe that turns blocks into balusters and vases. A jacquard loom that weaves tapestries from punched card chains. And a barrel organ that plays book music through steam whistles.
+A Create addon with four machines. A copy lathe that turns blocks into balusters and vases. A jacquard loom that weaves tapestries from punched card chains. A barrel organ that plays book music through steam whistles. And a 3-axis CNC mill that modpacks can give their own recipes.
 '''
 
 [[mixins]]
