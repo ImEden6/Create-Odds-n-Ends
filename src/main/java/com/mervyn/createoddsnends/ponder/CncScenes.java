@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 // The cnc schematic has the pendant at (1, 2, 2) facing north toward the camera, frames running
-// east of it from x 2 to 5 and back to z 4, a shaft under the pendant and a creative motor under that.
+// east of it from x 2 to 5 and back to z 4, the drive at (5, 2, 3) and a creative motor east of it.
 // Ponder worlds are client side, so the mill never picks its own job here: the scenes write
 // what it would be doing straight into its data.
 public final class CncScenes {
@@ -41,7 +41,8 @@ public final class CncScenes {
                 }
         BlockPos pendant = util.grid().at(1, 2, 2);
         scene.world().modifyBlock(pendant, state -> state.setValue(FORMED, true), false);
-        scene.world().modifyBlockEntity(pendant, BlockEntity.class, be -> be.setBlockState(be.getLevel().getBlockState(pendant)));
+        for (BlockPos pos : new BlockPos[] {pendant, util.grid().at(5, 2, 3)})
+            scene.world().modifyBlockEntity(pos, BlockEntity.class, be -> be.setBlockState(be.getLevel().getBlockState(pos)));
     }
 
     private static void contents(CreateSceneBuilder scene, SceneBuildingUtil util, List<ItemStack> in, List<ItemStack> out, boolean running, ItemStack making) {
@@ -72,7 +73,7 @@ public final class CncScenes {
         scene.showBasePlate();
 
         BlockPos pendant = util.grid().at(1, 2, 2);
-        Selection kinetics = util.select().fromTo(1, 0, 2, 1, 2, 2);
+        Selection kinetics = util.select().fromTo(5, 2, 3, 6, 2, 3);
         scene.world().setKineticSpeed(kinetics, 0);
         scene.idle(10);
 
@@ -82,7 +83,7 @@ public final class CncScenes {
         }
         scene.overlay().showText(70)
                 .attachKeyFrame()
-                .text("The mill is a 4x3x3 box of CNC Frames")
+                .text("The mill is a 4x3x3 box of CNC Frames, with a CNC Drive in the middle of the left end")
                 .pointAt(util.vector().topOf(util.grid().at(4, 3, 3)))
                 .placeNearTarget();
         scene.idle(80);
@@ -108,12 +109,12 @@ public final class CncScenes {
                 .placeNearTarget();
         scene.idle(70);
 
-        scene.world().showSection(util.select().fromTo(1, 0, 2, 1, 1, 2), Direction.UP);
+        scene.world().showSection(util.select().position(6, 2, 3), Direction.WEST);
         scene.idle(10);
         scene.world().setKineticSpeed(kinetics, 64);
         scene.overlay().showText(60)
-                .text("Rotation goes into the pendant from below")
-                .pointAt(util.vector().blockSurface(util.grid().at(1, 1, 2), Direction.NORTH))
+                .text("Rotation goes into the drive")
+                .pointAt(util.vector().blockSurface(util.grid().at(5, 2, 3), Direction.EAST))
                 .placeNearTarget();
         scene.idle(70);
         scene.overlay().showText(60)
@@ -130,9 +131,9 @@ public final class CncScenes {
         scene.showBasePlate();
         form(scene, util);
         BlockPos pendant = util.grid().at(1, 2, 2);
-        Selection kinetics = util.select().fromTo(1, 0, 2, 1, 2, 2);
+        Selection kinetics = util.select().fromTo(5, 2, 3, 6, 2, 3);
         scene.world().setKineticSpeed(kinetics, 64);
-        scene.world().showSection(util.select().fromTo(1, 0, 2, 5, 4, 4), Direction.DOWN);
+        scene.world().showSection(util.select().fromTo(1, 0, 2, 6, 4, 4), Direction.DOWN);
         scene.idle(15);
 
         ItemStack sheet = AllItems.GOLDEN_SHEET.asStack();

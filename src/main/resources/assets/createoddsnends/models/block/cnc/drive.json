@@ -1,0 +1,1 @@
+{"parent": "block/cube", "textures": {"particle": "createoddsnends:block/cnc_frame", "north": "createoddsnends:block/cnc_frame", "south": "createoddsnends:block/cnc_frame", "up": "createoddsnends:block/cnc_frame", "down": "createoddsnends:block/cnc_frame", "west": "createoddsnends:block/cnc_frame", "east": "createoddsnends:block/cnc_drive"}}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "createoddsnends:cnc_frame"
+    },
+    "S": {
+      "item": "create:shaft"
+    },
+    "C": {
+      "item": "create:cogwheel"
+    }
+  },
+  "pattern": [
+    "SFC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createoddsnends:cnc_drive"
+  }
+}

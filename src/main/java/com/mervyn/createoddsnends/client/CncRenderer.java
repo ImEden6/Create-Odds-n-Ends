@@ -8,8 +8,6 @@ import com.mervyn.createoddsnends.cnc.CncBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
@@ -19,7 +17,6 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -36,6 +33,7 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
     public static final PartialModel GREEN = of("lamp_green");
     public static final PartialModel AMBER = of("lamp_amber");
     public static final PartialModel RED = of("lamp_red");
+    public static final PartialModel DRIVE_STUB = of("drive_stub");
 
     private static final float PARK_X = 32, PARK_Y = 26, PARK_HEAD = 36;
     private static final float PATH_SPEED = .6f, TIP_Z = 31, TABLE_TOP = 18, TIP_DROP = 8;
@@ -56,9 +54,6 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
     @Override
     protected void renderSafe(CncBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         BlockState state = be.getBlockState();
-        KineticBlockEntityRenderer.standardKineticRotationTransform(
-                CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, state, Direction.DOWN), be, light)
-                .renderInto(ms, buffer.getBuffer(RenderType.solid()));
         if (!state.getValue(FORMED))
             return;
 
@@ -82,7 +77,7 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
         part(TABLE, state, ms, vb, light, 80 - tx - 8, 0, sy - 8);
         part(HEAD, state, ms, vb, light, 40, hz - 8, 8);
         part(TOWER, state, ms, vb, light, 0, 48, 0);
-        PartialModel lit = be.isRunning() ? GREEN : be.getSpeed() != 0 ? AMBER : RED;
+        PartialModel lit = be.isRunning() ? GREEN : be.speed() != 0 ? AMBER : RED;
         for (PartialModel lamp : new PartialModel[] {GREEN, AMBER, RED})
             CachedBuffers.partial(lamp, state)
                     .translate(0, 3, 0)

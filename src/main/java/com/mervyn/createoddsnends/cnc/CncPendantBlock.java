@@ -3,7 +3,7 @@ package com.mervyn.createoddsnends.cnc;
 import static com.mervyn.createoddsnends.cnc.CncFrameBlock.FACING;
 import static com.mervyn.createoddsnends.cnc.CncFrameBlock.FORMED;
 
-import com.simibubi.create.content.kinetics.base.KineticBlock;
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 
 import net.createmod.catnip.math.VoxelShaper;
@@ -18,7 +18,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -30,9 +29,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-// Takes its rotation from a shaft underneath, like a mixer turned upside down
-public class CncPendantBlock extends KineticBlock implements IBE<CncBlockEntity> {
-    private static final VoxelShaper SHAPE = VoxelShaper.forHorizontal(Shapes.or(box(2, 1, 2, 14, 15, 8), box(6, 0, 6, 10, 1, 10), box(9, 11, 5, 16, 13, 7)), Direction.NORTH);
+public class CncPendantBlock extends Block implements IBE<CncBlockEntity>, IWrenchable {
+    private static final VoxelShaper SHAPE = VoxelShaper.forHorizontal(Shapes.or(box(2, 1, 2, 14, 15, 8), box(9, 11, 5, 16, 13, 7)), Direction.NORTH);
 
     public CncPendantBlock(Properties properties) {
         super(properties);
@@ -42,7 +40,6 @@ public class CncPendantBlock extends KineticBlock implements IBE<CncBlockEntity>
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, FORMED);
-        super.createBlockStateDefinition(builder);
     }
 
     @Override
@@ -53,16 +50,6 @@ public class CncPendantBlock extends KineticBlock implements IBE<CncBlockEntity>
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE.get(state.getValue(FACING));
-    }
-
-    @Override
-    public Direction.Axis getRotationAxis(BlockState state) {
-        return Direction.Axis.Y;
-    }
-
-    @Override
-    public boolean hasShaftTowards(LevelReader level, BlockPos pos, BlockState state, Direction face) {
-        return face == Direction.DOWN;
     }
 
     @Override
@@ -83,10 +70,10 @@ public class CncPendantBlock extends KineticBlock implements IBE<CncBlockEntity>
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!level.isClientSide && !state.is(newState.getBlock()) && state.getValue(FORMED))
             CncStructure.unform(level, pos, state.getValue(FACING));
-        super.onRemove(state, level, pos, newState, isMoving);
+        IBE.onRemove(state, level, pos, newState);
     }
 
     @Override

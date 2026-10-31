@@ -36,13 +36,18 @@ public final class Cnc {
     }
 
     public static final DeferredBlock<CncFrameBlock> CNC_FRAME = BLOCKS.register("cnc_frame", () -> new CncFrameBlock(metal()));
+    public static final DeferredBlock<CncDriveBlock> CNC_DRIVE = BLOCKS.register("cnc_drive", () -> new CncDriveBlock(metal()));
     public static final DeferredBlock<CncPendantBlock> CNC_PENDANT = BLOCKS.register("cnc_pendant", () -> new CncPendantBlock(metal()));
 
     public static final DeferredItem<BlockItem> CNC_FRAME_ITEM = ITEMS.registerSimpleBlockItem(CNC_FRAME);
+    public static final DeferredItem<BlockItem> CNC_DRIVE_ITEM = ITEMS.registerSimpleBlockItem(CNC_DRIVE);
     public static final DeferredItem<BlockItem> CNC_PENDANT_ITEM = ITEMS.registerSimpleBlockItem(CNC_PENDANT);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CncBlockEntity>> CNC_BE = BLOCK_ENTITIES.register("cnc_pendant",
             () -> BlockEntityType.Builder.of((pos, state) -> new CncBlockEntity(Cnc.CNC_BE.get(), pos, state), CNC_PENDANT.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CncDriveBlockEntity>> CNC_DRIVE_BE = BLOCK_ENTITIES.register("cnc_drive",
+            () -> BlockEntityType.Builder.of((pos, state) -> new CncDriveBlockEntity(Cnc.CNC_DRIVE_BE.get(), pos, state), CNC_DRIVE.get()).build(null));
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<CncRecipe>> CNC_TYPE = RECIPE_TYPES.register("cnc",
             () -> RecipeType.simple(ResourceLocation.fromNamespaceAndPath(Tracer.MODID, "cnc")));
@@ -81,13 +86,14 @@ public final class Cnc {
     }
 
     private static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, be, side) -> new CncItems(level, pos), CNC_FRAME.get(), CNC_PENDANT.get());
+        event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, be, side) -> new CncItems(level, pos), CNC_FRAME.get(), CNC_DRIVE.get(), CNC_PENDANT.get());
     }
 
     private static void fillTab(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() != Tracer.TAB.getKey())
             return;
         event.accept(CNC_FRAME_ITEM.get());
+        event.accept(CNC_DRIVE_ITEM.get());
         event.accept(CNC_PENDANT_ITEM.get());
     }
 }

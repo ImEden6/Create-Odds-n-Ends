@@ -10,7 +10,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.kinetics.motor.CreativeMotorBlock;
 import com.simibubi.create.content.kinetics.motor.CreativeMotorBlockEntity;
-import com.simibubi.create.content.kinetics.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 
 import net.minecraft.core.BlockPos;
@@ -26,16 +25,26 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-// The pendant hangs on the right of the enclosure as you face the doors. The 4x3x3 box of frames runs
+// The pendant hangs on the right of the enclosure as you face the doors; the drive takes the place of
+// the frame in the middle of the left end. The 4x3x3 box of frames runs
 // from the block beside it ("side", clockwise of facing), from one below to one above it, and back
 // away from the doors. Each frame keeps its part index, so it can always find the pendant again.
 public final class CncStructure {
     static final int WIDE = 4, HIGH = 3, DEEP = 3;
+    static final int DRIVE_PART = 3 + WIDE * (1 + HIGH);
 
     private CncStructure() {}
 
     static int part(int along, int up, int back) {
         return along + WIDE * (up + HIGH * back);
+    }
+
+    static Block block(int along, int up, int back) {
+        return part(along, up, back) == DRIVE_PART ? Cnc.CNC_DRIVE.get() : Cnc.CNC_FRAME.get();
+    }
+
+    static BlockPos drive(BlockPos pendant, Direction facing) {
+        return at(pendant, facing, WIDE - 1, 1, 1);
     }
 
     static BlockPos at(BlockPos pendant, Direction facing, int along, int up, int back) {
@@ -66,8 +75,9 @@ public final class CncStructure {
                     BlockPos pos = at(pendant, facing, a, u, b);
                     BlockState state = level.getBlockState(pos);
                     String where = pos.getX() + ", " + pos.getY() + ", " + pos.getZ();
-                    if (!state.is(Cnc.CNC_FRAME.get()))
-                        return Component.translatable("createoddsnends.cnc.missing", where);
+                    Block wanted = block(a, u, b);
+                    if (!state.is(wanted))
+                        return Component.translatable("createoddsnends.cnc.missing", wanted.getName(), where);
                     if (state.getValue(FORMED) && !pendant.equals(findPendant(level, pos, state)))
                         return Component.translatable("createoddsnends.cnc.taken", where);
                 }
@@ -94,7 +104,7 @@ public final class CncStructure {
                 for (int b = 0; b < DEEP; b++) {
                     BlockPos pos = at(pendant, facing, a, u, b);
                     BlockState state = level.getBlockState(pos);
-                    if (state.is(Cnc.CNC_FRAME.get()) && state.getValue(FORMED) && state.getValue(FACING) == facing && state.getValue(PART) == part(a, u, b))
+                    if (state.is(block(a, u, b)) && state.getValue(FORMED) && state.getValue(FACING) == facing && state.getValue(PART) == part(a, u, b))
                         level.setBlock(pos, state.setValue(FORMED, false), Block.UPDATE_ALL);
                 }
         BlockState state = level.getBlockState(pendant);
@@ -106,7 +116,7 @@ public final class CncStructure {
     public static BlockPos findPendant(Level level, BlockPos pos, BlockState state) {
         if (state.is(Cnc.CNC_PENDANT.get()))
             return pos;
-        if (!state.is(Cnc.CNC_FRAME.get()) || !state.getValue(FORMED))
+        if (!(state.is(Cnc.CNC_FRAME.get()) || state.is(Cnc.CNC_DRIVE.get())) || !state.getValue(FORMED))
             return null;
         Direction facing = state.getValue(FACING);
         int part = state.getValue(PART);
@@ -126,17 +136,16 @@ public final class CncStructure {
     public static void showcase(ServerPlayer player, BlockPos pendant, Direction facing) {
         Level level = player.serverLevel();
         BlockPos.betweenClosed(pendant.relative(facing, 2).relative(facing.getCounterClockWise(), 2).below(),
-                        pendant.relative(facing.getOpposite(), DEEP + 1).relative(facing.getClockWise(), WIDE + 2).above(3))
+                        pendant.relative(facing.getOpposite(), DEEP + 1).relative(facing.getClockWise(), WIDE + 3).above(3))
                 .forEach(pos -> level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL));
         level.setBlock(pendant, Cnc.CNC_PENDANT.get().defaultBlockState().setValue(FACING, facing), Block.UPDATE_ALL);
         for (int a = 0; a < WIDE; a++)
             for (int u = 0; u < HIGH; u++)
                 for (int b = 0; b < DEEP; b++)
-                    level.setBlock(at(pendant, facing, a, u, b), Cnc.CNC_FRAME.get().defaultBlockState(), Block.UPDATE_ALL);
+                    level.setBlock(at(pendant, facing, a, u, b), block(a, u, b).defaultBlockState().setValue(FACING, facing), Block.UPDATE_ALL);
         form(level, pendant, facing);
-        level.setBlock(pendant.below(), AllBlocks.SHAFT.getDefaultState().setValue(RotatedPillarKineticBlock.AXIS, Direction.Axis.Y), Block.UPDATE_ALL);
-        BlockPos motor = pendant.below(2);
-        level.setBlock(motor, AllBlocks.CREATIVE_MOTOR.get().defaultBlockState().setValue(CreativeMotorBlock.FACING, Direction.UP), Block.UPDATE_ALL);
+        BlockPos motor = drive(pendant, facing).relative(facing.getClockWise());
+        level.setBlock(motor, AllBlocks.CREATIVE_MOTOR.get().defaultBlockState().setValue(CreativeMotorBlock.FACING, facing.getCounterClockWise()), Block.UPDATE_ALL);
         if (level.getBlockEntity(motor) instanceof CreativeMotorBlockEntity be)
             be.generatedSpeed.setValue(64);
         if (level.getBlockEntity(pendant) instanceof CncBlockEntity be) {

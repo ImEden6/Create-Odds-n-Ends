@@ -1,5 +1,6 @@
 package com.mervyn.createoddsnends;
 
+import com.mervyn.createoddsnends.client.CncDriveRenderer;
 import com.mervyn.createoddsnends.client.CncRenderer;
 import com.mervyn.createoddsnends.client.HeadstockRenderer;
 import com.mervyn.createoddsnends.cnc.Cnc;
@@ -61,6 +62,10 @@ public class TracerClient {
                 .factory(LatheVisual::create)
                 .skipVanillaRender(be -> true)
                 .apply());
+        event.enqueueWork(() -> SimpleBlockEntityVisualizer.builder(Cnc.CNC_DRIVE_BE.get())
+                .factory(CncDriveRenderer.visual())
+                .skipVanillaRender(be -> false)
+                .apply());
         event.enqueueWork(TracerClient::shiftTooltips);
     }
 
@@ -75,6 +80,7 @@ public class TracerClient {
     static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(Tracer.LATHE_HEADSTOCK_BE.get(), HeadstockRenderer::new);
         event.registerBlockEntityRenderer(Cnc.CNC_BE.get(), CncRenderer::new);
+        event.registerBlockEntityRenderer(Cnc.CNC_DRIVE_BE.get(), CncDriveRenderer::new);
     }
 
     @SubscribeEvent

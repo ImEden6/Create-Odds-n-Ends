@@ -78,7 +78,7 @@ final class CncTests {
         CncBlockEntity be = cnc(player.serverLevel(), i);
         for (int s = 0; s < CncBlockEntity.SLOTS; s++)
             be.input.setStackInSlot(s, ItemStack.EMPTY);
-        if (player.serverLevel().getBlockEntity(site(i).below(2)) instanceof CreativeMotorBlockEntity motor)
+        if (player.serverLevel().getBlockEntity(CncStructure.drive(site(i), facing).relative(facing.getClockWise())) instanceof CreativeMotorBlockEntity motor)
             motor.generatedSpeed.setValue(rpm);
     }
 
@@ -123,6 +123,14 @@ final class CncTests {
         level.setBlock(frame, Cnc.CNC_FRAME.get().defaultBlockState(), 3);
         CncStructure.wrench(level, site(3), player);
         check("reform", level.getBlockState(site(3)).getValue(FORMED), "");
+        BlockPos drive = CncStructure.drive(site(3), Direction.NORTH);
+        level.setBlock(drive, Cnc.CNC_FRAME.get().defaultBlockState(), 3);
+        boolean brokeOnDrive = !level.getBlockState(site(3)).getValue(FORMED);
+        CncStructure.wrench(level, site(3), player);
+        check("drive_required", brokeOnDrive && !level.getBlockState(site(3)).getValue(FORMED), "");
+        level.setBlock(drive, Cnc.CNC_DRIVE.get().defaultBlockState(), 3);
+        CncStructure.wrench(level, site(3), player);
+        check("reform_with_drive", level.getBlockState(site(3)).getValue(FORMED), "");
 
         // 4..7: every facing, every frame finds its pendant
         Direction[] facings = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
@@ -166,7 +174,7 @@ final class CncTests {
 
     private static void afterReload(ServerLevel level) {
         CncBlockEntity save = cnc(level, 2);
-        check("save_kept_progress", save != null && save.progress(0) >= savedProgress, savedProgress + " -> " + (save == null ? null : save.progress(0) + " speed " + save.getSpeed()));
+        check("save_kept_progress", save != null && save.progress(0) >= savedProgress, savedProgress + " -> " + (save == null ? null : save.progress(0) + " speed " + save.speed()));
     }
 
     private static void finish(ServerLevel level) {

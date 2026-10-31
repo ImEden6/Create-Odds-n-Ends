@@ -7,7 +7,8 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 import com.mervyn.createoddsnends.Tracer;
-import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;
@@ -33,9 +34,8 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class CncBlockEntity extends KineticBlockEntity {
+public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
     public static final int SLOTS = 9;
-    static final float STRESS_IMPACT = 8;
 
     final ItemStackHandler input = new ItemStackHandler(SLOTS) {
         @Override
@@ -76,10 +76,12 @@ public class CncBlockEntity extends KineticBlockEntity {
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
 
-    @Override
-    public float calculateStressApplied() {
-        lastStressApplied = STRESS_IMPACT;
-        return STRESS_IMPACT;
+    // rotation comes in through the drive at the far end
+    public float speed() {
+        if (!getBlockState().getValue(FORMED))
+            return 0;
+        BlockPos drive = CncStructure.drive(worldPosition, getBlockState().getValue(CncFrameBlock.FACING));
+        return level.getBlockEntity(drive) instanceof CncDriveBlockEntity be ? be.getSpeed() : 0;
     }
 
     @Override
@@ -97,12 +99,13 @@ public class CncBlockEntity extends KineticBlockEntity {
     public void tick() {
         super.tick();
         if (level.isClientSide) {
+            tickAudio();
             lastEngaged = engaged;
             engaged = Mth.approach(engaged, running ? 1 : 0, .05f);
             lastClock = clock;
             if (running) {
-                progress = Math.min(progress + Math.abs(getSpeed()) / 32, duration);
-                clock += Mth.clamp(Math.abs(getSpeed()) / 64, .5f, 2);
+                progress = Math.min(progress + Math.abs(speed()) / 32, duration);
+                clock += Mth.clamp(Math.abs(speed()) / 64, .5f, 2);
             }
             return;
         }
@@ -116,7 +119,7 @@ public class CncBlockEntity extends KineticBlockEntity {
         }
         if (!running)
             return;
-        progress += Math.abs(getSpeed()) / 32;
+        progress += Math.abs(speed()) / 32;
         if (progress >= duration)
             finish();
     }
@@ -134,7 +137,7 @@ public class CncBlockEntity extends KineticBlockEntity {
     }
 
     private boolean canRun() {
-        return job != null && getSpeed() != 0 && getBlockState().getValue(FORMED) && fits(job);
+        return job != null && speed() != 0 && getBlockState().getValue(FORMED) && fits(job);
     }
 
     private boolean fits(CncJob job) {
@@ -167,7 +170,7 @@ public class CncBlockEntity extends KineticBlockEntity {
     }
 
     public float progress(float partialTicks) {
-        return Math.min(1, (progress + (running ? Math.abs(getSpeed()) / 32 * partialTicks : 0)) / duration);
+        return Math.min(1, (progress + (running ? Math.abs(speed()) / 32 * partialTicks : 0)) / duration);
     }
 
     public float clock(float partialTicks) {
@@ -220,17 +223,14 @@ public class CncBlockEntity extends KineticBlockEntity {
         ItemHelper.dropContents(level, worldPosition, output);
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
-    public void tickAudio() {
-        super.tickAudio();
-        if (running && getSpeed() != 0)
-            SoundScapes.play(AmbienceGroup.MILLING, worldPosition, Mth.clamp(Math.abs(getSpeed()) / 256f + .8f, .8f, 1.3f));
+    private void tickAudio() {
+        if (running && speed() != 0)
+            SoundScapes.play(AmbienceGroup.MILLING, worldPosition, Mth.clamp(Math.abs(speed()) / 256f + .8f, .8f, 1.3f));
     }
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        super.addToGoggleTooltip(tooltip, isPlayerSneaking);
         lang().translate("cnc.goggles.title").forGoggles(tooltip);
         if (!getBlockState().getValue(FORMED)) {
             lang().translate("cnc.goggles.unformed").style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
