@@ -1,0 +1,14 @@
+{
+  "type": "createoddsnends:cnc",
+  "ingredients": [
+    {
+      "item": "minecraft:cobblestone"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:stone_stairs"
+    }
+  ],
+  "processing_time": 240
+}

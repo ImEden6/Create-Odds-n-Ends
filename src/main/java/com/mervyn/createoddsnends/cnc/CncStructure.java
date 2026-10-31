@@ -122,7 +122,7 @@ public final class CncStructure {
         return pendant != null && level.getBlockEntity(pendant) instanceof CncBlockEntity be && be.getBlockState().getValue(FORMED) ? be : null;
     }
 
-    // dev showcase: a formed mill on a creative motor with copper and iron waiting to be cut
+    // dev showcase: a formed mill on a creative motor with cobblestone waiting to be cut
     public static void showcase(ServerPlayer player, BlockPos pendant, Direction facing) {
         Level level = player.serverLevel();
         BlockPos.betweenClosed(pendant.relative(facing, 2).relative(facing.getCounterClockWise(), 2).below(),
@@ -140,9 +140,7 @@ public final class CncStructure {
         if (level.getBlockEntity(motor) instanceof CreativeMotorBlockEntity be)
             be.generatedSpeed.setValue(64);
         if (level.getBlockEntity(pendant) instanceof CncBlockEntity be) {
-            be.input.setStackInSlot(0, new ItemStack(Items.COPPER_BLOCK, 64));
-            be.input.setStackInSlot(1, new ItemStack(Items.IRON_INGOT, 64));
-            be.input.setStackInSlot(2, new ItemStack(Items.IRON_INGOT, 64));
+            be.input.setStackInSlot(0, new ItemStack(Items.COBBLESTONE, 64));
         }
     }
 }
