@@ -16,6 +16,8 @@ displayName="${mod_name}"
 
 displayURL="https://CHANGE-ME.invalid/source"
 
+logoFile="icon.png"
+
 credits="The Create team, for Create and Ponder"
 
 authors="Mervyn"
