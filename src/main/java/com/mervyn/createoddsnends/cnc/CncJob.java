@@ -29,6 +29,8 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Processin
 
     static List<CncJob> all(Level level) {
         List<CncJob> jobs = recipes(level);
+        if (!CncConfig.SEQUENCED_ASSEMBLY.get())
+            return jobs;
         RecipeType<SequencedAssemblyRecipe> assemblies = AllRecipeTypes.SEQUENCED_ASSEMBLY.getType();
         for (RecipeHolder<SequencedAssemblyRecipe> holder : level.getRecipeManager().getAllRecipesFor(assemblies))
             assembly(holder).ifPresent(jobs::add);

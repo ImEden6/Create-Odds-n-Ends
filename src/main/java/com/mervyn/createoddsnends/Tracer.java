@@ -3,6 +3,7 @@ package com.mervyn.createoddsnends;
 import org.slf4j.Logger;
 
 import com.mervyn.createoddsnends.cnc.Cnc;
+import com.mervyn.createoddsnends.cnc.CncConfig;
 import com.mervyn.createoddsnends.jacquard.Jacquard;
 import com.mervyn.createoddsnends.organ.Organ;
 import com.mervyn.createoddsnends.lathe.HeadstockBlock;
@@ -41,6 +42,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -133,6 +135,7 @@ public class Tracer {
         Jacquard.register(modEventBus);
         Organ.register(modEventBus);
         Cnc.register(modEventBus);
+        modContainer.registerConfig(ModConfig.Type.SERVER, CncConfig.SPEC);
         modEventBus.addListener(Tracer::registerPayloads);
         modEventBus.addListener(Tracer::registerCapabilities);
 
