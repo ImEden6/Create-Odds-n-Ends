@@ -38,7 +38,7 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
     public static final PartialModel RED = of("lamp_red");
 
     private static final float PARK_X = 32, PARK_Y = 26, PARK_HEAD = 36;
-    private static final float PATH_TICKS = 240;
+    private static final float PATH_SPEED = .6f, TIP_Z = 31, TABLE_TOP = 18, TIP_DROP = 8;
 
     public CncRenderer(BlockEntityRendererProvider.Context context) {}
 
@@ -67,13 +67,15 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
         ms.mulPose(Axis.YP.rotationDegrees(-state.getValue(FACING).toYRot() + 180));
         ms.translate(-.5, -1.5, -.5);
 
-        // a made up toolpath: the table sweeps side to side while the saddle steps in and out
-        // and the head pecks down, eased in from the parked spot when a job starts
-        float t = be.clock(partialTicks) / PATH_TICKS * Mth.TWO_PI;
+        // the tool tip sits still at x 48, z 31; the table and saddle carry the part under it along the
+        // part's own toolpath while the head follows its height, eased in from the parked spot
+        ItemStack work = be.workpiece();
+        CncToolpath path = work.isEmpty() ? null : CncToolpath.of(work, be.getLevel());
+        float[] tip = path == null ? new float[] {0, 4, 0} : path.at(be.clock(partialTicks) * PATH_SPEED);
         float on = be.engaged(partialTicks);
-        float tx = Mth.lerp(on, PARK_X, 32 + 10 * Mth.sin(t * 3));
-        float sy = Mth.lerp(on, PARK_Y, 27 + 3 * Mth.sin(t * 2 + 1));
-        float hz = Mth.lerp(on, PARK_HEAD, 34 + 1.5f * (1 + Mth.cos(t * 7)));
+        float tx = Mth.lerp(on, PARK_X, 32 + tip[0]);
+        float sy = Mth.lerp(on, PARK_Y, TIP_Z - tip[2]);
+        float hz = Mth.lerp(on, PARK_HEAD, TABLE_TOP + TIP_DROP + tip[1]);
 
         VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
         part(SADDLE, state, ms, vb, light, 40, 0, sy - 8);
@@ -88,12 +90,13 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
                     .color(lamp == lit ? 0xFFFFFF : 0x505050)
                     .renderInto(ms, vb);
 
-        ItemStack work = be.workpiece();
-        if (!work.isEmpty()) {
+        if (path != null) {
             ms.pushPose();
-            ms.translate((80 - tx) / 16, 22 / 16f, sy / 16);
+            ms.translate((80 - tx) / 16, (TABLE_TOP + (path.flat ? .25f : CncToolpath.SIZE / 2)) / 16, sy / 16);
             ms.scale(.5f, .5f, .5f);
-            Minecraft.getInstance().getItemRenderer().renderStatic(work, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
+            if (path.flat)
+                ms.mulPose(Axis.XP.rotationDegrees(-90));
+            Minecraft.getInstance().getItemRenderer().renderStatic(work, ItemDisplayContext.NONE, light, overlay, ms, buffer, be.getLevel(), 0);
             ms.popPose();
         }
         ms.popPose();
