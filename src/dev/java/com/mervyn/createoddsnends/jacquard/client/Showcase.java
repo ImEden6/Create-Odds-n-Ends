@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.mervyn.createoddsnends.Tracer;
 import com.mervyn.createoddsnends.cnc.CncStructure;
+import com.mervyn.createoddsnends.cnc.CncTests;
 import com.mervyn.createoddsnends.jacquard.JacquardCommands;
 import com.mervyn.createoddsnends.jacquard.JacquardHeadBlockEntity;
 import com.mervyn.createoddsnends.lathe.LatheStructure;
@@ -96,7 +97,11 @@ final class Showcase {
                     view("cnc_tool_1", 900, 5.2, -27, 2.1, 8, -27, 1.15),
                     again("cnc_tool_2", 912),
                     again("cnc_tool_3", 924),
-                    again("cnc_tool_4", 936)),
+                    again("cnc_tool_4", 936),
+                    view("cnc_doors", 1060, 1, -21, 4.5, 7.5, -26.5, 1.4),
+                    view("cnc_doors_high", 1160, 3, -26.5, 6.5, 7.5, -26.5, 1.5),
+                    again("jei_cnc", 1260),
+                    again("jei_turning", 1360)),
             "organ_nomotor", List.of(
                     view("organ_back", 440, 8.5, 14.8, 2.2, 5, 13, 1),
                     view("organ_crank_side", 360, 5, 16.5, 1.7, 5, 13, 1.1),
@@ -140,6 +145,10 @@ final class Showcase {
                     if (player(server).level().getBlockEntity(anchor.relative(ahead, 5).above(2)) instanceof JacquardHeadBlockEntity head)
                         head.showcaseJump(0.55);
                 });
+            if (tick == view.at - 12 && view.name.startsWith("cnc_doors"))
+                server.execute(() -> CncTests.showcaseDoors(player(server).serverLevel(), cnc().above()));
+            if (tick == view.at - 60 && view.name.startsWith("jei_"))
+                ShowcaseJei.show(view.name.substring(4));
             if (tick == view.at)
                 Screenshot.grab(mc.gameDirectory, "showcase_" + view.name + ".png", mc.getMainRenderTarget(), message -> {});
         }

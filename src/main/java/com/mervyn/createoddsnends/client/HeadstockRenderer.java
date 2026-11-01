@@ -121,7 +121,7 @@ public class HeadstockRenderer extends SafeBlockEntityRenderer<HeadstockBlockEnt
         ms.popPose();
     }
 
-    private static void spinAroundAxis(PoseStack ms, float radians) {
+    static void spinAroundAxis(PoseStack ms, float radians) {
         ms.translate(.5, .5, 0);
         ms.mulPose(Axis.ZP.rotation(radians));
         ms.translate(-.5, -.5, 0);
@@ -131,7 +131,7 @@ public class HeadstockRenderer extends SafeBlockEntityRenderer<HeadstockBlockEnt
         CachedBuffers.partial(model, state).light(light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
     }
 
-    private static void quads(List<BakedQuad> quads, BlockState source, Level level, BlockPos at, PoseStack ms, MultiBufferSource buffer, int light) {
+    static void quads(List<BakedQuad> quads, BlockState source, Level level, BlockPos at, PoseStack ms, MultiBufferSource buffer, int light) {
         PoseStack.Pose pose = ms.last();
         VertexConsumer vc = buffer.getBuffer(Sheets.cutoutBlockSheet());
         for (BakedQuad quad : quads) {

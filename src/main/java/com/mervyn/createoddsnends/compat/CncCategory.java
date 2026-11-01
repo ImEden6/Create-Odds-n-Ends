@@ -7,15 +7,18 @@ import java.util.List;
 import com.mervyn.createoddsnends.Tracer;
 import com.mervyn.createoddsnends.cnc.Cnc;
 import com.mervyn.createoddsnends.cnc.CncJob;
+import com.mervyn.createoddsnends.client.AnimatedCnc;
+import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
-import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -24,7 +27,7 @@ public class CncCategory extends AbstractRecipeCategory<CncJob> {
     public static final RecipeType<CncJob> TYPE = RecipeType.create(Tracer.MODID, "cnc", CncJob.class);
 
     public CncCategory(IGuiHelper gui) {
-        super(TYPE, Component.translatable("createoddsnends.jei.cnc"), gui.createDrawableItemLike(Cnc.CNC_PENDANT_ITEM.get()), 150, 58);
+        super(TYPE, Component.translatable("createoddsnends.jei.cnc"), gui.createDrawableItemLike(Cnc.CNC_PENDANT_ITEM.get()), 180, 66);
     }
 
     // the same ingredient listed twice shows once with a count
@@ -56,23 +59,23 @@ public class CncCategory extends AbstractRecipeCategory<CncJob> {
     public void setRecipe(IRecipeLayoutBuilder builder, CncJob job, IFocusGroup focuses) {
         List<List<ItemStack>> inputs = grouped(job.needs());
         for (int i = 0; i < inputs.size() && i < 9; i++)
-            builder.addInputSlot(1 + i % 3 * 18, 2 + i / 3 * 18)
-                    .setStandardSlotBackground()
+            builder.addInputSlot(4 + i % 3 * 19, 5 + i / 3 * 19)
+                    .setBackground(CreateRecipeCategory.getRenderedSlot(), -1, -1)
                     .addItemStacks(inputs.get(i));
         List<ProcessingOutput> results = job.results();
         for (int i = 0; i < results.size(); i++) {
             ProcessingOutput out = results.get(i);
-            var slot = builder.addOutputSlot(113 + i % 2 * 18, 11 + i / 2 * 18)
-                    .setOutputSlotBackground()
-                    .addItemStack(out.getStack());
-            if (out.getChance() < 1)
-                slot.addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable("createoddsnends.jei.chance",
-                        Math.round(out.getChance() * 100)).withStyle(ChatFormatting.GOLD)));
+            builder.addOutputSlot(143 + i % 2 * 19, 15 + i / 2 * 19)
+                    .setBackground(CreateRecipeCategory.getRenderedSlot(out), -1, -1)
+                    .addItemStack(out.getStack())
+                    .addRichTooltipCallback(CreateRecipeCategory.addStochasticTooltip(out));
         }
     }
 
     @Override
-    public void createRecipeExtras(IRecipeExtrasBuilder builder, CncJob job, IFocusGroup focuses) {
-        builder.addAnimatedRecipeArrowWidget(job.duration()).setPosition(70, 20);
+    public void draw(CncJob job, IRecipeSlotsView slots, GuiGraphics graphics, double mouseX, double mouseY) {
+        AllGuiTextures.JEI_SHADOW.render(graphics, 75, 50);
+        ItemStack[] first = job.needs().isEmpty() ? new ItemStack[0] : job.needs().get(0).getItems();
+        new AnimatedCnc(first.length == 0 ? ItemStack.EMPTY : first[0]).draw(graphics, 60, 2);
     }
 }
