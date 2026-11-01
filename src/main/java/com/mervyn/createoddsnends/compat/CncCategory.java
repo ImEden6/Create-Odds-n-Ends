@@ -18,6 +18,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -58,10 +59,15 @@ public class CncCategory extends AbstractRecipeCategory<CncJob> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CncJob job, IFocusGroup focuses) {
         List<List<ItemStack>> inputs = grouped(job.needs());
-        for (int i = 0; i < inputs.size() && i < 9; i++)
-            builder.addInputSlot(4 + i % 3 * 19, 5 + i / 3 * 19)
+        List<List<ItemStack>> tools = grouped(job.tools());
+        for (int i = 0; i < inputs.size() + tools.size() && i < 9; i++) {
+            boolean tool = i >= inputs.size();
+            var slot = builder.addInputSlot(4 + i % 3 * 19, 5 + i / 3 * 19)
                     .setBackground(CreateRecipeCategory.getRenderedSlot(), -1, -1)
-                    .addItemStacks(inputs.get(i));
+                    .addItemStacks(tool ? tools.get(i - inputs.size()) : inputs.get(i));
+            if (tool)
+                slot.addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable("createoddsnends.jei.cnc_tool").withStyle(ChatFormatting.GOLD)));
+        }
         List<ProcessingOutput> results = job.results();
         for (int i = 0; i < results.size(); i++) {
             ProcessingOutput out = results.get(i);

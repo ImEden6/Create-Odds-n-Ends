@@ -108,8 +108,9 @@ public class TracerJei implements IModPlugin {
         registration.addRecipeCatalysts(TurningCategory.TYPE, Tracer.LATHE_HEADSTOCK_ITEM.get(), Tracer.LATHE_BED_ITEM.get(), Tracer.LATHE_TAILSTOCK_ITEM.get());
         registration.addRecipeCatalysts(PunchingCategory.TYPE, Jacquard.CARD_PUNCH_ITEM.get());
         registration.addRecipeCatalysts(CncCategory.TYPE, Cnc.CNC_PENDANT_ITEM.get(), Cnc.CNC_FRAME_ITEM.get(), Cnc.CNC_DRIVE_ITEM.get());
-        registration.getJeiHelpers().getRecipeType(ResourceLocation.fromNamespaceAndPath("create", "sequenced_assembly"))
-                .ifPresent(type -> registration.addRecipeCatalysts(type, Cnc.CNC_PENDANT_ITEM.get()));
+        for (String borrowed : List.of("sequenced_assembly", "deploying"))
+            registration.getJeiHelpers().getRecipeType(ResourceLocation.fromNamespaceAndPath("create", borrowed))
+                    .ifPresent(type -> registration.addRecipeCatalysts(type, Cnc.CNC_PENDANT_ITEM.get()));
         registration.addRecipeCatalysts(WeavingCategory.TYPE, Jacquard.JACQUARD_HEAD_ITEM.get(), Jacquard.LOOM_FRAME_ITEM.get(), Jacquard.LOOM_DRIVE_ITEM.get());
     }
 }

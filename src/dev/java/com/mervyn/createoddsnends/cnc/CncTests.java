@@ -91,13 +91,28 @@ public final class CncTests {
 
     private static void setup(ServerPlayer player, ServerLevel level) {
         ItemStackHandler mix = new ItemStackHandler(CncBlockEntity.SLOTS);
-        mix.setStackInSlot(0, new ItemStack(AllItems.ANDESITE_ALLOY.get()));
-        mix.setStackInSlot(1, new ItemStack(AllItems.IRON_SHEET.get(), 4));
+        mix.setStackInSlot(0, new ItemStack(Items.COPPER_BLOCK));
+        mix.setStackInSlot(1, new ItemStack(Items.IRON_INGOT, 2));
         CncJob picked = CncJob.find(level, mix);
-        check("most_specific_wins", picked != null && picked.id().getPath().equals("cnc/propeller"), String.valueOf(picked == null ? null : picked.id()));
-        mix.setStackInSlot(1, new ItemStack(AllItems.IRON_SHEET.get(), 3));
+        check("most_specific_wins", picked != null && picked.id().getPath().equals("cnc_test"), String.valueOf(picked == null ? null : picked.id()));
+        mix.setStackInSlot(1, new ItemStack(Items.IRON_INGOT));
         picked = CncJob.find(level, mix);
-        check("subset_still_found", picked != null && picked.id().getPath().equals("cnc/whisk"), String.valueOf(picked == null ? null : picked.id()));
+        check("subset_still_found", picked != null && picked.id().getPath().equals("cnc_test_subset"), String.valueOf(picked == null ? null : picked.id()));
+
+        ItemStackHandler scrape = new ItemStackHandler(CncBlockEntity.SLOTS);
+        scrape.setStackInSlot(0, new ItemStack(Items.EXPOSED_COPPER));
+        picked = CncJob.find(level, scrape);
+        check("deploying_tool_required", picked == null, String.valueOf(picked == null ? null : picked.id()));
+        scrape.setStackInSlot(1, new ItemStack(Items.IRON_AXE));
+        picked = CncJob.find(level, scrape);
+        boolean took = picked != null && picked.take(scrape, false);
+        check("deploying_tool_kept", took && scrape.getStackInSlot(0).isEmpty() && scrape.getStackInSlot(1).is(Items.IRON_AXE),
+                (picked == null ? null : picked.id()) + " " + scrape.getStackInSlot(0) + " " + scrape.getStackInSlot(1));
+        ItemStackHandler cog = new ItemStackHandler(CncBlockEntity.SLOTS);
+        cog.setStackInSlot(0, new ItemStack(AllBlocks.SHAFT.get()));
+        cog.setStackInSlot(1, new ItemStack(Items.OAK_PLANKS));
+        picked = CncJob.find(level, cog);
+        check("deploying_consumed", picked != null && picked.take(cog, false) && cog.getStackInSlot(1).isEmpty(), String.valueOf(picked == null ? null : picked.id()));
 
         // 0: a whole precision mechanism assembly in one go
         build(player, 0, Direction.NORTH, 256);

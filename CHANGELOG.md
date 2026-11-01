@@ -25,9 +25,9 @@ First release. Needs Create 6.0.11 or newer on NeoForge 1.21.1. JEI is optional.
 ### CNC mill
 - cnc frames, cnc drive and pendant make a 4x3x3 mill. wrench the pendant to put it together, it tells you what's missing
 - rotation goes into the drive at the far end from the pendant, faster runs faster
-- `createoddsnends:cnc` recipe type for modpacks, up to 9 inputs and 4 outputs with chances. a few example recipes for create parts ship with it
+- `createoddsnends:cnc` recipe type for modpacks, up to 9 inputs and 4 outputs with chances.
 - doors swing open when you load or empty it by hand
-- also runs sequenced assembly recipes without fluid steps, `cnc.sequencedAssembly` server config turns that off
+- also runs deploying recipes and sequenced assemblies without fluid steps, `cnc.deploying` and `cnc.sequencedAssembly` server config turn those off
 - the tool follows the part's shape, flat items and blocks both
 
 ### Other

@@ -1,0 +1,17 @@
+{
+  "type": "createoddsnends:cnc",
+  "ingredients": [
+    {
+      "item": "minecraft:copper_block"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:copper_ingot"
+    }
+  ],
+  "processing_time": 120
+}
