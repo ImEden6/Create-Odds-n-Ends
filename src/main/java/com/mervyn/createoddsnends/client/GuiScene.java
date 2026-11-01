@@ -18,10 +18,10 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 
 // Draws whole machines into a JEI page with the same models and partials the world uses.
 // Units are blocks with y up, the same spaces the block entity renderers work in.
-final class GuiScene {
+public final class GuiScene {
     private GuiScene() {}
 
-    static PoseStack begin(GuiGraphics graphics, float x, float y, float scale, float pitch, float yaw) {
+    public static PoseStack begin(GuiGraphics graphics, float x, float y, float scale, float pitch, float yaw) {
         PoseStack ms = graphics.pose();
         ms.pushPose();
         ms.translate(x, y, 300);
@@ -32,13 +32,13 @@ final class GuiScene {
         return ms;
     }
 
-    static void end(GuiGraphics graphics) {
+    public static void end(GuiGraphics graphics) {
         graphics.flush();
         Lighting.setupFor3DItems();
         graphics.pose().popPose();
     }
 
-    static void block(GuiGraphics graphics, BlockState state, float x, float y, float z) {
+    public static void block(GuiGraphics graphics, BlockState state, float x, float y, float z) {
         PoseStack ms = graphics.pose();
         ms.pushPose();
         ms.translate(x, y, z);
@@ -47,15 +47,15 @@ final class GuiScene {
         ms.popPose();
     }
 
-    static SuperByteBuffer partial(PartialModel model, BlockState state) {
+    public static SuperByteBuffer partial(PartialModel model, BlockState state) {
         return CachedBuffers.partial(model, state).light(LightTexture.FULL_BRIGHT);
     }
 
-    static void draw(GuiGraphics graphics, SuperByteBuffer buffer) {
+    public static void draw(GuiGraphics graphics, SuperByteBuffer buffer) {
         buffer.renderInto(graphics.pose(), graphics.bufferSource().getBuffer(Sheets.cutoutBlockSheet()));
     }
 
-    static void drawGlass(GuiGraphics graphics, SuperByteBuffer buffer) {
+    public static void drawGlass(GuiGraphics graphics, SuperByteBuffer buffer) {
         buffer.renderInto(graphics.pose(), graphics.bufferSource().getBuffer(Sheets.translucentCullBlockSheet()));
     }
 }

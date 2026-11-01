@@ -68,25 +68,32 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
         if (!state.getValue(LoomPartBlock.FORMED))
             return;
         Design d = be.shownDesign();
-        int Wp = d.pixelWidth(), Hp = d.pixelHeight();
-        JacquardHeadBlockEntity.Phase ph = be.phase(partialTicks);
         int lit = LevelRenderer.getLightColor(be.getLevel(), be.getBlockPos().below());
         Direction facing = state.getValue(LoomPartBlock.FACING);
+        int texture = be.getDesignId() >= 0 && d != JacquardHeadBlockEntity.DEBUG_DESIGN ? be.getDesignId() : DesignTextures.DEBUG;
 
         ms.pushPose();
         ms.translate(.5, 0, .5);
         ms.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
         ms.translate(-.5, 0, -.5);
+        draw(ms, buffer, RenderType.solid(), false, lit, d, be.hasDesign(), texture, be.phase(partialTicks), be.picks());
+        ms.popPose();
+    }
+
+    // everything that moves, in the head block's space with the loom facing south; the JEI page drives it with a made up phase
+    public static void draw(PoseStack ms, MultiBufferSource buffer, RenderType solid, boolean entity, int lit, Design d, boolean real, int texture,
+                            JacquardHeadBlockEntity.Phase ph, JacquardHeadBlockEntity.Picks picks) {
+        int Wp = d.pixelWidth(), Hp = d.pixelHeight();
+        ms.pushPose();
         ms.scale(1 / 16f, 1 / 16f, 1 / 16f);
         ms.translate(8, -32, 16);
 
-        Mesh m = new Mesh(ms, buffer.getBuffer(RenderType.solid()), lit, false);
+        Mesh m = new Mesh(ms, buffer.getBuffer(solid), lit, entity);
         TextureAtlasSprite oak = Mesh.sprite("createoddsnends:block/loom_timber_h");
         TextureAtlasSprite linen = Mesh.sprite("createoddsnends:block/linen");
         TextureAtlasSprite brass = Mesh.sprite("create:block/brass_block");
         TextureAtlasSprite iron = Mesh.sprite("minecraft:block/iron_block");
 
-        boolean real = be.hasDesign();
         head(m, real ? d : null, brass, iron, ph, Hp - 1 - ph.row());
 
         // card cylinder and card chain
@@ -98,7 +105,6 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
         m.pop();
         double L = 2 * (TOP - BOT) + 2 * Math.PI * R;
         int nCards = (int) Math.round(L / 5);
-        JacquardHeadBlockEntity.Picks picks = be.picks();
         TextureAtlasSprite paper = Mesh.sprite("createoddsnends:block/blank_card");
         int current = (int) Math.floor(ph.cardS());
         for (int i = 0; i < nCards; i++) {
@@ -218,7 +224,7 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
             d0 += len;
         }
         if (!woven.isEmpty()) {
-            ResourceLocation tex = DesignTextures.get(be.getDesignId() >= 0 && d != JacquardHeadBlockEntity.DEBUG_DESIGN ? be.getDesignId() : DesignTextures.DEBUG, d);
+            ResourceLocation tex = DesignTextures.get(texture, d);
             Mesh cloth = new Mesh(ms, buffer.getBuffer(RenderType.entitySolid(tex)), lit, true);
             for (float[] q : woven)
                 cloth.quad(null, new Vector3f(-half, q[0], q[1]), new Vector3f(half, q[0], q[1]), new Vector3f(half, q[2], q[3]), new Vector3f(-half, q[2], q[3]),

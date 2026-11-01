@@ -30,7 +30,7 @@ public enum LoomCell implements StringRepresentable {
     TOP_FRONT_INNER_RIGHT(3, 2, 1),
     TOP_FRONT_RIGHT(4, 2, 1);
 
-    final int x, y, z;
+    public final int x, y, z;
 
     LoomCell(int x, int y, int z) {
         this.x = x;

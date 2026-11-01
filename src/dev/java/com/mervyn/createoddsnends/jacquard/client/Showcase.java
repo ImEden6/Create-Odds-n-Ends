@@ -101,7 +101,9 @@ final class Showcase {
                     view("cnc_doors", 1060, 1, -21, 4.5, 7.5, -26.5, 1.4),
                     view("cnc_doors_high", 1160, 3, -26.5, 6.5, 7.5, -26.5, 1.5),
                     again("jei_cnc", 1260),
-                    again("jei_turning", 1360)),
+                    again("jei_turning", 1360),
+                    again("jei_punching", 1460),
+                    again("jei_weaving", 1560)),
             "organ_nomotor", List.of(
                     view("organ_back", 440, 8.5, 14.8, 2.2, 5, 13, 1),
                     view("organ_crank_side", 360, 5, 16.5, 1.7, 5, 13, 1.1),

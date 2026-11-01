@@ -4,6 +4,7 @@ import com.mervyn.createoddsnends.jacquard.CardPunchBlock;
 import com.mervyn.createoddsnends.jacquard.CardPunchBlockEntity;
 import com.mervyn.createoddsnends.jacquard.Jacquard;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
@@ -47,10 +48,17 @@ public class CardPunchRenderer extends SafeBlockEntityRenderer<CardPunchBlockEnt
         ms.translate(.5, 0, .5);
         ms.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
         ms.translate(-.5, 0, -.5);
+        draw(ms, buffer.getBuffer(RenderType.solid()), false, light, angle, t, n, blanks, be.isPunching());
+        ms.popPose();
+    }
+
+    // the moving parts in the block's own space facing south; the JEI page drives it with its own clock
+    public static void draw(PoseStack ms, VertexConsumer vc, boolean entity, int light, float angle, double t, int n, int blanks, boolean punching) {
+        ms.pushPose();
         ms.scale(1 / 16f, 1 / 16f, 1 / 16f);
         ms.translate(8, 0, 8);
 
-        Mesh m = new Mesh(ms, buffer.getBuffer(RenderType.solid()), light, false);
+        Mesh m = new Mesh(ms, vc, light, entity);
         TextureAtlasSprite steel = Mesh.sprite("minecraft:block/iron_block");
         TextureAtlasSprite brass = Mesh.sprite("create:block/brass_block");
         TextureAtlasSprite paper = Mesh.sprite("createoddsnends:block/blank_card");
@@ -74,7 +82,7 @@ public class CardPunchRenderer extends SafeBlockEntityRenderer<CardPunchBlockEnt
             m.box(card(i), -6 + o, i * 0.5f, 11, 6 + o, i * 0.5f + 0.45f, 21);
         }
 
-        if (!be.isPunching()) {
+        if (!punching) {
             ms.popPose();
             return;
         }

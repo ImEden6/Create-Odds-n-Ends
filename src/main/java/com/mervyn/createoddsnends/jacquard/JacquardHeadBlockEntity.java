@@ -329,7 +329,7 @@ public class JacquardHeadBlockEntity extends SmartBlockEntity implements IHaveGo
             return weft.length;
         }
 
-        static Picks of(Design d) {
+        public static Picks of(Design d) {
             int Wp = d.pixelWidth(), Hp = d.pixelHeight();
             int[] rowStart = new int[Hp + 1];
             List<Integer> rows = new ArrayList<>(), wefts = new ArrayList<>();
@@ -389,8 +389,11 @@ public class JacquardHeadBlockEntity extends SmartBlockEntity implements IHaveGo
         if (weaving && !waiting && !idle)
             t = Math.min(t + Math.abs(speed) / JacquardWork.PICK_RPM / 20 * partialTick, gate ? GATE : 0.9999);
         double spin = this.spin + Math.abs(speed) / 60 * Math.PI * 2 / 20 * partialTick;
-        if (idle)
-            t = 0;
+        return phase(picks, p, idle ? 0 : t, spin, idle);
+    }
+
+    public static Phase phase(Picks picks, int p, double t, double spin, boolean idle) {
+        int row = picks.row()[p];
         boolean lastOfRow = p == picks.rowStart()[row + 1] - 1;
         double shed = t < 0.2 ? ease(t / 0.2) : t < 0.75 ? 1 : t < 0.95 ? 1 - ease((t - 0.75) / 0.2) : 0;
         double back = -0.08, beat = 0.24;
