@@ -34,9 +34,11 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
     public static final PartialModel AMBER = of("lamp_amber");
     public static final PartialModel RED = of("lamp_red");
     public static final PartialModel DRIVE_STUB = of("drive_stub");
+    public static final PartialModel DOOR_A = of("door_a");
+    public static final PartialModel DOOR_B = of("door_b");
 
     private static final float PARK_X = 32, PARK_Y = 26, PARK_HEAD = 36;
-    private static final float PATH_SPEED = .6f, TIP_Z = 31, TABLE_TOP = 18, TIP_DROP = 8;
+    static final float PATH_SPEED = .6f, TIP_Z = 31, TABLE_TOP = 18, TIP_DROP = 8;
 
     public CncRenderer(BlockEntityRendererProvider.Context context) {}
 
@@ -85,6 +87,11 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
                     .color(lamp == lit ? 0xFFFFFF : 0x505050)
                     .renderInto(ms, vb);
 
+        float open = 100 * be.door(partialTicks);
+        VertexConsumer glass = buffer.getBuffer(RenderType.translucent());
+        door(DOOR_A, state, ms, glass, light, 72, 56, -open);
+        door(DOOR_B, state, ms, glass, light, 24, 16, open);
+
         if (path != null) {
             ms.pushPose();
             ms.translate((80 - tx) / 16, (TABLE_TOP + (path.flat ? .25f : CncToolpath.SIZE / 2)) / 16, sy / 16);
@@ -94,6 +101,15 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
             Minecraft.getInstance().getItemRenderer().renderStatic(work, ItemDisplayContext.NONE, light, overlay, ms, buffer, be.getLevel(), 0);
             ms.popPose();
         }
+        ms.popPose();
+    }
+
+    private static void door(PartialModel model, BlockState state, PoseStack ms, VertexConsumer vb, int light, float hinge, float shift, float angle) {
+        ms.pushPose();
+        ms.translate(hinge / 16, 0, 2 / 16f);
+        ms.mulPose(Axis.YP.rotationDegrees(angle));
+        ms.translate(-hinge / 16, 0, -2 / 16f);
+        part(model, state, ms, vb, light, shift, 16, 0);
         ms.popPose();
     }
 

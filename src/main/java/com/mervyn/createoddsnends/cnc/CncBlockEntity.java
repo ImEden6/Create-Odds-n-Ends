@@ -21,6 +21,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -68,6 +70,9 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     float lastEngaged;
     float clock;
     float lastClock;
+    float door;
+    float lastDoor;
+    int doorHold;
 
     public CncBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -100,6 +105,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         super.tick();
         if (level.isClientSide) {
             tickAudio();
+            tickDoor();
             lastEngaged = engaged;
             engaged = Mth.approach(engaged, running ? 1 : 0, .05f);
             lastClock = clock;
@@ -177,6 +183,35 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         return Mth.lerp(partialTicks, lastClock, clock);
     }
 
+    public float door(float partialTicks) {
+        float t = Mth.lerp(partialTicks, lastDoor, door);
+        return t * t * (3 - 2 * t);
+    }
+
+    private void tickDoor() {
+        lastDoor = door;
+        if (doorHold > 0 && --doorHold == 0)
+            level.playLocalSound(worldPosition, SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .5f, 1.2f, false);
+        door = Mth.approach(door, doorHold > 0 ? 1 : 0, doorHold > 0 ? .15f : .08f);
+    }
+
+    // a player loading or emptying it by hand swings the doors open for a moment, funnels don't
+    void openDoors() {
+        level.blockEvent(worldPosition, getBlockState().getBlock(), 1, 0);
+    }
+
+    @Override
+    public boolean triggerEvent(int id, int param) {
+        if (id != 1)
+            return super.triggerEvent(id, param);
+        if (level.isClientSide) {
+            if (doorHold == 0 && door < .5f)
+                level.playLocalSound(worldPosition, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, .5f, 1.2f, false);
+            doorHold = 30;
+        }
+        return true;
+    }
+
     public float engaged(float partialTicks) {
         return Mth.lerp(partialTicks, lastEngaged, engaged);
     }
@@ -200,6 +235,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         if (!level.isClientSide) {
             ItemStack left = ItemHandlerHelper.insertItemStacked(input, held.copy(), false);
             player.setItemInHand(player.getUsedItemHand(), left);
+            openDoors();
         }
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
@@ -213,6 +249,8 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
                 if (!level.isClientSide)
                     player.getInventory().placeItemBackInInventory(from.extractItem(i, 64, false));
             }
+        if (any && !level.isClientSide)
+            openDoors();
         return any ? InteractionResult.sidedSuccess(level.isClientSide) : InteractionResult.PASS;
     }
 

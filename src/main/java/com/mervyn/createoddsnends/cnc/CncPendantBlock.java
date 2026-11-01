@@ -77,6 +77,11 @@ public class CncPendantBlock extends Block implements IBE<CncBlockEntity>, IWren
     }
 
     @Override
+    protected boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
+        return level.getBlockEntity(pos) instanceof CncBlockEntity be && be.triggerEvent(id, param);
+    }
+
+    @Override
     protected BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
