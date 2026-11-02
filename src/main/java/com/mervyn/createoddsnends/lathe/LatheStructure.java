@@ -13,6 +13,7 @@ import com.mervyn.createoddsnends.Profile;
 import com.mervyn.createoddsnends.Tracer;
 import com.mervyn.createoddsnends.turned.TurnedBlockEntity;
 import com.mervyn.createoddsnends.turned.TurnedBlockItem;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -76,6 +77,14 @@ public final class LatheStructure {
     private static boolean assemble(Level level, BlockPos controller, Player player) {
         Direction facing = level.getBlockState(controller).getValue(FACING);
         Component problem = check(level, controller, facing, LATHE);
+        // placement turns the headstock by where the player was looking, so it can easily end up
+        // pointing away from beds that are right there; turn it toward a lathe that's built another way
+        for (Direction other : Direction.Plane.HORIZONTAL)
+            if (problem != null && other != facing && check(level, controller, other, LATHE) == null) {
+                KineticBlockEntity.switchToBlockState(level, controller, level.getBlockState(controller).setValue(FACING, other));
+                facing = other;
+                problem = null;
+            }
         if (problem != null) {
             player.displayClientMessage(problem, true);
             return false;
