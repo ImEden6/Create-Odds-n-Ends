@@ -7,7 +7,6 @@ import com.mervyn.createoddsnends.cnc.Cnc;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
-import mezz.jei.api.gui.drawable.IDrawable;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,24 +17,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 // The whole mill on a JEI page, cutting the recipe's first input along its real toolpath.
-public class AnimatedCnc implements IDrawable {
+public class AnimatedCnc {
     private final ItemStack work;
 
     public AnimatedCnc(ItemStack work) {
         this.work = work;
     }
 
-    @Override
-    public int getWidth() {
-        return 80;
-    }
-
-    @Override
-    public int getHeight() {
-        return 60;
-    }
-
-    @Override
     public void draw(GuiGraphics graphics, int x, int y) {
         Minecraft mc = Minecraft.getInstance();
         PoseStack ms = GuiScene.begin(graphics, x + 40, y + 34, 13, 25, -150);

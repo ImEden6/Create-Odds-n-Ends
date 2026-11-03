@@ -30,14 +30,14 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
     static final int DEFAULT_DURATION = 200;
     static final int STEP_DURATION = 100;
 
-    static List<CncJob> all(Level level) {
+    public static List<CncJob> all(Level level) {
         List<CncJob> jobs = recipes(level);
-        if (CncConfig.DEPLOYING.get()) {
+        if (CncConfig.on(CncConfig.DEPLOYING)) {
             RecipeType<DeployerApplicationRecipe> deploying = AllRecipeTypes.DEPLOYING.getType();
             for (RecipeHolder<DeployerApplicationRecipe> holder : level.getRecipeManager().getAllRecipesFor(deploying))
                 deploying(holder).ifPresent(jobs::add);
         }
-        if (CncConfig.SEQUENCED_ASSEMBLY.get()) {
+        if (CncConfig.on(CncConfig.SEQUENCED_ASSEMBLY)) {
             RecipeType<SequencedAssemblyRecipe> assemblies = AllRecipeTypes.SEQUENCED_ASSEMBLY.getType();
             for (RecipeHolder<SequencedAssemblyRecipe> holder : level.getRecipeManager().getAllRecipesFor(assemblies))
                 assembly(holder).ifPresent(jobs::add);

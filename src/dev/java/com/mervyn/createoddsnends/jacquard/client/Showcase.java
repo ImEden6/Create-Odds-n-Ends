@@ -12,6 +12,7 @@ import com.mervyn.createoddsnends.lathe.LatheStructure;
 import com.mervyn.createoddsnends.organ.OrganCommands;
 
 import net.minecraft.client.Minecraft;
+import net.neoforged.fml.ModList;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.BlockPos;
@@ -149,8 +150,12 @@ final class Showcase {
                 });
             if (tick == view.at - 12 && view.name.startsWith("cnc_doors"))
                 server.execute(() -> CncTests.showcaseDoors(player(server).serverLevel(), cnc().above()));
-            if (tick == view.at - 60 && view.name.startsWith("jei_"))
-                ShowcaseJei.show(view.name.substring(4));
+            if (tick == view.at - 60 && view.name.startsWith("jei_")) {
+                if (ModList.get().isLoaded("jei"))
+                    ShowcaseJei.show(view.name.substring(4));
+                else
+                    ShowcaseEmi.show(view.name.substring(4));
+            }
             if (tick == view.at)
                 Screenshot.grab(mc.gameDirectory, "showcase_" + view.name + ".png", mc.getMainRenderTarget(), message -> {});
         }

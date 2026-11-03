@@ -4,7 +4,6 @@ import com.mervyn.createoddsnends.client.GuiScene;
 import com.mervyn.createoddsnends.jacquard.Jacquard;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 
-import mezz.jei.api.gui.drawable.IDrawable;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
@@ -12,20 +11,9 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.Direction;
 
 // The card punch on a JEI page feeding blanks through one after another until the chain is eight long, then starting over.
-public class AnimatedPunch implements IDrawable {
+public class AnimatedPunch {
     private static final int CARD = 40, CHAIN = 8;
 
-    @Override
-    public int getWidth() {
-        return 50;
-    }
-
-    @Override
-    public int getHeight() {
-        return 50;
-    }
-
-    @Override
     public void draw(GuiGraphics graphics, int x, int y) {
         float time = AnimationTickHolder.getRenderTime();
         int n = (int) (time / CARD) % (CHAIN + 1);

@@ -122,7 +122,10 @@ dependencies {
 
     compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
     compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
-    runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}") { transitive = false }
+    // ODDSNENDS_NOJEI=true runs the dev client with EMI alone, to check the native EMI plugin
+    if (System.getenv("ODDSNENDS_NOJEI") != "true")
+        runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}") { transitive = false }
+    compileOnly("dev.emi:emi-neoforge:${emi_version}:api") { transitive = false }
     runtimeOnly("dev.emi:emi-neoforge:${emi_version}") { transitive = false }
 }
 

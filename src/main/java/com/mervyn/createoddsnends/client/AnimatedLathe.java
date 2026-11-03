@@ -9,7 +9,6 @@ import com.mervyn.createoddsnends.Profile;
 import com.mervyn.createoddsnends.Tracer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import mezz.jei.api.gui.drawable.IDrawable;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
@@ -19,7 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 // The formed lathe on a JEI page turning the examples down to the recipe's profile, one block after another.
-public class AnimatedLathe implements IDrawable {
+public class AnimatedLathe {
     private static final float SPEED = 32;
     private static final int CYCLE = 140;
 
@@ -31,17 +30,6 @@ public class AnimatedLathe implements IDrawable {
         this.blocks = blocks;
     }
 
-    @Override
-    public int getWidth() {
-        return 60;
-    }
-
-    @Override
-    public int getHeight() {
-        return 50;
-    }
-
-    @Override
     public void draw(GuiGraphics graphics, int x, int y) {
         float time = AnimationTickHolder.getRenderTime();
         int round = (int) (time / CYCLE);

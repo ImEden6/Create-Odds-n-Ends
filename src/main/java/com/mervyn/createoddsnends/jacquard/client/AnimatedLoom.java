@@ -9,7 +9,6 @@ import com.mervyn.createoddsnends.jacquard.JacquardHeadBlockEntity;
 import com.mervyn.createoddsnends.jacquard.LoomCell;
 import com.mervyn.createoddsnends.jacquard.LoomFrameBlock;
 
-import mezz.jei.api.gui.drawable.IDrawable;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
@@ -18,21 +17,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
 // The formed loom on a JEI page weaving the sample design, a pick every few ticks so the cloth visibly grows.
-public class AnimatedLoom implements IDrawable {
+public class AnimatedLoom {
     private static final int PICK = 10;
     private static final JacquardHeadBlockEntity.Picks PICKS = JacquardHeadBlockEntity.Picks.of(JacquardHeadBlockEntity.DEBUG_DESIGN);
 
-    @Override
-    public int getWidth() {
-        return 60;
-    }
-
-    @Override
-    public int getHeight() {
-        return 50;
-    }
-
-    @Override
     public void draw(GuiGraphics graphics, int x, int y) {
         float time = AnimationTickHolder.getRenderTime();
         int pick = (int) (time / PICK) % PICKS.total();

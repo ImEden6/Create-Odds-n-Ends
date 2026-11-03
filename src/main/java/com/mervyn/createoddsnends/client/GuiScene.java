@@ -3,9 +3,10 @@ package com.mervyn.createoddsnends.client;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
+import com.simibubi.create.foundation.gui.CustomLightingSettings;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import net.createmod.catnip.gui.ILightingSettings;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.Minecraft;
@@ -19,6 +20,12 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 // Draws whole machines into a JEI page with the same models and partials the world uses.
 // Units are blocks with y up, the same spaces the block entity renderers work in.
 public final class GuiScene {
+    // Create's JEI lighting, rebuilt here since its own copy lives on a JEI class and EMI can run without JEI
+    private static final ILightingSettings LIGHTING = CustomLightingSettings.builder()
+            .firstLightRotation(12.5f, -45.0f)
+            .secondLightRotation(-20.0f, -50.0f)
+            .build();
+
     private GuiScene() {}
 
     public static PoseStack begin(GuiGraphics graphics, float x, float y, float scale, float pitch, float yaw) {
@@ -28,7 +35,7 @@ public final class GuiScene {
         ms.scale(scale, -scale, scale);
         ms.mulPose(Axis.XP.rotationDegrees(pitch));
         ms.mulPose(Axis.YP.rotationDegrees(yaw));
-        AnimatedKinetics.DEFAULT_LIGHTING.applyLighting();
+        LIGHTING.applyLighting();
         return ms;
     }
 
