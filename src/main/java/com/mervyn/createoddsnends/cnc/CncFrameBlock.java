@@ -3,6 +3,7 @@ package com.mervyn.createoddsnends.cnc;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -58,6 +59,18 @@ public class CncFrameBlock extends Block implements IWrenchable {
         if (state.getValue(FORMED) && hit.getDirection() == state.getValue(FACING))
             return cnc.toggleDoors(player);
         return cnc.useEmptyHand(player);
+    }
+
+    // the mill's insides are lit through, otherwise every frame dims the light a step and the
+    // inner walls come out in patches block by block
+    @Override
+    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+        return true;
+    }
+
+    @Override
+    protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
+        return 0;
     }
 
     @Override

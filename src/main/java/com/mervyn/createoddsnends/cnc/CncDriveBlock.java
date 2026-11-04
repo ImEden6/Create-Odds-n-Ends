@@ -8,6 +8,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -88,6 +89,18 @@ public class CncDriveBlock extends KineticBlock implements IBE<CncDriveBlockEnti
                 CncStructure.unform(level, pendant, state.getValue(FACING));
         }
         super.onRemove(state, level, pos, newState, isMoving);
+    }
+
+    // the mill's insides are lit through, otherwise every frame dims the light a step and the
+    // inner walls come out in patches block by block
+    @Override
+    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+        return true;
+    }
+
+    @Override
+    protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
+        return 0;
     }
 
     @Override
