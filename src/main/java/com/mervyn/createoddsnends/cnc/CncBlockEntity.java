@@ -72,7 +72,6 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     float lastClock;
     float door;
     float lastDoor;
-    int doorHold;
     // opened by a player on the front, saved; the mill won't cut with them open
     private boolean doorsOpen;
 
@@ -192,36 +191,15 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
 
     private void tickDoor() {
         lastDoor = door;
-        if (doorHold > 0 && --doorHold == 0 && !doorsOpen)
-            level.playLocalSound(worldPosition, SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .5f, 1.2f, false);
-        boolean open = doorsOpen || doorHold > 0;
-        door = Mth.approach(door, open ? 1 : 0, open ? .15f : .08f);
+        door = Mth.approach(door, doorsOpen ? 1 : 0, doorsOpen ? .15f : .08f);
     }
 
-    // a player loading or emptying it by hand swings the doors open for a moment, funnels don't
-    void openDoors() {
-        level.blockEvent(worldPosition, getBlockState().getBlock(), 1, 0);
-    }
-
-    @Override
-    public boolean triggerEvent(int id, int param) {
-        if (id != 1)
-            return super.triggerEvent(id, param);
-        if (level.isClientSide) {
-            if (doorHold == 0 && door < .5f)
-                level.playLocalSound(worldPosition, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, .5f, 1.2f, false);
-            doorHold = 30;
-        }
-        return true;
-    }
-
-    public InteractionResult toggleDoors(Player player) {
-        if (!level.isClientSide) {
-            doorsOpen = !doorsOpen;
-            level.playSound(null, worldPosition, doorsOpen ? SoundEvents.IRON_DOOR_OPEN : SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .6f, 1.2f);
-            sendData();
-        }
-        return InteractionResult.sidedSuccess(level.isClientSide);
+    void setDoors(boolean open) {
+        if (open == doorsOpen || level.isClientSide)
+            return;
+        doorsOpen = open;
+        level.playSound(null, worldPosition, open ? SoundEvents.IRON_DOOR_OPEN : SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .6f, 1.2f);
+        sendData();
     }
 
     public float engaged(float partialTicks) {
@@ -241,29 +219,39 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         return ItemStack.EMPTY;
     }
 
+    // By hand everything goes through the doors: a shut mill only opens up, an open one takes what
+    // you're holding or gives back finished pieces, then whatever's still waiting to be cut.
+    // Funnels, arms and pipes don't care about the doors.
     public ItemInteractionResult useItem(Player player, ItemStack held) {
         if (held.isEmpty())
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (!level.isClientSide) {
-            ItemStack left = ItemHandlerHelper.insertItemStacked(input, held.copy(), false);
-            player.setItemInHand(player.getUsedItemHand(), left);
-            openDoors();
+            if (!doorsOpen)
+                setDoors(true);
+            else
+                player.setItemInHand(player.getUsedItemHand(), ItemHandlerHelper.insertItemStacked(input, held.copy(), false));
         }
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 
     public InteractionResult useEmptyHand(Player player) {
-        ItemStackHandler from = player.isSecondaryUseActive() ? input : output;
+        if (!level.isClientSide) {
+            if (!doorsOpen)
+                setDoors(true);
+            else if (player.isSecondaryUseActive() || !(giveBack(player, output) || giveBack(player, input)))
+                setDoors(false);
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    private static boolean giveBack(Player player, ItemStackHandler from) {
         boolean any = false;
         for (int i = 0; i < SLOTS; i++)
             if (!from.getStackInSlot(i).isEmpty()) {
                 any = true;
-                if (!level.isClientSide)
-                    player.getInventory().placeItemBackInInventory(from.extractItem(i, 64, false));
+                player.getInventory().placeItemBackInInventory(from.extractItem(i, 64, false));
             }
-        if (any && !level.isClientSide)
-            openDoors();
-        return any ? InteractionResult.sidedSuccess(level.isClientSide) : InteractionResult.PASS;
+        return any;
     }
 
     @Override

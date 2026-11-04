@@ -70,7 +70,9 @@ and whole sequenced assemblies that have no fluid steps. Modpacks add their own 
 A sequenced assembly costs one loop's worth of parts and runs a lot quicker than Create's line does.
 `cnc.assemblyLoopsCharged` and `cnc.assemblyStepTicks` tune that, set the first to 0 to charge every loop.
 
-Right-click the front with an empty hand to open the doors. It won't cut while they're open.
+By hand it all goes through the doors. Right-click to open them, then right-click with parts to load it,
+or with an empty hand to take finished pieces (or parts that haven't been cut yet) back out. An empty
+hand on an empty mill, or a sneak, shuts the doors. It won't cut while they're open.
 Funnels, chutes, hoppers, mechanical arms and other mods' pipes all feed and empty it from any side.
 
 ## Building

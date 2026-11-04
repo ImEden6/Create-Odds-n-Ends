@@ -26,7 +26,7 @@ First release. Needs Create 6.0.10 or newer on NeoForge 1.21.1. JEI is optional.
 - cnc frames, cnc drive and pendant make a 4x3x3 mill. wrench the pendant to put it together, it tells you what's missing
 - rotation goes into the drive at the far end from the pendant, faster runs faster
 - `createoddsnends:cnc` recipe type for modpacks, up to 9 inputs and 4 outputs with chances.
-- doors swing open when you load or empty it by hand, or right-click the front to open them yourself. it pauses while they're open
+- by hand you open the doors first, then load it or take things out, parts included before they're cut. it pauses while the doors are open
 - sequenced assembly costs one loop of parts and runs faster than create's line, `cnc.assemblyLoopsCharged` and `cnc.assemblyStepTicks` tune it
 - mechanical arms can feed and empty it, so can funnels, chutes, hoppers and pipes
 - also runs deploying recipes and sequenced assemblies without fluid steps, `cnc.deploying` and `cnc.sequencedAssembly` server config turn those off

@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.HopperBlock;
@@ -191,7 +192,23 @@ public final class CncTests {
         // 11: doors opened by a player, the interlock keeps it from cutting
         build(player, 11, Direction.NORTH, 256);
         cnc(level, 11).input.setStackInSlot(0, new ItemStack(Items.COBBLESTONE, 4));
-        cnc(level, 11).toggleDoors(player);
+        cnc(level, 11).setDoors(true);
+
+        // 12: by hand. Shut, an item only opens the doors; open, it goes in; an empty hand takes it
+        // back out before anything is cut, then closes up once there's nothing left.
+        build(player, 12, Direction.NORTH, 0);
+        CncBlockEntity hand = cnc(level, 12);
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.COBBLESTONE, 5));
+        hand.useItem(player, player.getMainHandItem());
+        check("hand_shut_opens_only", hand.input.getStackInSlot(0).isEmpty() && player.getMainHandItem().getCount() == 5, hand.input.getStackInSlot(0).toString());
+        hand.useItem(player, player.getMainHandItem());
+        check("hand_open_inserts", hand.input.getStackInSlot(0).getCount() == 5 && player.getMainHandItem().isEmpty(), hand.input.getStackInSlot(0).toString());
+        hand.useEmptyHand(player);
+        check("hand_takes_input_back", hand.input.getStackInSlot(0).isEmpty() && player.getInventory().countItem(Items.COBBLESTONE) >= 5, "");
+        player.getInventory().clearOrCountMatchingItems(stack -> stack.is(Items.COBBLESTONE), -1, player.inventoryMenu.getCraftSlots());
+        hand.useEmptyHand(player);
+        boolean closed = !hand.getUpdateTag(level.registryAccess()).getBoolean("DoorsOpen");
+        check("hand_empty_closes", closed, "");
 
         // 10: automation. A hopper on the roof feeds it, and a mechanical arm point on a frame
         // finds the mill and moves items both ways. No rotation, so nothing gets used up.
@@ -276,6 +293,6 @@ public final class CncTests {
 
     public static void showcaseDoors(ServerLevel level, BlockPos pendant) {
         if (level.getBlockEntity(pendant) instanceof CncBlockEntity be)
-            be.openDoors();
+            be.setDoors(true);
     }
 }
