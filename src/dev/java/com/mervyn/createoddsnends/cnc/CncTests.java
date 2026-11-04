@@ -210,6 +210,10 @@ public final class CncTests {
         hand.useEmptyHand(player);
         boolean closed = !hand.getUpdateTag(level.registryAccess()).getBoolean("DoorsOpen");
         check("hand_empty_closes", closed, "");
+        hand.pressDoorButton();
+        check("pendant_opens", hand.getUpdateTag(level.registryAccess()).getBoolean("DoorsOpen"), "");
+        hand.pressDoorButton();
+        check("pendant_closes", !hand.getUpdateTag(level.registryAccess()).getBoolean("DoorsOpen"), "");
 
         // the open doors take clicks: aim at the middle of each, and just over the top of one
         for (int door = 0; door < 2; door++) {

@@ -365,7 +365,7 @@
   "createoddsnends.ponder.cnc_build.text_4": "Rotation goes into the drive",
   "createoddsnends.ponder.cnc_build.text_5": "Breaking any part takes the whole mill apart again",
   "createoddsnends.ponder.cnc_machining.header": "Machining with the CNC Mill",
-  "createoddsnends.ponder.cnc_machining.text_1": "Right click to open the doors, then put items in or take them out. Funnels, chutes and arms work on any side with the doors shut",
+  "createoddsnends.ponder.cnc_machining.text_1": "Right click the pendant or the front to open the doors, then put items in or take them out through the front. Funnels, chutes and arms work on any side with the doors shut",
   "createoddsnends.ponder.cnc_machining.text_2": "It makes anything a cnc or deploying recipe asks for, and runs a whole sequenced assembly in one go if it has every part for it",
   "createoddsnends.ponder.cnc_machining.text_3": "The light on top is green while it cuts, amber when it has nothing to do and red without rotation",
   "createoddsnends.ponder.cnc_machining.text_4": "Take the result out with an empty hand, sneak to take the input back",

@@ -9,11 +9,8 @@ import com.simibubi.create.foundation.block.IBE;
 import net.createmod.catnip.math.VoxelShaper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -58,15 +55,9 @@ public class CncPendantBlock extends Block implements IBE<CncBlockEntity>, IWren
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        CncBlockEntity cnc = CncStructure.find(level, pos);
-        return cnc != null ? cnc.useItem(player, hand, stack) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-    }
-
-    @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         CncBlockEntity cnc = CncStructure.find(level, pos);
-        return cnc != null ? cnc.useEmptyHand(player) : InteractionResult.PASS;
+        return cnc != null ? cnc.pressDoorButton() : InteractionResult.PASS;
     }
 
     @Override

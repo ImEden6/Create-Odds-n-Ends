@@ -237,6 +237,11 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
+    public InteractionResult pressDoorButton() {
+        setDoors(!doorsOpen);
+        return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
     private static boolean giveBack(Player player, ItemStackHandler from) {
         for (int i = SLOTS - 1; i >= 0; i--)
             if (!from.getStackInSlot(i).isEmpty()) {

@@ -46,16 +46,18 @@ public class CncFrameBlock extends Block implements IWrenchable {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        CncBlockEntity cnc = CncStructure.find(level, pos);
+        CncBlockEntity cnc = front(state, hit) ? CncStructure.find(level, pos) : null;
         return cnc != null ? cnc.useItem(player, hand, stack) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        CncBlockEntity cnc = CncStructure.find(level, pos);
-        if (cnc == null)
-            return InteractionResult.PASS;
-        return cnc.useEmptyHand(player);
+        CncBlockEntity cnc = front(state, hit) ? CncStructure.find(level, pos) : null;
+        return cnc != null ? cnc.useEmptyHand(player) : InteractionResult.PASS;
+    }
+
+    private static boolean front(BlockState state, BlockHitResult hit) {
+        return state.getValue(FORMED) && hit.getDirection() == state.getValue(FACING);
     }
 
     @Override
