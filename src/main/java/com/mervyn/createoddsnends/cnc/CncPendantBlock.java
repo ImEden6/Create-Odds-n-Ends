@@ -60,7 +60,7 @@ public class CncPendantBlock extends Block implements IBE<CncBlockEntity>, IWren
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         CncBlockEntity cnc = CncStructure.find(level, pos);
-        return cnc != null ? cnc.useItem(player, stack) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return cnc != null ? cnc.useItem(player, hand, stack) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

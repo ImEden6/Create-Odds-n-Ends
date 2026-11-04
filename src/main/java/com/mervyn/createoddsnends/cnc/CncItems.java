@@ -39,7 +39,7 @@ public class CncItems implements IItemHandler {
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         CncBlockEntity cnc = cnc();
-        return cnc == null || slot >= CncBlockEntity.SLOTS ? stack : cnc.input.insertItem(slot, stack, simulate);
+        return cnc == null || slot >= CncBlockEntity.SLOTS || !CncJob.accepts(level, stack) ? stack : cnc.input.insertItem(slot, stack, simulate);
     }
 
     @Override
@@ -55,6 +55,6 @@ public class CncItems implements IItemHandler {
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return slot < CncBlockEntity.SLOTS && cnc() != null;
+        return slot < CncBlockEntity.SLOTS && cnc() != null && CncJob.accepts(level, stack);
     }
 }

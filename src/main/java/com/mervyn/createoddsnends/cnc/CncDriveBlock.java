@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 
-// The frame in the middle of the mill's left end, with a shaft socket facing out. Facing is the
+// The frame in the bottom middle of the mill's left end, with a shaft socket facing out. Facing is the
 // mill's facing, so the shaft side is clockwise of it, same as the way the frames run from the pendant.
 public class CncDriveBlock extends KineticBlock implements IBE<CncDriveBlockEntity> {
     public CncDriveBlock(Properties properties) {
@@ -72,7 +72,7 @@ public class CncDriveBlock extends KineticBlock implements IBE<CncDriveBlockEnti
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         CncBlockEntity cnc = CncStructure.find(level, pos);
-        return cnc != null ? cnc.useItem(player, stack) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return cnc != null ? cnc.useItem(player, hand, stack) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

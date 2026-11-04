@@ -1,7 +1,10 @@
 package com.mervyn.createoddsnends.cnc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +21,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -29,7 +33,35 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredient> tools, List<ProcessingOutput> results, int duration, boolean weighted) {
     static final int DEFAULT_DURATION = 200;
 
+    private record Cached(List<CncJob> jobs, String config) {}
+
+    private static final Map<RecipeManager, Cached> CACHE = Collections.synchronizedMap(new WeakHashMap<>());
+
+    // rebuilt only when the recipes reload or the config changes, the mill asks on every slot change
     public static List<CncJob> all(Level level) {
+        String config = CncConfig.on(CncConfig.DEPLOYING) + "/" + CncConfig.on(CncConfig.SEQUENCED_ASSEMBLY) + "/"
+                + CncConfig.number(CncConfig.ASSEMBLY_LOOPS) + "/" + CncConfig.number(CncConfig.STEP_TICKS);
+        Cached cached = CACHE.get(level.getRecipeManager());
+        if (cached == null || !cached.config().equals(config)) {
+            cached = new Cached(build(level), config);
+            CACHE.put(level.getRecipeManager(), cached);
+        }
+        return cached.jobs();
+    }
+
+    static boolean accepts(Level level, ItemStack stack) {
+        for (CncJob job : all(level)) {
+            for (Ingredient need : job.needs)
+                if (need.test(stack))
+                    return true;
+            for (Ingredient tool : job.tools)
+                if (tool.test(stack))
+                    return true;
+        }
+        return false;
+    }
+
+    private static List<CncJob> build(Level level) {
         List<CncJob> jobs = recipes(level);
         if (CncConfig.on(CncConfig.DEPLOYING)) {
             RecipeType<DeployerApplicationRecipe> deploying = AllRecipeTypes.DEPLOYING.getType();
@@ -78,8 +110,10 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
                 extra = extra.subList(Math.min(1, extra.size()), extra.size());
                 if (!(step.getRecipe() instanceof ItemApplicationRecipe applied && applied.shouldKeepHeldItem()))
                     needs.addAll(extra);
-                else if (loop == 0)
-                    tools.addAll(extra);
+                else
+                    for (Ingredient tool : extra)
+                        if (!tools.contains(tool))
+                            tools.add(tool);
             }
         int duration = CncConfig.number(CncConfig.STEP_TICKS) * recipe.getSequence().size() * loops;
         return Optional.of(new CncJob(holder.id(), needs, tools, recipe.resultPool, duration, true));

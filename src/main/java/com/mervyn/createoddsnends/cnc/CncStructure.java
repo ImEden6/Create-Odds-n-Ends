@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.motor.CreativeMotorBlock;
 import com.simibubi.create.content.kinetics.motor.CreativeMotorBlockEntity;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -26,7 +27,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 // The pendant hangs on the right of the enclosure as you face the doors; the drive takes the place of
-// the frame in the middle of the left end. The 4x3x3 box of frames runs
+// the frame in the bottom middle of the left end. The 4x3x3 box of frames runs
 // from the block beside it ("side", clockwise of facing), from one below to one above it, and back
 // away from the doors. Each frame keeps its part index, so it can always find the pendant again.
 public final class CncStructure {
@@ -91,7 +92,11 @@ public final class CncStructure {
                     BlockPos pos = at(pendant, facing, a, u, b);
                     BlockState state = level.getBlockState(pos);
                     BlockState formed = state.setValue(FORMED, true).setValue(FACING, facing).setValue(PART, part(a, u, b));
-                    if (formed != state)
+                    if (formed == state)
+                        continue;
+                    if (state.is(Cnc.CNC_DRIVE.get()))
+                        KineticBlockEntity.switchToBlockState(level, pos, formed);
+                    else
                         level.setBlock(pos, formed, Block.UPDATE_ALL);
                 }
         BlockState state = level.getBlockState(pendant);

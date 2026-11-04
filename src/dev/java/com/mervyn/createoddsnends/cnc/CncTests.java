@@ -135,6 +135,7 @@ public final class CncTests {
             side.insertItem(0, new ItemStack(Items.COPPER_BLOCK), false);
             side.insertItem(1, new ItemStack(Items.IRON_INGOT, 2), false);
             check("io_no_insert_output", !side.insertItem(CncBlockEntity.SLOTS, new ItemStack(Items.DIRT), true).isEmpty(), "");
+            check("io_rejects_junk", side.insertItem(0, new ItemStack(Items.DIRT), true).getCount() == 1, "");
         }
 
         // 2: saved and loaded mid job, should carry on rather than start over
@@ -199,9 +200,9 @@ public final class CncTests {
         build(player, 12, Direction.NORTH, 0);
         CncBlockEntity hand = cnc(level, 12);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.COBBLESTONE, 5));
-        hand.useItem(player, player.getMainHandItem());
+        hand.useItem(player, InteractionHand.MAIN_HAND, player.getMainHandItem());
         check("hand_shut_opens_only", hand.input.getStackInSlot(0).isEmpty() && player.getMainHandItem().getCount() == 5, hand.input.getStackInSlot(0).toString());
-        hand.useItem(player, player.getMainHandItem());
+        hand.useItem(player, InteractionHand.MAIN_HAND, player.getMainHandItem());
         check("hand_open_inserts", hand.input.getStackInSlot(0).getCount() == 5 && player.getMainHandItem().isEmpty(), hand.input.getStackInSlot(0).toString());
         hand.useEmptyHand(player);
         check("hand_takes_input_back", hand.input.getStackInSlot(0).isEmpty() && player.getInventory().countItem(Items.COBBLESTONE) >= 5, "");
@@ -216,13 +217,13 @@ public final class CncTests {
         BlockPos roof = CncStructure.at(site(10), Direction.NORTH, 1, 2, 1).above();
         level.setBlock(roof, Blocks.HOPPER.defaultBlockState().setValue(HopperBlock.FACING, Direction.DOWN), Block.UPDATE_ALL);
         if (level.getBlockEntity(roof) instanceof HopperBlockEntity hopper)
-            hopper.setItem(0, new ItemStack(Items.DIRT, 2));
+            hopper.setItem(0, new ItemStack(Items.COPPER_BLOCK, 2));
         BlockPos wall = CncStructure.at(site(10), Direction.NORTH, 2, 1, 2);
         ArmInteractionPoint point = ArmInteractionPoint.create(level, wall, level.getBlockState(wall));
         check("arm_point_type", point instanceof CncArmPoint, String.valueOf(point));
         if (point != null) {
-            ItemStack left = point.insert(null, new ItemStack(Items.GRAVEL, 3), false);
-            check("arm_inserts", left.isEmpty() && cnc(level, 10).input.getStackInSlot(0).is(Items.GRAVEL), left.toString());
+            ItemStack left = point.insert(null, new ItemStack(Items.COBBLESTONE, 3), false);
+            check("arm_inserts", left.isEmpty() && cnc(level, 10).input.getStackInSlot(0).is(Items.COBBLESTONE), left.toString());
             cnc(level, 10).output.setStackInSlot(0, new ItemStack(Items.STONE_STAIRS, 2));
             ItemStack pulled = point.extract(null, CncBlockEntity.SLOTS, false);
             check("arm_extracts", pulled.is(Items.STONE_STAIRS) && pulled.getCount() == 2, pulled.toString());
@@ -276,7 +277,7 @@ public final class CncTests {
 
         int dirt = 0;
         for (int i = 0; i < CncBlockEntity.SLOTS; i++)
-            if (cnc(level, 10).input.getStackInSlot(i).is(Items.DIRT))
+            if (cnc(level, 10).input.getStackInSlot(i).is(Items.COPPER_BLOCK))
                 dirt += cnc(level, 10).input.getStackInSlot(i).getCount();
         check("hopper_feeds", dirt == 2, String.valueOf(dirt));
         CncBlockEntity shut = cnc(level, 11);

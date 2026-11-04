@@ -2,11 +2,12 @@ package com.mervyn.createoddsnends.client;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -15,7 +16,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackLinkedSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -28,7 +29,7 @@ public final class CncToolpath {
     static final float SIZE = 8;
     private static final int GRID = 16;
     private static final float CLEAR = 2;
-    private static final Map<Item, CncToolpath> CACHE = new HashMap<>();
+    private static final Map<ItemStack, CncToolpath> CACHE = new Object2ObjectOpenCustomHashMap<>(ItemStackLinkedSet.TYPE_AND_TAG);
 
     final boolean flat;
     private final float[][] points;
@@ -48,7 +49,11 @@ public final class CncToolpath {
     }
 
     public static CncToolpath of(ItemStack stack, Level level) {
-        return CACHE.computeIfAbsent(stack.getItem(), item -> build(stack, level));
+        return CACHE.computeIfAbsent(stack.copyWithCount(1), key -> build(key, level));
+    }
+
+    public static void clear() {
+        CACHE.clear();
     }
 
     // position after travelling this far along the path, looping

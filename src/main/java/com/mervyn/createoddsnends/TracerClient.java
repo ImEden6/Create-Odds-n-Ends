@@ -2,6 +2,7 @@ package com.mervyn.createoddsnends;
 
 import com.mervyn.createoddsnends.client.CncDriveRenderer;
 import com.mervyn.createoddsnends.client.CncRenderer;
+import com.mervyn.createoddsnends.client.CncToolpath;
 import com.mervyn.createoddsnends.client.HeadstockRenderer;
 import com.mervyn.createoddsnends.cnc.Cnc;
 import com.mervyn.createoddsnends.client.LathePartials;
@@ -116,5 +117,6 @@ public class TracerClient {
     static void clearTurnedQuads(ModelEvent.BakingCompleted event) {
         TurnedQuads.clear();
         TemplateModel.clear();
+        CncToolpath.clear();
     }
 }

@@ -24,6 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -82,7 +83,6 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
 
-    // rotation comes in through the drive at the far end
     public float speed() {
         if (!getBlockState().getValue(FORMED))
             return 0;
@@ -222,14 +222,15 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     // By hand everything goes through the doors: a shut mill only opens up, an open one takes what
     // you're holding or gives back finished pieces, then whatever's still waiting to be cut.
     // Funnels, arms and pipes don't care about the doors.
-    public ItemInteractionResult useItem(Player player, ItemStack held) {
-        if (held.isEmpty())
+    // Anything no job takes falls through, so funnels and shafts still get placed against the mill
+    public ItemInteractionResult useItem(Player player, InteractionHand hand, ItemStack held) {
+        if (held.isEmpty() || !CncJob.accepts(level, held))
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (!level.isClientSide) {
             if (!doorsOpen)
                 setDoors(true);
             else
-                player.setItemInHand(player.getUsedItemHand(), ItemHandlerHelper.insertItemStacked(input, held.copy(), false));
+                player.setItemInHand(hand, ItemHandlerHelper.insertItemStacked(input, held.copy(), false));
         }
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
