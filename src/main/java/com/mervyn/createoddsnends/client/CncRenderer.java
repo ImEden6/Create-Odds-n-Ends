@@ -5,6 +5,7 @@ import static com.mervyn.createoddsnends.cnc.CncFrameBlock.FORMED;
 
 import com.mervyn.createoddsnends.Tracer;
 import com.mervyn.createoddsnends.cnc.CncBlockEntity;
+import com.mervyn.createoddsnends.cnc.CncDoors;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -83,7 +84,7 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
                     .color(lamp == lit ? 0xFFFFFF : 0x505050)
                     .renderInto(ms, vb);
 
-        float open = 100 * be.door(partialTicks);
+        float open = CncDoors.OPEN_DEGREES * be.door(partialTicks);
         VertexConsumer glass = buffer.getBuffer(RenderType.translucent());
         door(DOOR_A, state, ms, glass, light, 72, 56, -open);
         door(DOOR_B, state, ms, glass, light, 24, 16, open);

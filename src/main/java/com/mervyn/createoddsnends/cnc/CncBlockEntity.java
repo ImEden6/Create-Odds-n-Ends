@@ -194,6 +194,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         if (open == doorsOpen || level.isClientSide)
             return;
         doorsOpen = open;
+        CncDoors.track(level, worldPosition, open);
         level.playSound(null, worldPosition, open ? SoundEvents.IRON_DOOR_OPEN : SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .6f, 1.2f);
         sendData();
     }
@@ -244,6 +245,18 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
                 player.getInventory().placeItemBackInInventory(from.extractItem(i, 64, false));
             }
         return any;
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+        CncDoors.track(level, worldPosition, doorsOpen);
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        CncDoors.track(level, worldPosition, false);
     }
 
     @Override
@@ -304,6 +317,8 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         boolean wasRunning = running;
         running = tag.getBoolean("Running");
         doorsOpen = tag.getBoolean("DoorsOpen");
+        if (level != null)
+            CncDoors.track(level, worldPosition, doorsOpen);
         if (!clientPacket || !running || !wasRunning || tag.getFloat("Progress") < progress - duration / 2f)
             progress = tag.getFloat("Progress");
         duration = Math.max(1, tag.getInt("Duration"));

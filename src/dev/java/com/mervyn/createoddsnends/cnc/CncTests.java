@@ -211,6 +211,23 @@ public final class CncTests {
         boolean closed = !hand.getUpdateTag(level.registryAccess()).getBoolean("DoorsOpen");
         check("hand_empty_closes", closed, "");
 
+        // the open doors take clicks: aim at the middle of each, and just over the top of one
+        for (int door = 0; door < 2; door++) {
+            float hinge = door == 0 ? 72 : 24, toward = door == 0 ? -1 : 1;
+            float angle = net.minecraft.util.Mth.DEG_TO_RAD * (door == 0 ? -CncDoors.OPEN_DEGREES : CncDoors.OPEN_DEGREES);
+            float dx = toward * net.minecraft.util.Mth.cos(angle), dz = -toward * net.minecraft.util.Mth.sin(angle);
+            org.joml.Matrix4f toWorld = new org.joml.Matrix4f().translate(site(12).getX() + .5f, site(12).getY() + .5f, site(12).getZ() + .5f)
+                    .rotateY(net.minecraft.util.Mth.DEG_TO_RAD * (-Direction.NORTH.toYRot() + 180)).translate(-.5f, -1.5f, -.5f).scale(1 / 16f);
+            org.joml.Vector3f mid = toWorld.transformPosition(new org.joml.Vector3f(hinge + 12 * dx, 25, 2 + 12 * dz));
+            org.joml.Vector3f normal = toWorld.transformDirection(new org.joml.Vector3f(dz, 0, -dx)).normalize();
+            net.minecraft.world.phys.Vec3 target = new net.minecraft.world.phys.Vec3(mid.x, mid.y, mid.z);
+            net.minecraft.world.phys.Vec3 eye = target.add(normal.x * 2, normal.y * 2, normal.z * 2);
+            net.minecraft.world.phys.Vec3 look = target.subtract(eye).normalize();
+            check("door_click_" + door, CncDoors.crossesDoor(site(12), Direction.NORTH, eye, look, 10), eye.toString());
+            net.minecraft.world.phys.Vec3 over = target.add(0, 1.5, 0).subtract(eye).normalize();
+            check("door_miss_" + door, !CncDoors.crossesDoor(site(12), Direction.NORTH, eye, over, 10), "");
+        }
+
         // 10: automation. A hopper on the roof feeds it, and a mechanical arm point on a frame
         // finds the mill and moves items both ways. No rotation, so nothing gets used up.
         build(player, 10, Direction.NORTH, 0);
