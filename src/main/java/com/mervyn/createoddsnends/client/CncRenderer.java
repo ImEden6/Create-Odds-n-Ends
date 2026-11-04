@@ -23,8 +23,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-// Draws the parts that move, in the same mirrored machine space tools/cnc.py builds the shell in:
-// px, origin at the bottom front corner of the pendant column, one block below the pendant.
 public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
     public static final PartialModel SADDLE = of("saddle");
     public static final PartialModel TABLE = of("table");
@@ -64,8 +62,6 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
         ms.mulPose(Axis.YP.rotationDegrees(-state.getValue(FACING).toYRot() + 180));
         ms.translate(-.5, -1.5, -.5);
 
-        // the tool tip sits still at x 48, z 31; the table and saddle carry the part under it along the
-        // part's own toolpath while the head follows its height, eased in from the parked spot
         ItemStack work = be.workpiece();
         CncToolpath path = work.isEmpty() ? null : CncToolpath.of(work, be.getLevel());
         float[] tip = path == null ? new float[] {0, 4, 0} : path.at(be.clock(partialTicks) * PATH_SPEED);

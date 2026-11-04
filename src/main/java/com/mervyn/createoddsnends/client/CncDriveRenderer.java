@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
-// the stub of shaft sticking out of the drive's socket; Flywheel draws it when it can, this when it can't
 public class CncDriveRenderer extends KineticBlockEntityRenderer<CncDriveBlockEntity> {
     public CncDriveRenderer(BlockEntityRendererProvider.Context context) {
         super(context);

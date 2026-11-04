@@ -26,10 +26,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-// The pendant hangs on the right of the enclosure as you face the doors; the drive takes the place of
-// the frame in the bottom middle of the left end. The 4x3x3 box of frames runs
-// from the block beside it ("side", clockwise of facing), from one below to one above it, and back
-// away from the doors. Each frame keeps its part index, so it can always find the pendant again.
 public final class CncStructure {
     static final int WIDE = 4, HIGH = 3, DEEP = 3;
     static final int DRIVE_PART = 3 + WIDE * HIGH;
@@ -137,7 +133,6 @@ public final class CncStructure {
         return pendant != null && level.getBlockEntity(pendant) instanceof CncBlockEntity be && be.getBlockState().getValue(FORMED) ? be : null;
     }
 
-    // dev showcase: a formed mill on a creative motor with cobblestone waiting to be cut
     public static void showcase(ServerPlayer player, BlockPos pendant, Direction facing) {
         Level level = player.serverLevel();
         BlockPos.betweenClosed(pendant.relative(facing, 2).relative(facing.getCounterClockWise(), 2).below(),

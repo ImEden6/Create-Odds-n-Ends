@@ -9,8 +9,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
 
-// Arms only target registered point types. Any block of a formed mill takes parts into the input
-// and gives up finished pieces, the same as a funnel on it would.
 public class CncArmPoint extends ArmInteractionPoint {
     public CncArmPoint(ArmInteractionPointType type, Level level, BlockPos pos, BlockState state) {
         super(type, level, pos, state);

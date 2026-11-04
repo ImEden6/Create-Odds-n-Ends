@@ -7,8 +7,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.IItemHandler;
 
-// What funnels, chutes and arms see on any part of a formed mill: the first nine slots are the input
-// (insert only), the next nine the output (extract only). Looked up on every call like LatheItems.
 public class CncItems implements IItemHandler {
     private final Level level;
     private final BlockPos pos;

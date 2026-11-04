@@ -25,7 +25,6 @@ public final class CncConfig {
 
     private CncConfig() {}
 
-    // a recipe viewer can ask before the server config has loaded, the defaults stand in until then
     static boolean on(ModConfigSpec.BooleanValue value) {
         return SPEC.isLoaded() ? value.get() : value.getDefault();
     }

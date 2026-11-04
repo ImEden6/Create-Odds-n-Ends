@@ -58,8 +58,6 @@ public class CncFrameBlock extends Block implements IWrenchable {
         return cnc.useEmptyHand(player);
     }
 
-    // the mill's insides are lit through, otherwise every frame dims the light a step and the
-    // inner walls come out in patches block by block
     @Override
     protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
         return true;

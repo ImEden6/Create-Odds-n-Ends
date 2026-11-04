@@ -27,8 +27,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 
-// The frame in the bottom middle of the mill's left end, with a shaft socket facing out. Facing is the
-// mill's facing, so the shaft side is clockwise of it, same as the way the frames run from the pendant.
 public class CncDriveBlock extends KineticBlock implements IBE<CncDriveBlockEntity> {
     public CncDriveBlock(Properties properties) {
         super(properties);
@@ -45,7 +43,6 @@ public class CncDriveBlock extends KineticBlock implements IBE<CncDriveBlockEnti
         super.createBlockStateDefinition(builder);
     }
 
-    // placed while looking at the left end of the mill, so the socket faces back at you
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getClockWise());
@@ -91,8 +88,6 @@ public class CncDriveBlock extends KineticBlock implements IBE<CncDriveBlockEnti
         super.onRemove(state, level, pos, newState, isMoving);
     }
 
-    // the mill's insides are lit through, otherwise every frame dims the light a step and the
-    // inner walls come out in patches block by block
     @Override
     protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
         return true;

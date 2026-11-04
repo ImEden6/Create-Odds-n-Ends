@@ -16,7 +16,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-// The whole mill on a JEI page, cutting the recipe's first input along its real toolpath.
 public class AnimatedCnc {
     private final ItemStack work;
 

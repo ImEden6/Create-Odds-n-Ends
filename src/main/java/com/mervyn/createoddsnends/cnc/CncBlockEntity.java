@@ -65,15 +65,12 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     private boolean running;
     private ItemStack making = ItemStack.EMPTY;
 
-    // client only: 0 parked, 1 following the toolpath, and how far along the toolpath it is in ticks.
-    // The toolpath runs on its own clock rather than job progress so it keeps the same pace whatever the recipe length.
     float engaged;
     float lastEngaged;
     float clock;
     float lastClock;
     float door;
     float lastDoor;
-    // opened by a player on the front, saved; the mill won't cut with them open
     private boolean doorsOpen;
 
     public CncBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -165,7 +162,6 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         if (done != null && done.take(input, false))
             for (ItemStack rolled : done.roll(level.random))
                 ItemHandlerHelper.insertItemStacked(output, rolled, false);
-        // pick the next job straight away so the client never sees a stop between two runs
         jobId = null;
         refresh();
         running = canRun();
@@ -206,7 +202,6 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         return Mth.lerp(partialTicks, lastEngaged, engaged);
     }
 
-    // what sits on the table: the part being cut, or the last finished piece waiting to be taken out
     public ItemStack workpiece() {
         if (running && !making.isEmpty())
             return making;
@@ -219,10 +214,6 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         return ItemStack.EMPTY;
     }
 
-    // By hand everything goes through the doors: a shut mill only opens up, an open one takes what
-    // you're holding or gives back finished pieces, then whatever's still waiting to be cut.
-    // Funnels, arms and pipes don't care about the doors.
-    // Anything no job takes falls through, so funnels and shafts still get placed against the mill
     public ItemInteractionResult useItem(Player player, InteractionHand hand, ItemStack held) {
         if (held.isEmpty() || !CncJob.accepts(level, held))
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

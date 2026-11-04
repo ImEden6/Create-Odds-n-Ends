@@ -20,11 +20,6 @@ import net.minecraft.world.item.ItemStackLinkedSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-// Where the tool tip goes over the part on the table, worked out once per item and cached.
-// Points are px from the middle of the part's footprint (x, z) and px above the table (y). The part
-// is drawn 8 px across, so the footprint runs -4..4. Flat items lie on the table and get a raster
-// pass over their solid pixels, blocks get one over the top of their model, anything that gives
-// nothing usable gets a plain square pass.
 public final class CncToolpath {
     static final float SIZE = 8;
     private static final int GRID = 16;
@@ -56,7 +51,6 @@ public final class CncToolpath {
         CACHE.clear();
     }
 
-    // position after travelling this far along the path, looping
     float[] at(float distance) {
         float total = along[along.length - 1];
         if (total <= 0)
@@ -94,7 +88,6 @@ public final class CncToolpath {
                     height[x][z] = .5f / SIZE;
     }
 
-    // highest upward face over each column, in model units 0..1
     private static void tops(BakedModel model, float[][] height) {
         RandomSource random = RandomSource.create(42);
         List<BakedQuad> quads = new ArrayList<>(model.getQuads(null, null, random));
@@ -128,7 +121,6 @@ public final class CncToolpath {
         return height;
     }
 
-    // every other row, back and forth, cutting along each solid run and lifting clear between runs
     private static List<float[]> raster(float[][] height) {
         List<float[]> path = new ArrayList<>();
         boolean forward = true;

@@ -26,10 +26,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
-// One thing the mill can make: every item it eats, what comes out, and how long it takes at 32 rpm.
-// Built from a cnc recipe as is, from a deploying recipe (the part plus what the deployer would hold),
-// or from a sequenced assembly with every step's extra items added up, so the whole loop runs in one go.
-// Tools are needed in the input but never used up, like the axe a deployer scrapes copper with.
 public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredient> tools, List<ProcessingOutput> results, int duration, boolean weighted) {
     static final int DEFAULT_DURATION = 200;
 
@@ -37,7 +33,6 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
 
     private static final Map<RecipeManager, Cached> CACHE = Collections.synchronizedMap(new WeakHashMap<>());
 
-    // rebuilt only when the recipes reload or the config changes, the mill asks on every slot change
     public static List<CncJob> all(Level level) {
         String config = CncConfig.on(CncConfig.DEPLOYING) + "/" + CncConfig.on(CncConfig.SEQUENCED_ASSEMBLY) + "/"
                 + CncConfig.number(CncConfig.ASSEMBLY_LOOPS) + "/" + CncConfig.number(CncConfig.STEP_TICKS);
@@ -99,7 +94,6 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
         List<Ingredient> needs = new ArrayList<>();
         List<Ingredient> tools = new ArrayList<>();
         needs.add(recipe.getIngredient());
-        // the mill does the whole loop in one setup, so it only charges for the loops the config asks for
         int charged = CncConfig.number(CncConfig.ASSEMBLY_LOOPS);
         int loops = charged == 0 ? recipe.getLoops() : Math.min(charged, recipe.getLoops());
         for (int loop = 0; loop < loops; loop++)
@@ -120,7 +114,6 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
     }
 
     @Nullable
-    // the recipe that uses the most of what's in there wins, so one whose inputs are a subset of another's can't steal it
     static CncJob find(Level level, IItemHandlerModifiable input) {
         CncJob best = null;
         for (CncJob job : all(level))
@@ -133,8 +126,6 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
         return needs.size() + tools.size();
     }
 
-    // Each ingredient takes one item from the first slot that fits it. Tools then have to find one
-    // among what's left, but only on a scratch copy, so they stay put.
     boolean take(IItemHandlerModifiable input, boolean simulate) {
         int[] left = new int[input.getSlots()];
         for (int i = 0; i < left.length; i++)
@@ -166,7 +157,6 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
         return true;
     }
 
-    // cnc results each roll their own chance; a sequenced assembly's pool picks one, weighted by chance
     List<ItemStack> roll(RandomSource random) {
         if (!weighted)
             return results.stream().map(out -> out.rollOutput(random)).filter(stack -> !stack.isEmpty()).toList();
@@ -182,8 +172,6 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
         return List.of();
     }
 
-    // What the recipe viewers show. A sequenced assembly's pool can run to a dozen scrap items, so it
-    // shows as its likeliest result plus one slot cycling through the rest, chances as real odds.
     public List<ProcessingOutput> shown() {
         if (!weighted)
             return results;
@@ -197,7 +185,6 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
         return odds;
     }
 
-    // every set of stacks the job could hand out, so the output can be checked for room up front
     List<List<ItemStack>> possible() {
         if (!weighted)
             return List.of(results.stream().map(out -> out.getStack().copy()).toList());
