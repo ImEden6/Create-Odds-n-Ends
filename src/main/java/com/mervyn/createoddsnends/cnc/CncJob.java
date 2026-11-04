@@ -148,6 +148,21 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
         return List.of();
     }
 
+    // What the recipe viewers show. A sequenced assembly's pool can run to a dozen scrap items, so it
+    // shows as its likeliest result plus one slot cycling through the rest, chances as real odds.
+    public List<ProcessingOutput> shown() {
+        if (!weighted)
+            return results;
+        float total = 0;
+        for (ProcessingOutput out : results)
+            total += out.getChance();
+        List<ProcessingOutput> odds = new ArrayList<>();
+        for (ProcessingOutput out : results)
+            odds.add(new ProcessingOutput(out.getStack(), total <= 0 ? 0 : out.getChance() / total));
+        odds.sort((a, b) -> Float.compare(b.getChance(), a.getChance()));
+        return odds;
+    }
+
     // every set of stacks the job could hand out, so the output can be checked for room up front
     List<List<ItemStack>> possible() {
         if (!weighted)

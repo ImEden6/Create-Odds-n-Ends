@@ -101,6 +101,7 @@ final class Showcase {
                     again("cnc_tool_4", 936),
                     view("cnc_doors", 1060, 1, -21, 4.5, 7.5, -26.5, 1.4),
                     view("cnc_doors_high", 1160, 3, -26.5, 6.5, 7.5, -26.5, 1.5),
+                    view("cnc_doors_inside", 1210, 5.2, -25.6, 2.3, 8, -26.6, 1.6),
                     again("jei_cnc", 1260),
                     again("jei_turning", 1360),
                     again("jei_punching", 1460),

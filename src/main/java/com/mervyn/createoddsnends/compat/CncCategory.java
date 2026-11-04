@@ -68,7 +68,23 @@ public class CncCategory extends AbstractRecipeCategory<CncJob> {
             if (tool)
                 slot.addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable("createoddsnends.jei.cnc_tool").withStyle(ChatFormatting.GOLD)));
         }
-        List<ProcessingOutput> results = job.results();
+        List<ProcessingOutput> results = job.shown();
+        if (job.weighted() && results.size() > 1) {
+            ProcessingOutput main = results.getFirst();
+            builder.addOutputSlot(143, 15)
+                    .setBackground(CreateRecipeCategory.getRenderedSlot(main), -1, -1)
+                    .addItemStack(main.getStack())
+                    .addRichTooltipCallback(CreateRecipeCategory.addStochasticTooltip(main));
+            List<ProcessingOutput> rest = results.subList(1, results.size());
+            builder.addOutputSlot(162, 15)
+                    .setBackground(CreateRecipeCategory.getRenderedSlot(0), -1, -1)
+                    .addItemStacks(rest.stream().map(ProcessingOutput::getStack).toList())
+                    .addRichTooltipCallback((view, tooltip) -> view.getDisplayedItemStack().ifPresent(shown -> rest.stream()
+                            .filter(out -> ItemStack.isSameItem(out.getStack(), shown))
+                            .findFirst()
+                            .ifPresent(out -> CreateRecipeCategory.addStochasticTooltip(out).onRichTooltip(view, tooltip))));
+            return;
+        }
         for (int i = 0; i < results.size(); i++) {
             ProcessingOutput out = results.get(i);
             builder.addOutputSlot(143 + i % 2 * 19, 15 + i / 2 * 19)

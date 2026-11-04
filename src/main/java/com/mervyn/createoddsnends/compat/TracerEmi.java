@@ -160,8 +160,15 @@ public class TracerEmi implements EmiPlugin {
         List<EmiIngredient> needs = job.needs().stream().filter(need -> !need.isEmpty()).map(EmiIngredient::of).toList();
         List<EmiIngredient> tools = job.tools().stream().filter(tool -> !tool.isEmpty()).map(EmiIngredient::of).toList();
         List<EmiStack> results = new ArrayList<>();
-        for (ProcessingOutput out : job.results())
+        for (ProcessingOutput out : job.shown())
             results.add(EmiStack.of(out.getStack()).setChance(out.getChance()));
+        // a sequenced assembly's scrap pool goes in one cycling slot after the likeliest result
+        List<EmiIngredient> slots = new ArrayList<>();
+        if (job.weighted() && results.size() > 1) {
+            slots.add(results.getFirst());
+            slots.add(EmiIngredient.of(results.subList(1, results.size())));
+        } else
+            slots.addAll(results);
         ItemStack[] first = job.needs().isEmpty() ? new ItemStack[0] : job.needs().get(0).getItems();
         AnimatedCnc mill = new AnimatedCnc(first.length == 0 ? ItemStack.EMPTY : first[0]);
         ResourceLocation source = job.id();
@@ -184,8 +191,8 @@ public class TracerEmi implements EmiPlugin {
                 AllGuiTextures.JEI_SHADOW.render(graphics, 15, 48);
                 mill.draw(graphics, 0, 0);
             });
-            for (int i = 0; i < results.size(); i++)
-                widgets.addSlot(results.get(i), 142 + i % 2 * 19, 14 + i / 2 * 19);
+            for (int i = 0; i < slots.size(); i++)
+                widgets.addSlot(slots.get(i), 142 + i % 2 * 19, 14 + i / 2 * 19);
         }, results.toArray(EmiStack[]::new)));
     }
 
