@@ -9,6 +9,7 @@ import com.mervyn.createoddsnends.organ.Organ;
 import com.mervyn.createoddsnends.lathe.HeadstockBlock;
 import com.mervyn.createoddsnends.lathe.HeadstockBlockEntity;
 import com.mervyn.createoddsnends.cnc.CncArmPoint;
+import com.mervyn.createoddsnends.cnc.CncDoors;
 import com.mervyn.createoddsnends.lathe.LatheArmPoint;
 import com.mervyn.createoddsnends.lathe.LatheItems;
 import com.mervyn.createoddsnends.lathe.LathePartBlock;
@@ -152,6 +153,7 @@ public class Tracer {
     }
 
     private static void registerPayloads(RegisterPayloadHandlersEvent event) {
-        event.registrar("1").playToServer(SaveProfile.TYPE, SaveProfile.STREAM_CODEC, SaveProfile::handle);
+        event.registrar("1").playToServer(SaveProfile.TYPE, SaveProfile.STREAM_CODEC, SaveProfile::handle)
+                .playToServer(CncDoors.Close.TYPE, CncDoors.Close.STREAM_CODEC, CncDoors.Close::handle);
     }
 }

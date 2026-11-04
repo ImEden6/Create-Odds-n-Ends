@@ -238,13 +238,12 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     }
 
     private static boolean giveBack(Player player, ItemStackHandler from) {
-        boolean any = false;
-        for (int i = 0; i < SLOTS; i++)
+        for (int i = SLOTS - 1; i >= 0; i--)
             if (!from.getStackInSlot(i).isEmpty()) {
-                any = true;
                 player.getInventory().placeItemBackInInventory(from.extractItem(i, 64, false));
+                return true;
             }
-        return any;
+        return false;
     }
 
     @Override

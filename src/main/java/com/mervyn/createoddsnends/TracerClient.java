@@ -1,6 +1,7 @@
 package com.mervyn.createoddsnends;
 
 import com.mervyn.createoddsnends.client.CncDriveRenderer;
+import com.mervyn.createoddsnends.client.CncDoorClicks;
 import com.mervyn.createoddsnends.client.CncRenderer;
 import com.mervyn.createoddsnends.client.CncToolpath;
 import com.mervyn.createoddsnends.client.HeadstockRenderer;
@@ -51,6 +52,7 @@ public class TracerClient {
     public TracerClient(ModContainer container) {
         LathePartials.init();
         CncRenderer.init();
+        NeoForge.EVENT_BUS.addListener(CncDoorClicks::onUse);
         OrganPartials.init();
         PonderIndex.addPlugin(new TracerPonder());
         if (PonderShots.ENABLED)

@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -84,7 +83,6 @@ public final class Cnc {
         RECIPE_SERIALIZERS.register(modBus);
         modBus.addListener(Cnc::registerCapabilities);
         modBus.addListener(Cnc::fillTab);
-        NeoForge.EVENT_BUS.addListener(CncDoors::onRightClick);
     }
 
     private static void registerCapabilities(RegisterCapabilitiesEvent event) {

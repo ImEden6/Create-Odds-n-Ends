@@ -9,14 +9,19 @@ import java.util.WeakHashMap;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import com.mervyn.createoddsnends.Tracer;
+
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public final class CncDoors {
     public static final float OPEN_DEGREES = 100;
@@ -32,34 +37,35 @@ public final class CncDoors {
             set.remove(pendant);
     }
 
-    static void onRightClick(PlayerInteractEvent.RightClickBlock event) {
-        Player player = event.getEntity();
-        Level level = event.getLevel();
-        if (!player.getMainHandItem().isEmpty())
-            return;
-        Set<BlockPos> open = OPEN.get(level);
-        if (open == null)
-            return;
-        Vec3 eye = player.getEyePosition();
-        Vec3 look = player.getViewVector(1);
-        double reach = eye.distanceTo(event.getHitVec().getLocation());
-        BlockPos[] pendants;
-        synchronized (open) {
-            pendants = open.toArray(BlockPos[]::new);
-        }
-        for (BlockPos pendant : pendants) {
-            if (pendant.distToCenterSqr(eye) > 256 || !(level.getBlockEntity(pendant) instanceof CncBlockEntity cnc))
-                continue;
-            if (!crossesDoor(pendant, cnc.getBlockState().getValue(CncFrameBlock.FACING), eye, look, reach))
-                continue;
-            cnc.setDoors(false);
-            event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.sidedSuccess(level.isClientSide));
-            return;
+    public static BlockPos[] open(Level level) {
+        Set<BlockPos> set = OPEN.get(level);
+        if (set == null)
+            return new BlockPos[0];
+        synchronized (set) {
+            return set.toArray(BlockPos[]::new);
         }
     }
 
-    static boolean crossesDoor(BlockPos pendant, Direction facing, Vec3 eye, Vec3 look, double reach) {
+    public record Close(BlockPos pendant) implements CustomPacketPayload {
+        public static final Type<Close> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Tracer.MODID, "close_cnc_doors"));
+        public static final StreamCodec<ByteBuf, Close> STREAM_CODEC = BlockPos.STREAM_CODEC.map(Close::new, Close::pendant);
+
+        @Override
+        public Type<Close> type() {
+            return TYPE;
+        }
+
+        public static void handle(Close payload, IPayloadContext context) {
+            Player player = context.player();
+            Level level = player.level();
+            if (level.getBlockEntity(payload.pendant) instanceof CncBlockEntity cnc
+                    && crossesDoor(payload.pendant, cnc.getBlockState().getValue(CncFrameBlock.FACING), player.getEyePosition(), player.getViewVector(1),
+                    player.blockInteractionRange() + 1))
+                cnc.setDoors(false);
+        }
+    }
+
+    public static boolean crossesDoor(BlockPos pendant, Direction facing, Vec3 eye, Vec3 look, double reach) {
         Matrix4f toWorld = new Matrix4f()
                 .translate(pendant.getX() + .5f, pendant.getY() + .5f, pendant.getZ() + .5f)
                 .rotateY(Mth.DEG_TO_RAD * (-facing.toYRot() + 180))
