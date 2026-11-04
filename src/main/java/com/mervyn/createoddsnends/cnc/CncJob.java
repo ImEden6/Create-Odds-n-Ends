@@ -28,7 +28,6 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 // Tools are needed in the input but never used up, like the axe a deployer scrapes copper with.
 public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredient> tools, List<ProcessingOutput> results, int duration, boolean weighted) {
     static final int DEFAULT_DURATION = 200;
-    static final int STEP_DURATION = 100;
 
     public static List<CncJob> all(Level level) {
         List<CncJob> jobs = recipes(level);
@@ -60,7 +59,7 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
         Ingredient held = recipe.getRequiredHeldItem();
         boolean keep = recipe.shouldKeepHeldItem();
         List<Ingredient> needs = keep ? List.of(recipe.getProcessedItem()) : List.of(recipe.getProcessedItem(), held);
-        return Optional.of(new CncJob(holder.id(), needs, keep ? List.of(held) : List.of(), recipe.getRollableResults(), STEP_DURATION, false));
+        return Optional.of(new CncJob(holder.id(), needs, keep ? List.of(held) : List.of(), recipe.getRollableResults(), CncConfig.number(CncConfig.STEP_TICKS), false));
     }
 
     private static Optional<CncJob> assembly(RecipeHolder<SequencedAssemblyRecipe> holder) {
@@ -68,7 +67,10 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
         List<Ingredient> needs = new ArrayList<>();
         List<Ingredient> tools = new ArrayList<>();
         needs.add(recipe.getIngredient());
-        for (int loop = 0; loop < recipe.getLoops(); loop++)
+        // the mill does the whole loop in one setup, so it only charges for the loops the config asks for
+        int charged = CncConfig.number(CncConfig.ASSEMBLY_LOOPS);
+        int loops = charged == 0 ? recipe.getLoops() : Math.min(charged, recipe.getLoops());
+        for (int loop = 0; loop < loops; loop++)
             for (SequencedRecipe<?> step : recipe.getSequence()) {
                 if (!step.getRecipe().getFluidIngredients().isEmpty())
                     return Optional.empty();
@@ -79,7 +81,7 @@ public record CncJob(ResourceLocation id, List<Ingredient> needs, List<Ingredien
                 else if (loop == 0)
                     tools.addAll(extra);
             }
-        int duration = STEP_DURATION * recipe.getSequence().size() * recipe.getLoops();
+        int duration = CncConfig.number(CncConfig.STEP_TICKS) * recipe.getSequence().size() * loops;
         return Optional.of(new CncJob(holder.id(), needs, tools, recipe.resultPool, duration, true));
     }
 

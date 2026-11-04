@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 // away from the doors. Each frame keeps its part index, so it can always find the pendant again.
 public final class CncStructure {
     static final int WIDE = 4, HIGH = 3, DEEP = 3;
-    static final int DRIVE_PART = 3 + WIDE * (1 + HIGH);
+    static final int DRIVE_PART = 3 + WIDE * HIGH;
 
     private CncStructure() {}
 
@@ -44,7 +44,7 @@ public final class CncStructure {
     }
 
     static BlockPos drive(BlockPos pendant, Direction facing) {
-        return at(pendant, facing, WIDE - 1, 1, 1);
+        return at(pendant, facing, WIDE - 1, 0, 1);
     }
 
     static BlockPos at(BlockPos pendant, Direction facing, int along, int up, int back) {

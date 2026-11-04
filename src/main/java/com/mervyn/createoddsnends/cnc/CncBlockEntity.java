@@ -73,6 +73,8 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     float door;
     float lastDoor;
     int doorHold;
+    // opened by a player on the front, saved; the mill won't cut with them open
+    private boolean doorsOpen;
 
     public CncBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -143,7 +145,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     }
 
     private boolean canRun() {
-        return job != null && speed() != 0 && getBlockState().getValue(FORMED) && fits(job);
+        return job != null && !doorsOpen && speed() != 0 && getBlockState().getValue(FORMED) && fits(job);
     }
 
     private boolean fits(CncJob job) {
@@ -190,9 +192,10 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
 
     private void tickDoor() {
         lastDoor = door;
-        if (doorHold > 0 && --doorHold == 0)
+        if (doorHold > 0 && --doorHold == 0 && !doorsOpen)
             level.playLocalSound(worldPosition, SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .5f, 1.2f, false);
-        door = Mth.approach(door, doorHold > 0 ? 1 : 0, doorHold > 0 ? .15f : .08f);
+        boolean open = doorsOpen || doorHold > 0;
+        door = Mth.approach(door, open ? 1 : 0, open ? .15f : .08f);
     }
 
     // a player loading or emptying it by hand swings the doors open for a moment, funnels don't
@@ -210,6 +213,15 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
             doorHold = 30;
         }
         return true;
+    }
+
+    public InteractionResult toggleDoors(Player player) {
+        if (!level.isClientSide) {
+            doorsOpen = !doorsOpen;
+            level.playSound(null, worldPosition, doorsOpen ? SoundEvents.IRON_DOOR_OPEN : SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .6f, 1.2f);
+            sendData();
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     public float engaged(float partialTicks) {
@@ -274,6 +286,8 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
             lang().translate("cnc.goggles.unformed").style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
             return true;
         }
+        if (doorsOpen)
+            lang().translate("cnc.goggles.doors_open").style(ChatFormatting.GOLD).forGoggles(tooltip, 1);
         if (making.isEmpty()) {
             lang().translate("cnc.goggles.idle").style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
             return true;
@@ -295,6 +309,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         tag.putFloat("Progress", progress);
         tag.putInt("Duration", duration);
         tag.putBoolean("Running", running);
+        tag.putBoolean("DoorsOpen", doorsOpen);
         if (!making.isEmpty())
             tag.put("Making", making.save(registries));
         if (jobId != null)
@@ -308,6 +323,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         output.deserializeNBT(registries, tag.getCompound("Output"));
         boolean wasRunning = running;
         running = tag.getBoolean("Running");
+        doorsOpen = tag.getBoolean("DoorsOpen");
         if (!clientPacket || !running || !wasRunning || tag.getFloat("Progress") < progress - duration / 2f)
             progress = tag.getFloat("Progress");
         duration = Math.max(1, tag.getInt("Duration"));

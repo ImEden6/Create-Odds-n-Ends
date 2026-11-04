@@ -52,7 +52,12 @@ public class CncFrameBlock extends Block implements IWrenchable {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         CncBlockEntity cnc = CncStructure.find(level, pos);
-        return cnc != null ? cnc.useEmptyHand(player) : InteractionResult.PASS;
+        if (cnc == null)
+            return InteractionResult.PASS;
+        // the front face is the doors; anywhere else an empty hand takes finished pieces out
+        if (state.getValue(FORMED) && hit.getDirection() == state.getValue(FACING))
+            return cnc.toggleDoors(player);
+        return cnc.useEmptyHand(player);
     }
 
     @Override

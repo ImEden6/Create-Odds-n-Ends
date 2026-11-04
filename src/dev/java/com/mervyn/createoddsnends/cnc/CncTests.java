@@ -18,6 +18,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
+import net.minecraft.world.level.block.HopperBlock;
+import net.minecraft.world.level.block.Block;
+import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPoint;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -114,13 +118,13 @@ public final class CncTests {
         picked = CncJob.find(level, cog);
         check("deploying_consumed", picked != null && picked.take(cog, false) && cog.getStackInSlot(1).isEmpty(), String.valueOf(picked == null ? null : picked.id()));
 
-        // 0: a whole precision mechanism assembly in one go
+        // 0: a precision mechanism in one go, charged for a single loop of parts
         build(player, 0, Direction.NORTH, 256);
         CncBlockEntity seq = cnc(level, 0);
         seq.input.setStackInSlot(0, new ItemStack(AllItems.GOLDEN_SHEET.get()));
-        seq.input.setStackInSlot(1, new ItemStack(AllBlocks.COGWHEEL.get(), 5));
-        seq.input.setStackInSlot(2, new ItemStack(AllBlocks.LARGE_COGWHEEL.get(), 5));
-        seq.input.setStackInSlot(3, new ItemStack(Items.IRON_NUGGET, 5));
+        seq.input.setStackInSlot(1, new ItemStack(AllBlocks.COGWHEEL.get()));
+        seq.input.setStackInSlot(2, new ItemStack(AllBlocks.LARGE_COGWHEEL.get()));
+        seq.input.setStackInSlot(3, new ItemStack(Items.IRON_NUGGET));
 
         // 1: fed and emptied through the item capability on two different frames, like funnels would
         build(player, 1, Direction.NORTH, 256);
@@ -184,6 +188,29 @@ public final class CncTests {
         build(player, 9, Direction.NORTH, 256);
         cnc(level, 9).input.setStackInSlot(0, new ItemStack(Items.DIRT, 3));
 
+        // 11: doors opened by a player, the interlock keeps it from cutting
+        build(player, 11, Direction.NORTH, 256);
+        cnc(level, 11).input.setStackInSlot(0, new ItemStack(Items.COBBLESTONE, 4));
+        cnc(level, 11).toggleDoors(player);
+
+        // 10: automation. A hopper on the roof feeds it, and a mechanical arm point on a frame
+        // finds the mill and moves items both ways. No rotation, so nothing gets used up.
+        build(player, 10, Direction.NORTH, 0);
+        BlockPos roof = CncStructure.at(site(10), Direction.NORTH, 1, 2, 1).above();
+        level.setBlock(roof, Blocks.HOPPER.defaultBlockState().setValue(HopperBlock.FACING, Direction.DOWN), Block.UPDATE_ALL);
+        if (level.getBlockEntity(roof) instanceof HopperBlockEntity hopper)
+            hopper.setItem(0, new ItemStack(Items.DIRT, 2));
+        BlockPos wall = CncStructure.at(site(10), Direction.NORTH, 2, 1, 2);
+        ArmInteractionPoint point = ArmInteractionPoint.create(level, wall, level.getBlockState(wall));
+        check("arm_point_type", point instanceof CncArmPoint, String.valueOf(point));
+        if (point != null) {
+            ItemStack left = point.insert(null, new ItemStack(Items.GRAVEL, 3), false);
+            check("arm_inserts", left.isEmpty() && cnc(level, 10).input.getStackInSlot(0).is(Items.GRAVEL), left.toString());
+            cnc(level, 10).output.setStackInSlot(0, new ItemStack(Items.STONE_STAIRS, 2));
+            ItemStack pulled = point.extract(null, CncBlockEntity.SLOTS, false);
+            check("arm_extracts", pulled.is(Items.STONE_STAIRS) && pulled.getCount() == 2, pulled.toString());
+        }
+
         for (String id : List.of("cnc_frame", "cnc_pendant"))
             check("crafting_" + id, level.getRecipeManager().byKey(ResourceLocation.fromNamespaceAndPath(Tracer.MODID, id)).isPresent(), "");
     }
@@ -229,6 +256,17 @@ public final class CncTests {
 
         CncBlockEntity full = cnc(level, 8);
         check("full_output_waits", !full.isRunning() && full.input.getStackInSlot(0).getCount() == 1, "running " + full.isRunning());
+
+        int dirt = 0;
+        for (int i = 0; i < CncBlockEntity.SLOTS; i++)
+            if (cnc(level, 10).input.getStackInSlot(i).is(Items.DIRT))
+                dirt += cnc(level, 10).input.getStackInSlot(i).getCount();
+        check("hopper_feeds", dirt == 2, String.valueOf(dirt));
+        CncBlockEntity shut = cnc(level, 11);
+        boolean madeNothing = true;
+        for (int i = 0; i < CncBlockEntity.SLOTS; i++)
+            madeNothing &= shut.output.getStackInSlot(i).isEmpty();
+        check("doors_pause", madeNothing && !shut.isRunning(), "running " + shut.isRunning());
 
         CncBlockEntity junk = cnc(level, 9);
         check("junk_idle", !junk.isRunning() && junk.input.getStackInSlot(0).getCount() == 3, "");

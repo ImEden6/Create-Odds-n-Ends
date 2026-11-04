@@ -8,6 +8,7 @@ import com.mervyn.createoddsnends.jacquard.Jacquard;
 import com.mervyn.createoddsnends.organ.Organ;
 import com.mervyn.createoddsnends.lathe.HeadstockBlock;
 import com.mervyn.createoddsnends.lathe.HeadstockBlockEntity;
+import com.mervyn.createoddsnends.cnc.CncArmPoint;
 import com.mervyn.createoddsnends.lathe.LatheArmPoint;
 import com.mervyn.createoddsnends.lathe.LatheItems;
 import com.mervyn.createoddsnends.lathe.LathePartBlock;
@@ -101,6 +102,7 @@ public class Tracer {
             () -> BlockEntityType.Builder.of(TurnedBlockEntity::new, TURNED_BLOCK.get()).build(null));
 
     public static final DeferredHolder<ArmInteractionPointType, LatheArmPoint.Type> LATHE_ARM_POINT = ARM_POINTS.register("lathe", LatheArmPoint.Type::new);
+    public static final DeferredHolder<ArmInteractionPointType, CncArmPoint.Type> CNC_ARM_POINT = ARM_POINTS.register("cnc", CncArmPoint.Type::new);
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("tracer", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.createoddsnends"))

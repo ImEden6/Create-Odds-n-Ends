@@ -344,7 +344,7 @@
   "createoddsnends.ponder.organ_basics.text_8": "A redstone signal on either half pauses it. Turn it off and it carries on from the same spot",
   "block.createoddsnends.cnc_frame": "CNC Frame",
   "block.createoddsnends.cnc_pendant": "CNC Pendant",
-  "block.createoddsnends.cnc_frame.tooltip.summary": "Fill a _4x3x3_ box with these, a _CNC Drive_ in the middle of the left end, hang a _CNC Pendant_ on the right end of the front face and wrench it to build the mill.",
+  "block.createoddsnends.cnc_frame.tooltip.summary": "Fill a _4x3x3_ box with these, a _CNC Drive_ in the bottom middle of the left end, hang a _CNC Pendant_ on the right end of the front face and wrench it to build the mill.",
   "block.createoddsnends.cnc_pendant.tooltip.summary": "Runs the CNC mill. Feed items in through any side of the mill and it makes whatever a _cnc_, _deploying_ or _sequenced assembly_ recipe says.",
   "createoddsnends.cnc.missing": "CNC needs a %s at %s",
   "createoddsnends.cnc.taken": "Frame at %s is already part of another CNC",
@@ -352,13 +352,14 @@
   "createoddsnends.cnc.goggles.title": "CNC Mill",
   "createoddsnends.cnc.goggles.unformed": "Not assembled",
   "createoddsnends.cnc.goggles.idle": "Nothing to make",
+  "createoddsnends.cnc.goggles.doors_open": "Doors open, paused",
   "createoddsnends.cnc.goggles.progress": "Machining %s%%",
   "createoddsnends.jei.cnc": "CNC Machining",
   "createoddsnends.jei.chance": "%s%% chance",
   "createoddsnends.jei.cnc_tool": "Has to be in the mill, doesn't get used up",
-  "createoddsnends.jei.info.cnc": "Build a 4x3x3 box of CNC Frames with a CNC Drive in the middle of the left end, hang a CNC Pendant on the right end of the front face, one block up, and wrench the pendant. Run a shaft into the drive. Funnels, chutes and arms can feed any side. It runs cnc recipes, deploying recipes, and whole sequenced assemblies in one go as long as no step needs fluid.",
+  "createoddsnends.jei.info.cnc": "Build a 4x3x3 box of CNC Frames with a CNC Drive in the bottom middle of the left end, hang a CNC Pendant on the right end of the front face, one block up, and wrench the pendant. Run a shaft into the drive. Funnels, chutes and arms can feed any side. It runs cnc recipes, deploying recipes, and whole sequenced assemblies in one go as long as no step needs fluid.",
   "createoddsnends.ponder.cnc_build.header": "Building the CNC Mill",
-  "createoddsnends.ponder.cnc_build.text_1": "The mill is a 4x3x3 box of CNC Frames, with a CNC Drive in the middle of the left end",
+  "createoddsnends.ponder.cnc_build.text_1": "The mill is a 4x3x3 box of CNC Frames, with a CNC Drive in the bottom middle of the left end",
   "createoddsnends.ponder.cnc_build.text_2": "The CNC Pendant hangs off the right end of the front face, one block up, facing the same way as the doors",
   "createoddsnends.ponder.cnc_build.text_3": "Wrench the pendant to put it together. If a frame is missing, it tells you where",
   "createoddsnends.ponder.cnc_build.text_4": "Rotation goes into the drive",
@@ -369,5 +370,5 @@
   "createoddsnends.ponder.cnc_machining.text_3": "The light on top is green while it cuts, amber when it has nothing to do and red without rotation",
   "createoddsnends.ponder.cnc_machining.text_4": "Take the result out with an empty hand, sneak to take the input back",
   "block.createoddsnends.cnc_drive": "CNC Drive",
-  "block.createoddsnends.cnc_drive.tooltip.summary": "Goes in the _middle of the left end_ of a CNC mill instead of a frame. Run a _shaft_ into it to power the mill."
+  "block.createoddsnends.cnc_drive.tooltip.summary": "Goes in the _bottom middle of the left end_ of a CNC mill instead of a frame. Run a _shaft_ into it to power the mill."
 }

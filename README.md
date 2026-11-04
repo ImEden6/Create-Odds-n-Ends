@@ -58,7 +58,7 @@ doesn't change anything there.
 ## CNC mill
 
 A 4×3×3 brass-framed mill. Build the box from CNC frames, put the pendant against the middle of one
-short end at the front, and a CNC drive in the middle of the other short end. Wrench the pendant to
+short end at the front, and a CNC drive in the bottom middle of the other short end. Wrench the pendant to
 put it together, or to find out what's missing. Rotation goes into the drive's socket. Right-click
 the machine or use funnels to load it, and the tool follows the shape of whatever it's cutting.
 
@@ -67,6 +67,11 @@ and a tool like an axe has to be in there but doesn't get used up)
 and whole sequenced assemblies that have no fluid steps. Modpacks add their own with the
 `createoddsnends:cnc` recipe type (up to 9 inputs, 4 outputs, chances and a duration).
 `cnc.deploying` and `cnc.sequencedAssembly` in the server config turn the borrowed ones off.
+A sequenced assembly costs one loop's worth of parts and runs a lot quicker than Create's line does.
+`cnc.assemblyLoopsCharged` and `cnc.assemblyStepTicks` tune that, set the first to 0 to charge every loop.
+
+Right-click the front with an empty hand to open the doors. It won't cut while they're open.
+Funnels, chutes, hoppers, mechanical arms and other mods' pipes all feed and empty it from any side.
 
 ## Building
 
