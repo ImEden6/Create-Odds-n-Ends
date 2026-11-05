@@ -218,9 +218,11 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         for (int i = 0; i < SLOTS; i++)
             if (!output.getStackInSlot(i).isEmpty())
                 return output.getStackInSlot(i);
-        for (int i = 0; i < SLOTS; i++)
-            if (!input.getStackInSlot(i).isEmpty())
-                return input.getStackInSlot(i);
+        for (int i = 0; i < SLOTS; i++) {
+            ItemStack stack = input.getStackInSlot(i);
+            if (!stack.isEmpty() && tools.stream().noneMatch(tool -> ItemStack.isSameItem(tool, stack)))
+                return stack;
+        }
         return ItemStack.EMPTY;
     }
 
