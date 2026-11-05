@@ -200,7 +200,7 @@ public final class CncScenes {
         scene.overlay().showText(80)
                 .attachKeyFrame()
                 .colored(PonderPalette.OUTPUT)
-                .text("Finished pieces only come out of the hatch on the pendant's end. Funnels, chutes and arms all work on the two hatches")
+                .text("Finished pieces only come out of the hatch on the pendant's end. Mechanical arms can also work the front, the doors open for them by themselves")
                 .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 3), Direction.WEST))
                 .placeNearTarget();
         scene.idle(90);

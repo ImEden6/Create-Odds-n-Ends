@@ -1,5 +1,6 @@
 package com.mervyn.createoddsnends;
 
+import com.mervyn.createoddsnends.cnc.CncShowcase;
 import com.mervyn.createoddsnends.cnc.CncStructure;
 import com.mervyn.createoddsnends.jacquard.JacquardCommands;
 import com.mervyn.createoddsnends.lathe.LatheStructure;
@@ -25,7 +26,13 @@ public final class OddsNEndsCommands {
                         .executes(ctx -> {
                             showcase(ctx.getSource().getPlayerOrException());
                             return 1;
-                        })));
+                        })
+                        .then(Commands.literal("cnc")
+                                .executes(ctx -> {
+                                    ServerPlayer player = ctx.getSource().getPlayerOrException();
+                                    CncShowcase.all(player, player.blockPosition(), player.getDirection());
+                                    return 1;
+                                }))));
     }
 
     // every machine at once, powered and loaded, laid out like the dev showcase run: loom ahead,

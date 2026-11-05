@@ -29,6 +29,7 @@ First release. Needs Create 6.0.10 or newer on NeoForge 1.21.1. JEI is optional.
 - by hand you open the doors first, then load it or take things out, parts included before they're cut. click an open door to shut them. it pauses while they're open
 - sequenced assembly costs one loop of parts and runs faster than create's line, `cnc.assemblyLoopsCharged` and `cnc.assemblyStepTicks` tune it
 - automation feeds the hatch on the roof and empties the hatch on the pendant's end, arms, funnels, chutes, hoppers and pipes all work on them
+- arms can also load and unload through the front, the doors open for them on their own
 - tools a recipe keeps, like an axe, hang in the tool changer while the job runs
 - also runs deploying recipes and sequenced assemblies without fluid steps, `cnc.deploying` and `cnc.sequencedAssembly` server config turn those off
 - the tool follows the part's shape, flat items and blocks both

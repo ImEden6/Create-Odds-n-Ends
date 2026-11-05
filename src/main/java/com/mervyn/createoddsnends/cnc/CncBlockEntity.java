@@ -77,6 +77,8 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     float lastDoor;
     private boolean doorsOpen;
     private List<ItemStack> tools = List.of();
+    private int armDoors;
+    private int armWaiting;
 
     public CncBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -119,6 +121,12 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
             return;
         }
 
+        if (armWaiting > 0)
+            armWaiting--;
+        if (armDoors > 0 && --armDoors == 0) {
+            level.playSound(null, worldPosition, SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .6f, 1.2f);
+            sendData();
+        }
         if (stale)
             refresh();
         boolean can = canRun();
@@ -146,7 +154,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     }
 
     private boolean canRun() {
-        return job != null && !doorsOpen && speed() != 0 && getBlockState().getValue(FORMED) && fits(job);
+        return job != null && !doorsOpen && armDoors == 0 && !(armWaiting > 0 && progress == 0) && speed() != 0 && getBlockState().getValue(FORMED) && fits(job);
     }
 
     private boolean fits(CncJob job) {
@@ -248,6 +256,24 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
+    boolean armCanReach() {
+        return !running || progress == 0;
+    }
+
+    void armWaiting() {
+        armWaiting = 40;
+    }
+
+    void armVisit() {
+        armWaiting = 0;
+        if (armDoors == 0 && !doorsOpen) {
+            level.playSound(null, worldPosition, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, .6f, 1.2f);
+            armDoors = 30;
+            sendData();
+        } else
+            armDoors = Math.max(armDoors, 30);
+    }
+
     public InteractionResult pressDoorButton() {
         setDoors(!doorsOpen);
         return InteractionResult.sidedSuccess(level.isClientSide);
@@ -317,7 +343,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         tag.putFloat("Progress", progress);
         tag.putInt("Duration", duration);
         tag.putBoolean("Running", running);
-        tag.putBoolean("DoorsOpen", doorsOpen);
+        tag.putBoolean("DoorsOpen", doorsOpen || clientPacket && armDoors > 0);
         if (clientPacket && job != null) {
             ListTag shown = new ListTag();
             for (Ingredient tool : job.tools())

@@ -71,6 +71,10 @@ public final class CncTests {
             finish(level);
     }
 
+    private static BlockPos showcaseOrigin() {
+        return base.relative(Direction.SOUTH, 20).below();
+    }
+
     private static BlockPos site(int i) {
         return base.relative(Direction.EAST, i * 9);
     }
@@ -237,6 +241,8 @@ public final class CncTests {
             check("door_miss_" + door, !CncDoors.crossesDoor(site(12), Direction.NORTH, eye, over, 10), "");
         }
 
+        CncShowcase.all(player, showcaseOrigin(), Direction.SOUTH);
+
         // 10: automation. A hopper on the roof feeds it, and a mechanical arm point on a frame
         // finds the mill and moves items both ways. No rotation, so nothing gets used up.
         build(player, 10, Direction.NORTH, 0);
@@ -244,6 +250,17 @@ public final class CncTests {
         level.setBlock(hopperPos, Blocks.HOPPER.defaultBlockState().setValue(HopperBlock.FACING, Direction.DOWN), Block.UPDATE_ALL);
         if (level.getBlockEntity(hopperPos) instanceof HopperBlockEntity hopper)
             hopper.setItem(0, new ItemStack(Items.COPPER_BLOCK, 2));
+        build(player, 13, Direction.NORTH, 0);
+        BlockPos face = CncStructure.at(site(13), Direction.NORTH, 1, 1, 0);
+        ArmInteractionPoint front = ArmInteractionPoint.create(level, face, level.getBlockState(face));
+        check("arm_front_point", front instanceof CncArmPoint, String.valueOf(front));
+        if (front != null) {
+            ItemStack left = front.insert(null, new ItemStack(Items.COPPER_BLOCK), false);
+            check("arm_front_inserts", left.isEmpty(), left.toString());
+            check("arm_front_opens_doors", cnc(level, 13).getUpdateTag(level.registryAccess()).getBoolean("DoorsOpen"), "");
+            check("arm_front_saves_shut", !cnc(level, 13).saveWithoutMetadata(level.registryAccess()).getBoolean("DoorsOpen"), "");
+        }
+        check("funnel_not_on_front", level.getCapability(Capabilities.ItemHandler.BLOCK, face, Direction.NORTH) == null, "");
         BlockPos side = CncStructure.at(site(10), Direction.NORTH, 2, 1, 2);
         check("arm_not_on_walls", ArmInteractionPoint.create(level, side, level.getBlockState(side)) == null, "");
         BlockPos top = CncStructure.at(site(10), Direction.NORTH, 2, 2, 1);
@@ -310,6 +327,21 @@ public final class CncTests {
             if (cnc(level, 10).input.getStackInSlot(i).is(Items.COPPER_BLOCK))
                 dirt += cnc(level, 10).input.getStackInSlot(i).getCount();
         check("hopper_feeds", dirt == 2, String.valueOf(dirt));
+        for (int i = 0; i < CncShowcase.VARIANTS.size(); i++) {
+            BlockPos pendant = showcaseOrigin().relative(Direction.SOUTH, 7).above().relative(Direction.NORTH.getCounterClockWise(), i * 11);
+            int cogs = 0;
+            for (BlockPos pos : BlockPos.betweenClosed(pendant.offset(-9, -3, -9), pendant.offset(9, 4, 9))) {
+                if (pos.equals(pendant))
+                    continue;
+                IItemHandler items = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+                if (items != null)
+                    for (int slot = 0; slot < items.getSlots(); slot++)
+                        if (items.getStackInSlot(slot).is(AllBlocks.COGWHEEL.get().asItem()))
+                            cogs += items.getStackInSlot(slot).getCount();
+            }
+            check("showcase_" + CncShowcase.VARIANTS.get(i), cogs > 0, cogs + " cogwheels out, depots " + java.util.stream.Stream.of(net.minecraft.core.Direction.EAST, net.minecraft.core.Direction.WEST).map(d -> { BlockPos dp = CncStructure.at(pendant, Direction.NORTH, 1, 0, 0).relative(Direction.NORTH, 3).relative(d); IItemHandler h = level.getCapability(Capabilities.ItemHandler.BLOCK, dp, null); return level.getBlockState(dp).getBlock() + "=" + (h == null ? "nocap" : h.getStackInSlot(0).toString()); }).toList() + ", loose " + level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(pendant).inflate(9)).stream().map(e -> e.getItem() + "@" + e.blockPosition().subtract(pendant)).toList() + ", mill " + (level.getBlockEntity(pendant) instanceof CncBlockEntity m ? m.getUpdateTag(level.registryAccess()).toString() : "missing") + " arm " + (level.getBlockEntity(CncStructure.at(pendant, Direction.NORTH, 1, 0, 0).relative(Direction.NORTH, 3)) instanceof com.simibubi.create.content.kinetics.mechanicalArm.ArmBlockEntity arm ? arm.saveWithoutMetadata(level.registryAccess()).toString() : "none"));
+        }
+
         CncBlockEntity shut = cnc(level, 11);
         boolean madeNothing = true;
         for (int i = 0; i < CncBlockEntity.SLOTS; i++)

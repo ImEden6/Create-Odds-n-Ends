@@ -74,7 +74,8 @@ By hand it all goes through the doors. Right-click the pendant or the front to o
 or with an empty hand to take finished pieces (or parts that haven't been cut yet) back out, a stack a click. Click one
 of the open doors to shut them. It won't cut while they're open.
 Automation goes through two hatches: parts in through the one on the roof, finished pieces out through the
-one on the pendant's end. Funnels, chutes, hoppers, mechanical arms and other mods' pipes all work on them.
+one on the pendant's end. Funnels, chutes, hoppers, mechanical arms and other mods' pipes all work on them. Arms can also work the
+front like a player would: the doors swing open for them and shut again, and it finishes its current cut first.
 
 ## Building
 
