@@ -13,6 +13,8 @@ import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRender
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.createmod.catnip.render.CachedBuffers;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -88,6 +90,17 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
         VertexConsumer glass = buffer.getBuffer(RenderType.translucent());
         door(DOOR_A, state, ms, glass, light, 72, 56, -open);
         door(DOOR_B, state, ms, glass, light, 24, 16, open);
+
+        List<ItemStack> tools = be.tools();
+        for (int i = 0; i < tools.size() && i < 6; i++) {
+            double a = i * Math.PI / 3;
+            ms.pushPose();
+            ms.translate((80 - 10 - 4.5 * Math.cos(a)) / 16, 25 / 16f, (24 + 4.5 * Math.sin(a)) / 16);
+            ms.mulPose(Axis.ZP.rotationDegrees(135));
+            ms.scale(.3f, .3f, .3f);
+            Minecraft.getInstance().getItemRenderer().renderStatic(tools.get(i), ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
+            ms.popPose();
+        }
 
         if (path != null) {
             ms.pushPose();

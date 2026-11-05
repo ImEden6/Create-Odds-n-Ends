@@ -86,7 +86,10 @@ public final class Cnc {
     }
 
     private static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, be, side) -> new CncItems(level, pos), CNC_FRAME.get(), CNC_DRIVE.get(), CNC_PENDANT.get());
+        event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, be, side) -> {
+            CncItems.Hatch hatch = side == null ? null : CncItems.hatch(state, side);
+            return hatch == null ? null : new CncItems(level, pos, hatch);
+        }, CNC_FRAME.get());
     }
 
     private static void fillTab(BuildCreativeModeTabContentsEvent event) {

@@ -9,6 +9,7 @@ import java.util.List;
 import com.mervyn.createoddsnends.cnc.CncBlockEntity;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.logistics.funnel.FunnelBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.math.Pointing;
@@ -124,6 +125,10 @@ public final class CncScenes {
         scene.idle(70);
     }
 
+    private static void doors(CreateSceneBuilder scene, SceneBuildingUtil util, boolean open) {
+        scene.world().modifyBlockEntityNBT(util.select().position(1, 2, 2), CncBlockEntity.class, nbt -> nbt.putBoolean("DoorsOpen", open));
+    }
+
     public static void machining(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
         scene.title("cnc_machining", "Machining with the CNC Mill");
@@ -131,44 +136,73 @@ public final class CncScenes {
         scene.showBasePlate();
         form(scene, util);
         BlockPos pendant = util.grid().at(1, 2, 2);
+        BlockPos front = util.grid().at(3, 2, 2);
         Selection kinetics = util.select().fromTo(5, 1, 3, 6, 1, 3);
         scene.world().setKineticSpeed(kinetics, 64);
         scene.world().showSection(util.select().fromTo(1, 0, 2, 6, 4, 4), Direction.DOWN);
         scene.idle(15);
 
+        scene.overlay().showControls(util.vector().blockSurface(pendant, Direction.NORTH), Pointing.DOWN, 30).rightClick();
+        scene.idle(10);
+        doors(scene, util, true);
+        scene.overlay().showText(70)
+                .attachKeyFrame()
+                .text("Right click the pendant to open the doors. It won't cut while they're open")
+                .pointAt(util.vector().blockSurface(pendant, Direction.NORTH))
+                .placeNearTarget();
+        scene.idle(80);
+
         ItemStack sheet = AllItems.GOLDEN_SHEET.asStack();
-        List<ItemStack> parts = List.of(sheet, new ItemStack(AllBlocks.COGWHEEL.get(), 5), new ItemStack(AllBlocks.LARGE_COGWHEEL.get(), 5), new ItemStack(Items.IRON_NUGGET, 5));
-        scene.overlay().showControls(util.vector().blockSurface(util.grid().at(3, 2, 2), Direction.NORTH), Pointing.DOWN, 30).rightClick().withItem(sheet);
+        List<ItemStack> parts = List.of(sheet, new ItemStack(AllBlocks.COGWHEEL.get()), new ItemStack(AllBlocks.LARGE_COGWHEEL.get()), new ItemStack(Items.IRON_NUGGET));
+        scene.overlay().showControls(util.vector().blockSurface(front, Direction.NORTH), Pointing.DOWN, 30).rightClick().withItem(sheet);
         scene.idle(10);
         contents(scene, util, parts, List.of(), false, ItemStack.EMPTY);
         scene.overlay().showText(80)
                 .attachKeyFrame()
-                .text("Right click it with items to put them in. Funnels, chutes and arms work on any side too")
-                .pointAt(util.vector().blockSurface(util.grid().at(3, 2, 2), Direction.NORTH))
+                .text("Load parts through the front, and take things out with an empty hand, a stack at a time")
+                .pointAt(util.vector().blockSurface(front, Direction.NORTH))
                 .placeNearTarget();
         scene.idle(90);
 
+        scene.overlay().showControls(util.vector().blockSurface(pendant, Direction.NORTH), Pointing.DOWN, 30).rightClick();
+        scene.idle(10);
+        doors(scene, util, false);
         contents(scene, util, parts, List.of(), true, AllItems.PRECISION_MECHANISM.asStack());
         scene.overlay().showText(90)
                 .attachKeyFrame()
-                .text("It makes anything a cnc recipe asks for, and runs a whole sequenced assembly in one go if it has every part for it")
+                .text("Shut the doors and it gets to work. It makes anything a cnc or deploying recipe asks for, and a whole sequenced assembly in one go")
                 .pointAt(util.vector().topOf(util.grid().at(3, 1, 3)))
                 .placeNearTarget();
         scene.idle(100);
-        scene.overlay().showText(90)
+        scene.overlay().showText(80)
                 .text("The light on top is green while it cuts, amber when it has nothing to do and red without rotation")
                 .pointAt(util.vector().topOf(util.grid().at(2, 3, 2)).add(0, .7, 0))
                 .placeNearTarget();
-        scene.idle(70);
+        scene.idle(90);
 
-        contents(scene, util, List.of(), List.of(AllItems.PRECISION_MECHANISM.asStack()), false, ItemStack.EMPTY);
+        BlockPos inFunnel = util.grid().at(4, 4, 3);
+        BlockPos outFunnel = util.grid().at(1, 1, 3);
+        scene.world().setBlock(inFunnel, AllBlocks.ANDESITE_FUNNEL.getDefaultState().setValue(FunnelBlock.FACING, Direction.UP), false);
+        scene.world().showSection(util.select().position(inFunnel), Direction.DOWN);
         scene.idle(10);
-        scene.overlay().showControls(util.vector().blockSurface(util.grid().at(3, 2, 2), Direction.NORTH), Pointing.DOWN, 30).rightClick();
-        scene.overlay().showText(70)
+        scene.overlay().showText(80)
                 .attachKeyFrame()
-                .text("Take the result out with an empty hand, sneak to take the input back")
-                .pointAt(util.vector().blockSurface(util.grid().at(3, 2, 2), Direction.NORTH))
+                .colored(PonderPalette.INPUT)
+                .text("Automation feeds it through the hatch on the roof, and nowhere else")
+                .pointAt(util.vector().topOf(inFunnel))
                 .placeNearTarget();
-        scene.idle(80);
+        scene.idle(90);
+
+        scene.world().setBlock(outFunnel, AllBlocks.ANDESITE_FUNNEL.getDefaultState().setValue(FunnelBlock.FACING, Direction.WEST), false);
+        scene.world().showSection(util.select().position(outFunnel), Direction.EAST);
+        scene.idle(10);
+        contents(scene, util, List.of(), List.of(AllItems.PRECISION_MECHANISM.asStack()), false, ItemStack.EMPTY);
+        scene.overlay().showText(80)
+                .attachKeyFrame()
+                .colored(PonderPalette.OUTPUT)
+                .text("Finished pieces only come out of the hatch on the pendant's end. Funnels, chutes and arms all work on the two hatches")
+                .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 3), Direction.WEST))
+                .placeNearTarget();
+        scene.idle(90);
     }
 }

@@ -357,7 +357,7 @@
   "createoddsnends.jei.cnc": "CNC Machining",
   "createoddsnends.jei.chance": "%s%% chance",
   "createoddsnends.jei.cnc_tool": "Has to be in the mill, doesn't get used up",
-  "createoddsnends.jei.info.cnc": "Build a 4x3x3 box of CNC Frames with a CNC Drive in the bottom middle of the left end, hang a CNC Pendant on the right end of the front face, one block up, and wrench the pendant. Run a shaft into the drive. Funnels, chutes and arms can feed any side. It runs cnc recipes, deploying recipes, and whole sequenced assemblies in one go as long as no step needs fluid.",
+  "createoddsnends.jei.info.cnc": "Build a 4x3x3 box of CNC Frames with a CNC Drive in the bottom middle of the left end, hang a CNC Pendant on the right end of the front face, one block up, and wrench the pendant. Run a shaft into the drive. By hand, open the doors with the pendant and work through the front. Automation feeds the hatch on the roof and takes from the hatch on the pendant's end. It runs cnc recipes, deploying recipes, and whole sequenced assemblies in one go as long as no step needs fluid.",
   "createoddsnends.ponder.cnc_build.header": "Building the CNC Mill",
   "createoddsnends.ponder.cnc_build.text_1": "The mill is a 4x3x3 box of CNC Frames, with a CNC Drive in the bottom middle of the left end",
   "createoddsnends.ponder.cnc_build.text_2": "The CNC Pendant hangs off the right end of the front face, one block up, facing the same way as the doors",
@@ -365,10 +365,12 @@
   "createoddsnends.ponder.cnc_build.text_4": "Rotation goes into the drive",
   "createoddsnends.ponder.cnc_build.text_5": "Breaking any part takes the whole mill apart again",
   "createoddsnends.ponder.cnc_machining.header": "Machining with the CNC Mill",
-  "createoddsnends.ponder.cnc_machining.text_1": "Right click the pendant or the front to open the doors, then put items in or take them out through the front. Funnels, chutes and arms work on any side with the doors shut",
-  "createoddsnends.ponder.cnc_machining.text_2": "It makes anything a cnc or deploying recipe asks for, and runs a whole sequenced assembly in one go if it has every part for it",
-  "createoddsnends.ponder.cnc_machining.text_3": "The light on top is green while it cuts, amber when it has nothing to do and red without rotation",
-  "createoddsnends.ponder.cnc_machining.text_4": "Take the result out with an empty hand, sneak to take the input back",
   "block.createoddsnends.cnc_drive": "CNC Drive",
-  "block.createoddsnends.cnc_drive.tooltip.summary": "Goes in the _bottom middle of the left end_ of a CNC mill instead of a frame. Run a _shaft_ into it to power the mill."
+  "block.createoddsnends.cnc_drive.tooltip.summary": "Goes in the _bottom middle of the left end_ of a CNC mill instead of a frame. Run a _shaft_ into it to power the mill.",
+  "createoddsnends.ponder.cnc_machining.text_1": "Right click the pendant to open the doors. It won't cut while they're open",
+  "createoddsnends.ponder.cnc_machining.text_2": "Load parts through the front, and take things out with an empty hand, a stack at a time",
+  "createoddsnends.ponder.cnc_machining.text_3": "Shut the doors and it gets to work. It makes anything a cnc or deploying recipe asks for, and a whole sequenced assembly in one go",
+  "createoddsnends.ponder.cnc_machining.text_4": "The light on top is green while it cuts, amber when it has nothing to do and red without rotation",
+  "createoddsnends.ponder.cnc_machining.text_5": "Automation feeds it through the hatch on the roof, and nowhere else",
+  "createoddsnends.ponder.cnc_machining.text_6": "Finished pieces only come out of the hatch on the pendant's end. Funnels, chutes and arms all work on the two hatches"
 }

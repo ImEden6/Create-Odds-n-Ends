@@ -2,6 +2,7 @@ package com.mervyn.createoddsnends.cnc;
 
 import static com.mervyn.createoddsnends.cnc.CncFrameBlock.FORMED;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +20,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -29,6 +32,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -72,6 +76,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     float door;
     float lastDoor;
     private boolean doorsOpen;
+    private List<ItemStack> tools = List.of();
 
     public CncBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -199,6 +204,10 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         sendData();
     }
 
+    public List<ItemStack> tools() {
+        return tools;
+    }
+
     public float engaged(float partialTicks) {
         return Mth.lerp(partialTicks, lastEngaged, engaged);
     }
@@ -307,6 +316,16 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         tag.putInt("Duration", duration);
         tag.putBoolean("Running", running);
         tag.putBoolean("DoorsOpen", doorsOpen);
+        if (clientPacket && job != null) {
+            ListTag shown = new ListTag();
+            for (Ingredient tool : job.tools())
+                for (int i = 0; i < SLOTS; i++)
+                    if (tool.test(input.getStackInSlot(i))) {
+                        shown.add(input.getStackInSlot(i).copyWithCount(1).save(registries));
+                        break;
+                    }
+            tag.put("Tools", shown);
+        }
         if (!making.isEmpty())
             tag.put("Making", making.save(registries));
         if (jobId != null)
@@ -321,6 +340,12 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         boolean wasRunning = running;
         running = tag.getBoolean("Running");
         doorsOpen = tag.getBoolean("DoorsOpen");
+        if (clientPacket) {
+            List<ItemStack> shown = new ArrayList<>();
+            for (Tag tool : tag.getList("Tools", Tag.TAG_COMPOUND))
+                ItemStack.parse(registries, tool).ifPresent(shown::add);
+            tools = shown;
+        }
         if (level != null)
             CncDoors.track(level, worldPosition, doorsOpen);
         if (!clientPacket || !running || !wasRunning || tag.getFloat("Progress") < progress - duration / 2f)

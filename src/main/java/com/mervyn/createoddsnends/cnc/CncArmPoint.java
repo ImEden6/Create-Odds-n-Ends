@@ -16,13 +16,14 @@ public class CncArmPoint extends ArmInteractionPoint {
 
     @Override
     protected IItemHandler getHandler(ArmBlockEntity arm) {
-        return new CncItems(level, pos);
+        CncItems.Hatch hatch = CncItems.hatch(level.getBlockState(pos), null);
+        return hatch == null ? null : new CncItems(level, pos, hatch);
     }
 
     public static class Type extends ArmInteractionPointType {
         @Override
         public boolean canCreatePoint(Level level, BlockPos pos, BlockState state) {
-            return state.hasProperty(CncFrameBlock.FORMED) && state.getValue(CncFrameBlock.FORMED);
+            return CncItems.hatch(state, null) != null;
         }
 
         @Override

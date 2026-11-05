@@ -127,16 +127,21 @@ public final class CncTests {
         seq.input.setStackInSlot(2, new ItemStack(AllBlocks.LARGE_COGWHEEL.get()));
         seq.input.setStackInSlot(3, new ItemStack(Items.IRON_NUGGET));
 
-        // 1: fed and emptied through the item capability on two different frames, like funnels would
+        // 1: fed through the roof hatch and emptied through the hatch on the pendant's end, nowhere else
         build(player, 1, Direction.NORTH, 256);
-        IItemHandler side = level.getCapability(Capabilities.ItemHandler.BLOCK, CncStructure.at(site(1), Direction.NORTH, 3, 1, 1), Direction.EAST);
-        check("io_slots", side != null && side.getSlots() == CncBlockEntity.SLOTS * 2, String.valueOf(side == null ? null : side.getSlots()));
-        if (side != null) {
-            side.insertItem(0, new ItemStack(Items.COPPER_BLOCK), false);
-            side.insertItem(1, new ItemStack(Items.IRON_INGOT, 2), false);
-            check("io_no_insert_output", !side.insertItem(CncBlockEntity.SLOTS, new ItemStack(Items.DIRT), true).isEmpty(), "");
-            check("io_rejects_junk", side.insertItem(0, new ItemStack(Items.DIRT), true).getCount() == 1, "");
+        IItemHandler roof = level.getCapability(Capabilities.ItemHandler.BLOCK, CncStructure.at(site(1), Direction.NORTH, 1, 2, 1), Direction.UP);
+        IItemHandler outHatch = level.getCapability(Capabilities.ItemHandler.BLOCK, CncStructure.at(site(1), Direction.NORTH, 0, 0, 1), Direction.WEST);
+        IItemHandler wall = level.getCapability(Capabilities.ItemHandler.BLOCK, CncStructure.at(site(1), Direction.NORTH, 3, 1, 1), Direction.EAST);
+        IItemHandler roofSide = level.getCapability(Capabilities.ItemHandler.BLOCK, CncStructure.at(site(1), Direction.NORTH, 1, 2, 1), Direction.NORTH);
+        check("io_hatches_only", roof != null && outHatch != null && wall == null && roofSide == null, roof + " " + outHatch + " " + wall + " " + roofSide);
+        if (roof != null) {
+            roof.insertItem(0, new ItemStack(Items.COPPER_BLOCK), false);
+            roof.insertItem(1, new ItemStack(Items.IRON_INGOT, 2), false);
+            check("io_rejects_junk", roof.insertItem(0, new ItemStack(Items.DIRT), true).getCount() == 1, "");
+            check("io_roof_no_extract", roof.extractItem(0, 64, true).isEmpty(), "");
         }
+        if (outHatch != null)
+            check("io_no_insert_output", outHatch.insertItem(0, new ItemStack(Items.COPPER_BLOCK), true).getCount() == 1, "");
 
         // 2: saved and loaded mid job, should carry on rather than start over
         build(player, 2, Direction.NORTH, 32);
@@ -235,19 +240,24 @@ public final class CncTests {
         // 10: automation. A hopper on the roof feeds it, and a mechanical arm point on a frame
         // finds the mill and moves items both ways. No rotation, so nothing gets used up.
         build(player, 10, Direction.NORTH, 0);
-        BlockPos roof = CncStructure.at(site(10), Direction.NORTH, 1, 2, 1).above();
-        level.setBlock(roof, Blocks.HOPPER.defaultBlockState().setValue(HopperBlock.FACING, Direction.DOWN), Block.UPDATE_ALL);
-        if (level.getBlockEntity(roof) instanceof HopperBlockEntity hopper)
+        BlockPos hopperPos = CncStructure.at(site(10), Direction.NORTH, 1, 2, 1).above();
+        level.setBlock(hopperPos, Blocks.HOPPER.defaultBlockState().setValue(HopperBlock.FACING, Direction.DOWN), Block.UPDATE_ALL);
+        if (level.getBlockEntity(hopperPos) instanceof HopperBlockEntity hopper)
             hopper.setItem(0, new ItemStack(Items.COPPER_BLOCK, 2));
-        BlockPos wall = CncStructure.at(site(10), Direction.NORTH, 2, 1, 2);
-        ArmInteractionPoint point = ArmInteractionPoint.create(level, wall, level.getBlockState(wall));
-        check("arm_point_type", point instanceof CncArmPoint, String.valueOf(point));
-        if (point != null) {
-            ItemStack left = point.insert(null, new ItemStack(Items.COBBLESTONE, 3), false);
+        BlockPos side = CncStructure.at(site(10), Direction.NORTH, 2, 1, 2);
+        check("arm_not_on_walls", ArmInteractionPoint.create(level, side, level.getBlockState(side)) == null, "");
+        BlockPos top = CncStructure.at(site(10), Direction.NORTH, 2, 2, 1);
+        BlockPos end = CncStructure.at(site(10), Direction.NORTH, 0, 0, 1);
+        ArmInteractionPoint in = ArmInteractionPoint.create(level, top, level.getBlockState(top));
+        ArmInteractionPoint out = ArmInteractionPoint.create(level, end, level.getBlockState(end));
+        check("arm_point_type", in instanceof CncArmPoint && out instanceof CncArmPoint, in + " " + out);
+        if (in != null && out != null) {
+            ItemStack left = in.insert(null, new ItemStack(Items.COBBLESTONE, 3), false);
             check("arm_inserts", left.isEmpty() && cnc(level, 10).input.getStackInSlot(0).is(Items.COBBLESTONE), left.toString());
             cnc(level, 10).output.setStackInSlot(0, new ItemStack(Items.STONE_STAIRS, 2));
-            ItemStack pulled = point.extract(null, CncBlockEntity.SLOTS, false);
+            ItemStack pulled = out.extract(null, 0, false);
             check("arm_extracts", pulled.is(Items.STONE_STAIRS) && pulled.getCount() == 2, pulled.toString());
+            check("arm_no_insert_output", out.insert(null, new ItemStack(Items.COBBLESTONE), true).getCount() == 1, "");
         }
 
         for (String id : List.of("cnc_frame", "cnc_pendant"))
@@ -283,13 +293,12 @@ public final class CncTests {
         check("sequenced_one_result", outputs == 1, made.toString());
         check("sequenced_ate_inputs", inputGone, "");
 
-        IItemHandler side = level.getCapability(Capabilities.ItemHandler.BLOCK, CncStructure.at(site(1), Direction.NORTH, 0, 0, 2), Direction.WEST);
+        IItemHandler outHatch = level.getCapability(Capabilities.ItemHandler.BLOCK, CncStructure.at(site(1), Direction.NORTH, 0, 0, 1), Direction.WEST);
         ItemStack pulled = ItemStack.EMPTY;
-        if (side != null)
-            for (int s = CncBlockEntity.SLOTS; s < CncBlockEntity.SLOTS * 2 && pulled.isEmpty(); s++)
-                pulled = side.extractItem(s, 64, false);
+        if (outHatch != null)
+            for (int s = 0; s < CncBlockEntity.SLOTS && pulled.isEmpty(); s++)
+                pulled = outHatch.extractItem(s, 64, false);
         check("io_extract", pulled.is(AllItems.PRECISION_MECHANISM.get()), pulled.toString());
-        check("io_no_extract_input", side != null && side.extractItem(0, 64, true).isEmpty(), "");
 
         check("save_finished", cnc(level, 2).input.getStackInSlot(0).isEmpty(), cnc(level, 2).input.getStackInSlot(0).toString());
 

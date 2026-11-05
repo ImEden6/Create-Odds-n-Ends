@@ -28,7 +28,8 @@ First release. Needs Create 6.0.10 or newer on NeoForge 1.21.1. JEI is optional.
 - `createoddsnends:cnc` recipe type for modpacks, up to 9 inputs and 4 outputs with chances.
 - by hand you open the doors first, then load it or take things out, parts included before they're cut. click an open door to shut them. it pauses while they're open
 - sequenced assembly costs one loop of parts and runs faster than create's line, `cnc.assemblyLoopsCharged` and `cnc.assemblyStepTicks` tune it
-- mechanical arms can feed and empty it, so can funnels, chutes, hoppers and pipes
+- automation feeds the hatch on the roof and empties the hatch on the pendant's end, arms, funnels, chutes, hoppers and pipes all work on them
+- tools a recipe keeps, like an axe, hang in the tool changer while the job runs
 - also runs deploying recipes and sequenced assemblies without fluid steps, `cnc.deploying` and `cnc.sequencedAssembly` server config turn those off
 - the tool follows the part's shape, flat items and blocks both
 
