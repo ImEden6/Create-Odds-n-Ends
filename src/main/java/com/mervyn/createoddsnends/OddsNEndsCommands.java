@@ -12,7 +12,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
-// debug only, every feature hangs its commands off /oddsnends
 public final class OddsNEndsCommands {
     private OddsNEndsCommands() {}
 
@@ -35,8 +34,6 @@ public final class OddsNEndsCommands {
                                 }))));
     }
 
-    // every machine at once, powered and loaded, laid out like the dev showcase run: loom ahead,
-    // organ off to the right, lathe and CNC off to the left. Needs flat clear ground about 30 blocks each way.
     private static void showcase(ServerPlayer player) {
         BlockPos anchor = player.blockPosition();
         Direction ahead = player.getDirection();

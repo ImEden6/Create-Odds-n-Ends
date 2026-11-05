@@ -4,7 +4,7 @@ A Create addon of workshop machines that do one odd job each: a copy lathe that 
 into shapes, a jacquard loom that weaves pictures from punched cards, a barrel organ that plays
 punched music through pipes, drums and whistles, and a CNC mill that modpacks can give their own recipes.
 
-For Minecraft 1.21.1 on NeoForge, needs Create 6. JEI shows the lathe, loom, punch and CNC recipes, and
+For Minecraft 1.21.1 on NeoForge, needs Create 6.0.10 or newer. JEI or EMI shows the lathe, loom, punch and CNC recipes, and
 every machine has Ponder scenes. Hold W over one in your inventory to see them.
 
 ## Copy lathe
