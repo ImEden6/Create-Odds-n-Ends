@@ -37,6 +37,5 @@ First release. Needs Create 6.0.10 or newer on NeoForge 1.21.1. JEI and EMI both
 ### Other
 - recipes for everything that can be crafted, the jacquard head and barrel organ go through the mechanical crafter
 - JEI and EMI pages for turning, card punching, weaving and the CNC, the lathe and CNC pages show the machine working, plus info pages
-- `/oddsnends showcase` (op only) builds every machine powered and loaded, `/oddsnends showcase cnc` builds five mills fed by hoppers, chutes, funnels and arms
 - Ponder scenes for every machine
 - worlds from before the rename (`createcoolstuffs`) keep their blocks and items

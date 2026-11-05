@@ -45,6 +45,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -142,7 +143,8 @@ public class Tracer {
         modEventBus.addListener(Tracer::registerPayloads);
         modEventBus.addListener(Tracer::registerCapabilities);
 
-        NeoForge.EVENT_BUS.addListener(OddsNEndsCommands::register);
+        if (!FMLEnvironment.production)
+            NeoForge.EVENT_BUS.addListener(OddsNEndsCommands::register);
         NeoForge.EVENT_BUS.addListener(LathePartBlock::keepSlotsClear);
 
     }
