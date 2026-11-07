@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 // coordinates: pixels, origin at the footprint's bottom centre, +z toward the front.
 public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntity> {
     // CARD_PATH
-    private static final float CX = 26, TOP = 44, BOT = 30, R = 3.5f;
+    private static final float CX = 27, TOP = 44, BOT = 30, R = 3.5f;
     private static final int WARP = 0xE9E2CF, CORD = 0xC9B78F, HOLE = 0x3E3428;
     // top of the shuttle race, just under the lower shed
     private static final float RACE = 24.6f;
@@ -83,8 +83,12 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
         TextureAtlasSprite brass = Mesh.sprite("create:block/brass_block");
         TextureAtlasSprite iron = Mesh.sprite("minecraft:block/iron_block");
 
-        // jacquard head: griffe, card cylinder, card chain
-        m.box(brass, -14, (float) (47 + 1.4 * ph.shed()), -8, 14, (float) (48 + 1.4 * ph.shed()), 2);
+        boolean real = be.hasDesign();
+        TextureAtlasSprite planks = Mesh.sprite("minecraft:block/spruce_planks");
+        TextureAtlasSprite stripped = Mesh.sprite("minecraft:block/stripped_spruce_log");
+        head(m, real ? d : null, spruce, planks, stripped, brass, iron, ph, Hp - 1 - ph.row());
+
+        // card cylinder and card chain
         double cylAngle = ph.cardS() * Math.PI / 2;
         m.push();
         m.rotZ(cylAngle, CX, TOP);
@@ -105,7 +109,7 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
             // the card for pick q has a hole for every thread that pick lifts. Half the loop shows
             // picks already read, half the ones coming, so cards change over out of sight at the bottom.
             int q = current - nCards / 2 + Math.floorMod(i - (current - nCards / 2), nCards);
-            if (q >= 0 && q < picks.total())
+            if (real && q >= 0 && q < picks.total())
                 holes(m, d, picks, q);
             m.pop();
         }
@@ -113,11 +117,11 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
         // drive: cross shaft and riser to the head (the input shaft is Create's, on the drive block)
         m.push();
         m.rotX(ph.spin(), 6, 8);
-        m.shaft(0, -16, -1, -1, 20, 1, 1);
+        m.shaft(0, -17, -1, -1, 20, 1, 1);
         m.pop();
         m.push();
         m.rotY(ph.spin(), -21, 8);
-        m.shaft(1, -1, 10, -1, 1, 36, 1);
+        m.shaft(1, -1, 10, -1, 1, 41, 1);
         m.pop();
 
         // warp beam and cloth roller
@@ -148,7 +152,7 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
         m.box(oak, sx - 3, RACE, 0.6f, sx + 3, RACE + 1.8f, 2.6f);
         m.box(brass, sx - 3.6f, RACE + 0.4f, 1.2f, sx - 3, RACE + 1.4f, 2.0f);
         m.box(brass, sx + 3, RACE + 0.4f, 1.2f, sx + 3.6f, RACE + 1.4f, 2.0f);
-        m.box(paper, weftRgb, sx - 1.6f, RACE + 1.8f, 1.1f, sx + 1.6f, RACE + 2.2f, 2.1f);
+        m.box(paper, weftRgb, sx - 1.6f, RACE + 1.3f, 1.1f, sx + 1.6f, RACE + 1.86f, 2.1f);
         if (ph.flying() || (ph.sp() > 0 && ph.sp() < 1)) {
             float start = ph.dir() > 0 ? -19.5f : 19.5f;
             m.thread(new Vector3f(start, RACE + 0.7f, 1.6f), new Vector3f(sx, RACE + 0.7f, 1.6f), new Vector3f(0, 1, 0), 0.6f, weftRgb);
@@ -212,6 +216,38 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
                         new float[] {0, q[4], 1, q[4], 1, q[5], 0, q[5]}, new Vector3f(0, q[6], q[7]), Mesh.WHITE, true);
         }
         ms.popPose();
+    }
+
+    private static void head(Mesh m, Design d, TextureAtlasSprite log, TextureAtlasSprite planks, TextureAtlasSprite stripped, TextureAtlasSprite brass,
+                             TextureAtlasSprite iron, JacquardHeadBlockEntity.Phase ph, int row) {
+        for (float x : new float[] {-16, 14})
+            for (float z : new float[] {-10, 2})
+                m.box(log, x, 38, z, x + 2, 46.5f, z + 2);
+        m.box(planks, -17, 46.5f, -11, 17, 48, 5);
+        m.box(planks, -14, 38.5f, -8, 14, 39.5f, 2);
+        for (float z : new float[] {-10, 3}) {
+            m.box(stripped, -14, 38, z, 14, 39.5f, z + 1);
+            m.box(stripped, -14, 45, z, 14, 46.5f, z + 1);
+        }
+        for (float x : new float[] {-16, 14})
+            m.box(stripped, x + 0.5f, 45, -8, x + 1.5f, 46.5f, 2);
+
+        float lift = (float) (1.4 * ph.shed());
+        m.box(brass, -14, 42.5f + lift, -8.5f, -13, 44.6f + lift, 2.5f);
+        m.box(brass, 13, 42.5f + lift, -8.5f, 14, 44.6f + lift, 2.5f);
+        int cols = 9;
+        for (int r = 0; r < 5; r++) {
+            float kz = -7 + r * 2;
+            m.box(iron, -13, 43 + lift, kz - 0.2f, 13, 44.2f + lift, kz + 0.2f);
+            for (int c = 0; c < cols; c++) {
+                float x = -12 + 24f * c / (cols - 1);
+                int sample = c * 5 + r;
+                boolean up = d != null && d.dye(sample * d.pixelWidth() / (cols * 5), row) != ph.weft();
+                float y = up ? lift : 0, wz = up ? kz + 0.5f : kz + 1;
+                m.box(iron, x - 0.15f, 39.5f + y, wz - 0.15f, x + 0.15f, 44.6f + y, wz + 0.15f);
+                m.box(iron, x - 0.15f, 44.3f + y, up ? kz - 0.3f : kz + 0.35f, x + 0.15f, 44.6f + y, wz + 0.15f);
+            }
+        }
     }
 
     // one row of holes across the card, a hole for each thread pick q lifts
