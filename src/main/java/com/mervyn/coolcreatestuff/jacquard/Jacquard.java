@@ -9,6 +9,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.SoundType;
@@ -17,7 +18,10 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -33,7 +37,11 @@ public final class Jacquard {
     static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, Tracer.MODID);
     static final DeferredRegister.DataComponents COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, Tracer.MODID);
 
+    static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, Tracer.MODID);
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> DESIGN = COMPONENTS.registerComponentType("design",
+            b -> b.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> CARDS = COMPONENTS.registerComponentType("cards",
             b -> b.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 
     private static BlockBehaviour.Properties wood() {
@@ -66,6 +74,9 @@ public final class Jacquard {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CardPunchBlockEntity>> CARD_PUNCH_BE = BLOCK_ENTITIES.register("card_punch",
             () -> BlockEntityType.Builder.of((pos, state) -> new CardPunchBlockEntity(Jacquard.CARD_PUNCH_BE.get(), pos, state), CARD_PUNCH.get()).build(null));
 
+    public static final DeferredHolder<MenuType<?>, MenuType<CardPunchMenu>> CARD_PUNCH_MENU = MENUS.register("card_punch",
+            () -> IMenuTypeExtension.create(CardPunchMenu::new));
+
     public static final DeferredHolder<EntityType<?>, EntityType<TapestryEntity>> TAPESTRY_ENTITY = ENTITIES.register("tapestry",
             () -> EntityType.Builder.<TapestryEntity>of(TapestryEntity::new, MobCategory.MISC)
                     .sized(0.5f, 0.5f).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE).build("tapestry"));
@@ -78,12 +89,22 @@ public final class Jacquard {
         BLOCK_ENTITIES.register(modBus);
         ENTITIES.register(modBus);
         COMPONENTS.register(modBus);
+        MENUS.register(modBus);
         modBus.addListener(DesignSync::register);
+        modBus.addListener(Jacquard::registerCapabilities);
         modBus.addListener(Jacquard::fillTab);
         NeoForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedOutEvent event) -> {
-            if (event.getEntity() instanceof ServerPlayer player)
+            if (event.getEntity() instanceof ServerPlayer player) {
                 DesignSync.forget(player);
+                SaveDesign.forget(player);
+            }
         });
+    }
+
+    private static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CARD_PUNCH_BE.get(), (be, side) -> be.automation);
+        event.registerBlock(Capabilities.ItemHandler.BLOCK, (level, pos, state, be, side) -> new LoomItems(level, pos),
+                JACQUARD_HEAD.get(), LOOM_FRAME.get(), LOOM_DRIVE.get());
     }
 
     private static void fillTab(BuildCreativeModeTabContentsEvent event) {

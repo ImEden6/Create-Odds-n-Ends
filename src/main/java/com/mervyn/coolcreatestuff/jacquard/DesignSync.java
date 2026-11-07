@@ -7,10 +7,11 @@ import java.util.UUID;
 import com.mervyn.coolcreatestuff.Tracer;
 
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.ints.Int2LongMap;
+import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
+import net.minecraft.Util;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -25,6 +26,8 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 // the server answers with the whole design, and the client keeps it until it disconnects.
 public final class DesignSync {
     private static final int REQUESTS_PER_SECOND = 20;
+    private static final long RETRY_MILLIS = 2000;
+    public static final int PONDER = -2;
 
     private DesignSync() {}
 
@@ -55,11 +58,12 @@ public final class DesignSync {
 
     private static final Map<UUID, Budget> BUDGETS = new HashMap<>();
     private static final Int2ObjectMap<Design> CLIENT = new Int2ObjectOpenHashMap<>();
-    private static final IntSet ASKED = new IntOpenHashSet();
+    private static final Int2LongMap ASKED = new Int2LongOpenHashMap();
 
     static void register(RegisterPayloadHandlersEvent event) {
         event.registrar("1")
                 .playToServer(Request.TYPE, Request.STREAM_CODEC, DesignSync::answer)
+                .playToServer(SaveDesign.TYPE, SaveDesign.STREAM_CODEC, SaveDesign::handle)
                 .playToClient(Reply.TYPE, Reply.STREAM_CODEC, (reply, ctx) -> {
                     CLIENT.put(reply.id(), reply.design());
                     ASKED.remove(reply.id());
@@ -85,12 +89,16 @@ public final class DesignSync {
         BUDGETS.remove(player.getUUID());
     }
 
-    // client side: the design if it has arrived, otherwise asks for it once
+    // client side: the design if it has arrived, otherwise asks for it
     @Nullable
     public static Design client(int id) {
+        if (id == PONDER)
+            return JacquardHeadBlockEntity.DEBUG_DESIGN;
         Design design = CLIENT.get(id);
-        if (design == null && id >= 0 && ASKED.add(id))
+        if (design == null && id >= 0 && Util.getMillis() >= ASKED.getOrDefault(id, 0)) {
+            ASKED.put(id, Util.getMillis() + RETRY_MILLIS);
             PacketDistributor.sendToServer(new Request(id));
+        }
         return design;
     }
 

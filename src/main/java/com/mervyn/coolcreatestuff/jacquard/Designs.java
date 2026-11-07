@@ -1,5 +1,7 @@
 package com.mervyn.coolcreatestuff.jacquard;
 
+import java.util.Arrays;
+
 import org.jetbrains.annotations.Nullable;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -30,6 +32,11 @@ public class Designs extends SavedData {
     }
 
     public int add(Design design) {
+        for (Int2ObjectMap.Entry<Design> entry : designs.int2ObjectEntrySet()) {
+            Design d = entry.getValue();
+            if (d.width() == design.width() && d.height() == design.height() && Arrays.equals(d.pixels(), design.pixels()))
+                return entry.getIntKey();
+        }
         int id = nextId++;
         designs.put(id, design);
         setDirty();

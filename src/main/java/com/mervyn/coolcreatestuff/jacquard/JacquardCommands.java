@@ -80,14 +80,20 @@ public final class JacquardCommands {
         }
         level.setBlock(head, Jacquard.JACQUARD_HEAD.get().defaultBlockState().setValue(LoomPartBlock.FACING, front), Block.UPDATE_ALL);
         LoomStructure.wrench(level, head, player);
-        if (level.getBlockEntity(head) instanceof JacquardHeadBlockEntity be)
+        if (level.getBlockEntity(head) instanceof JacquardHeadBlockEntity be) {
             be.setDesignId(id);
+            be.fillThread();
+        }
         BlockPos drive = LoomStructure.at(head, front, 0, 0, 1);
         motor(level, drive, LoomDriveBlock.input(level.getBlockState(drive)));
 
         BlockPos punch = anchor.relative(ahead, 3).relative(left, 5);
         level.setBlock(punch, Jacquard.CARD_PUNCH.get().defaultBlockState().setValue(HorizontalKineticBlock.HORIZONTAL_FACING, front), Block.UPDATE_ALL);
         motor(level, punch, CardPunchBlock.input(level.getBlockState(punch)));
+        level.setBlock(anchor.relative(ahead, 3).relative(left, 8), Jacquard.LOOM_DRIVE.get().defaultBlockState().setValue(HorizontalKineticBlock.HORIZONTAL_FACING, front), Block.UPDATE_ALL);
+        level.setBlock(anchor.relative(ahead, 4).relative(left, 8), Jacquard.LOOM_FRAME.get().defaultBlockState().setValue(LoomPartBlock.FACING, front), Block.UPDATE_ALL);
+        level.setBlock(anchor.relative(ahead, 5).relative(left, 8), Jacquard.JACQUARD_HEAD.get().defaultBlockState().setValue(LoomPartBlock.FACING, front), Block.UPDATE_ALL);
+        level.setBlock(anchor.relative(ahead, 6).relative(left, 8), Jacquard.CARD_PUNCH.get().defaultBlockState().setValue(HorizontalKineticBlock.HORIZONTAL_FACING, front), Block.UPDATE_ALL);
 
         BlockPos wall = anchor.relative(ahead, 7).relative(right, 4);
         for (int across = 0; across < 4; across++)

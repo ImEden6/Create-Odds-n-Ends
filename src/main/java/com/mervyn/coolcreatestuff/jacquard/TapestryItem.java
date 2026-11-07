@@ -49,6 +49,6 @@ public class TapestryItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        DesignCardItem.designTooltip(stack, tooltip);
+        DesignCardItem.designTooltip(stack, tooltip, false);
     }
 }

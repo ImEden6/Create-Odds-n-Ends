@@ -72,24 +72,13 @@ public final class DesignTextures {
         TEXTURES.clear();
     }
 
-    // paintDesign(): 8 texels per design pixel with a woven shading pattern. The preview packs
-    // every design into one 512 square; here each design gets a texture of its own size.
     static NativeImage paint(Design d) {
         int Wp = d.pixelWidth(), Hp = d.pixelHeight();
-        NativeImage img = new NativeImage(Wp * 8, Hp * 8, false);
+        NativeImage img = new NativeImage(Wp, Hp, false);
         for (int py = 0; py < Hp; py++)
             for (int px = 0; px < Wp; px++) {
                 int[] rgb = DesignGen.DYE_RGB[d.dye(px, py)];
-                for (int ty = 0; ty < 8; ty++)
-                    for (int tx = 0; tx < 8; tx++) {
-                        int w = ((tx + (ty >> 1)) & 3) < 2 ? 9 : -9;
-                        if (ty == 7)
-                            w -= 7;
-                        if (tx == 7)
-                            w -= 3;
-                        w += ((px * 31 + py * 17 + tx * 7 + ty * 13) % 5) - 2;
-                        img.setPixelRGBA(px * 8 + tx, py * 8 + ty, abgr(rgb[0] + w, rgb[1] + w, rgb[2] + w));
-                    }
+                img.setPixelRGBA(px, py, abgr(rgb[0], rgb[1], rgb[2]));
             }
         return img;
     }
