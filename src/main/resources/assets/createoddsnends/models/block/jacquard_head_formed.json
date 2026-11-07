@@ -2,10 +2,12 @@
   "parent": "minecraft:block/block",
   "ambientocclusion": false,
   "textures": {
-    "particle": "createoddsnends:block/loom_timber_h5",
-    "t0": "createoddsnends:block/loom_timber_h5",
-    "t1": "createoddsnends:block/loom_timber_end",
-    "t2": "createoddsnends:block/loom_planks_h"
+    "particle": "createoddsnends:block/loom_long/timber_h_66x5",
+    "t0": "createoddsnends:block/loom_long/timber_h_66x5",
+    "t1": "createoddsnends:block/loom_long/timber_end_5x5",
+    "t2": "createoddsnends:block/loom_long/planks_h_40x8",
+    "t3": "createoddsnends:block/loom_long/planks_h_40x1",
+    "t4": "createoddsnends:block/loom_long/planks_end_8x1"
   },
   "elements": [
     {
@@ -22,55 +24,55 @@
       "faces": {
         "up": {
           "uv": [
+            6.061,
             0,
-            5,
-            16,
-            10
+            9.939,
+            16
           ],
           "texture": "#t0"
         },
         "down": {
           "uv": [
+            6.061,
             0,
-            5,
-            16,
-            10
+            9.939,
+            16
           ],
           "texture": "#t0"
         },
         "north": {
           "uv": [
+            6.061,
             0,
-            5,
-            16,
-            10
+            9.939,
+            16
           ],
           "texture": "#t0"
         },
         "south": {
           "uv": [
+            6.061,
             0,
-            5,
-            16,
-            10
+            9.939,
+            16
           ],
           "texture": "#t0"
         },
         "east": {
           "uv": [
-            5,
-            5,
-            10,
-            10
+            0,
+            0,
+            16,
+            16
           ],
           "texture": "#t1"
         },
         "west": {
           "uv": [
-            5,
-            5,
-            10,
-            10
+            0,
+            0,
+            16,
+            16
           ],
           "texture": "#t1"
         }
@@ -90,57 +92,57 @@
       "faces": {
         "up": {
           "uv": [
+            4.8,
             0,
-            4,
-            16,
-            12
+            11.2,
+            16
           ],
           "texture": "#t2"
         },
         "down": {
           "uv": [
+            4.8,
             0,
-            4,
-            16,
-            12
+            11.2,
+            16
           ],
           "texture": "#t2"
         },
         "north": {
           "uv": [
+            4.8,
             0,
-            7,
-            16,
-            8
+            11.2,
+            16
           ],
-          "texture": "#t2"
+          "texture": "#t3"
         },
         "south": {
           "uv": [
+            4.8,
             0,
-            7,
-            16,
-            8
+            11.2,
+            16
           ],
-          "texture": "#t2"
+          "texture": "#t3"
         },
         "east": {
           "uv": [
-            4,
-            7,
-            12,
-            8
+            0,
+            0,
+            16,
+            16
           ],
-          "texture": "#t2"
+          "texture": "#t4"
         },
         "west": {
           "uv": [
-            4,
-            7,
-            12,
-            8
+            0,
+            0,
+            16,
+            16
           ],
-          "texture": "#t2"
+          "texture": "#t4"
         }
       }
     }
