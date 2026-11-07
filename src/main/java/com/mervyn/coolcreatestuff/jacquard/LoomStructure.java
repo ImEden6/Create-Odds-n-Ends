@@ -133,6 +133,14 @@ public final class LoomStructure {
             unform(level, head, removed.getValue(FACING));
     }
 
+    @Nullable
+    static JacquardHeadBlockEntity loom(Level level, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        if (!state.hasProperty(FORMED) || !state.getValue(FORMED))
+            return null;
+        return level.getBlockEntity(findHead(pos, state)) instanceof JacquardHeadBlockEntity be ? be : null;
+    }
+
     // every formed part knows its own cell and facing, so the head is a fixed offset away
     public static BlockPos findHead(BlockPos pos, BlockState state) {
         Direction facing = state.getValue(FACING);

@@ -1,10 +1,15 @@
 package com.mervyn.coolcreatestuff.jacquard;
 
+import com.simibubi.create.api.equipment.goggles.IProxyHoveringInformation;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -16,9 +21,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
 
 // Facing is the loom's front, the weaver's side.
-public class LoomPartBlock extends Block implements IWrenchable {
+public class LoomPartBlock extends Block implements IWrenchable, IProxyHoveringInformation {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty FORMED = BooleanProperty.create("formed");
 
@@ -42,6 +48,24 @@ public class LoomPartBlock extends Block implements IWrenchable {
         if (!state.getValue(FORMED))
             return IWrenchable.super.onWrenched(state, context);
         return InteractionResult.PASS;
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        JacquardHeadBlockEntity loom = LoomStructure.loom(level, pos);
+        return loom != null ? loom.useItem(player, stack) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        JacquardHeadBlockEntity loom = LoomStructure.loom(level, pos);
+        return loom != null && player.getMainHandItem().isEmpty() ? loom.useEmptyHand(player) : InteractionResult.PASS;
+    }
+
+    // goggles on any part read the head
+    @Override
+    public BlockPos getInformationSource(Level level, BlockPos pos, BlockState state) {
+        return state.getValue(FORMED) ? LoomStructure.findHead(pos, state) : pos;
     }
 
     @Override
