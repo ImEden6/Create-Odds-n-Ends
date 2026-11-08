@@ -56,7 +56,7 @@ public class TapestryRenderer extends EntityRenderer<TapestryEntity> {
                 m.box(white, LINEN, x1 - i - 1, y0 - 2, z, x1 - i, y0, z + 1);
             }
         } else {
-            TextureAtlasSprite brass = Mesh.sprite("create:block/brass_block");
+            TextureAtlasSprite brass = Mesh.sprite("createoddsnends:block/brass_trim");
             m.box(brass, x0 - 1, y1, z, x1 + 1, y1 + 1, z + 1);
             m.box(brass, x0 - 2, y1 - 1, z, x0 - 1, y1 + 2, z + 2);
             m.box(brass, x1 + 1, y1 - 1, z, x1 + 2, y1 + 2, z + 2);

@@ -59,8 +59,8 @@ public class CardPunchRenderer extends SafeBlockEntityRenderer<CardPunchBlockEnt
         ms.translate(8, 0, 8);
 
         Mesh m = new Mesh(ms, vc, light, entity);
-        TextureAtlasSprite steel = Mesh.sprite("minecraft:block/iron_block");
-        TextureAtlasSprite brass = Mesh.sprite("create:block/brass_block");
+        TextureAtlasSprite steel = Mesh.sprite("createoddsnends:block/iron_plain");
+        TextureAtlasSprite brass = Mesh.sprite("createoddsnends:block/brass_trim");
         TextureAtlasSprite paper = Mesh.sprite("createoddsnends:block/blank_card");
 
         m.push();

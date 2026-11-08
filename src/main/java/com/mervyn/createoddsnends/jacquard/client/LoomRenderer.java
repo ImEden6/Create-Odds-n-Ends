@@ -91,8 +91,8 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
         Mesh m = new Mesh(ms, buffer.getBuffer(solid), lit, entity);
         TextureAtlasSprite oak = Mesh.sprite("createoddsnends:block/loom_timber_h");
         TextureAtlasSprite linen = Mesh.sprite("createoddsnends:block/linen");
-        TextureAtlasSprite brass = Mesh.sprite("create:block/brass_block");
-        TextureAtlasSprite iron = Mesh.sprite("minecraft:block/iron_block");
+        TextureAtlasSprite brass = Mesh.sprite("createoddsnends:block/brass_trim");
+        TextureAtlasSprite iron = Mesh.sprite("createoddsnends:block/iron_plain");
 
         head(m, real ? d : null, brass, iron, ph, Hp - 1 - ph.row());
 

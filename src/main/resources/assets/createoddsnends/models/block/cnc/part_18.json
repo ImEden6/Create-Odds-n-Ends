@@ -1,1 +1,1 @@
-{"parent": "block/block", "ambientocclusion": false, "render_type": "minecraft:cutout", "textures": {"particle": "create:block/brass_block", "atlas": "createoddsnends:block/cnc_atlas"}, "elements": [], "texture_size": [256, 256]}
+{"parent": "block/block", "ambientocclusion": false, "render_type": "minecraft:cutout", "textures": {"particle": "createoddsnends:block/brass_trim", "atlas": "createoddsnends:block/cnc/body"}, "elements": [], "texture_size": [256, 256]}
