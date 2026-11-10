@@ -1,5 +1,10 @@
 package com.mervyn.createoddsnends.jacquard.client;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.Nullable;
@@ -12,10 +17,14 @@ import com.mervyn.createoddsnends.jacquard.DesignGen;
 import com.mervyn.createoddsnends.jacquard.DesignSync;
 import com.mervyn.createoddsnends.jacquard.Jacquard;
 import com.mervyn.createoddsnends.jacquard.SaveDesign;
+import com.mervyn.createoddsnends.organ.Score;
+import com.mervyn.createoddsnends.organ.ScoreSync;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -24,6 +33,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -35,6 +45,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 // middle, the woven preview and the punch's slots on the right.
 public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Tracer.MODID, "textures/gui/card_punch.png");
+    private static final ResourceLocation SCORE_TEXTURE = ResourceLocation.fromNamespaceAndPath(Tracer.MODID, "textures/gui/card_punch_score.png");
+    private static final long MAX_MIDI_BYTES = 4 * 1024 * 1024;
     private static final int TEX_W = 292, TEX_H = 249;
     private static final WidgetSprites BUTTON = new WidgetSprites(ResourceLocation.withDefaultNamespace("widget/button"),
             ResourceLocation.withDefaultNamespace("widget/button_disabled"), ResourceLocation.withDefaultNamespace("widget/button_highlighted"));
@@ -60,6 +72,10 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
     private ResourceLocation previewLocation;
     private boolean previewDirty = true;
     private IconButton load;
+    private final List<AbstractWidget> designWidgets = new ArrayList<>();
+    private final ScorePanel score = new ScorePanel(this);
+    private boolean scoreMode;
+    private Button designTab, scoreTab;
 
     public CardPunchScreen(CardPunchMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -68,16 +84,24 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
         inventoryLabelX = CardPunchMenu.INVENTORY_X;
         inventoryLabelY = CardPunchMenu.INVENTORY_Y - 11;
         int pending = menu.punch.pending();
-        Design design = pending >= 0 ? DesignSync.client(pending) : null;
+        Design design = pending >= 0 && !menu.punch.pendingIsScore() ? DesignSync.client(pending) : null;
         if (design != null)
             canvas.load(design);
         else
             canvas.clear(secondary);
+        Score saved = menu.punch.pendingIsScore() ? ScoreSync.client(pending) : null;
+        if (saved != null)
+            score.load(saved);
     }
 
     @Override
     protected void init() {
         super.init();
+        designWidgets.clear();
+        designTab = addRenderableWidget(Button.builder(Component.translatable("createoddsnends.editor.mode.design"), b -> setScoreMode(false))
+                .bounds(leftPos + 80, topPos + 3, 44, 12).build());
+        scoreTab = addRenderableWidget(Button.builder(Component.translatable("createoddsnends.editor.mode.score"), b -> setScoreMode(true))
+                .bounds(leftPos + 126, topPos + 3, 44, 12).build());
         int i = 0;
         for (Tool t : Tool.values())
             tile(i++, t.name().toLowerCase(), () -> tool = t, () -> tool == t);
@@ -93,10 +117,62 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
 
         sizeButtons(88, true);
         sizeButtons(101, false);
+        score.init(leftPos, topPos, this::addRenderableWidget);
+        previewDirty = true;
+        applyMode();
+    }
+
+    private void setScoreMode(boolean on) {
+        if (drawing >= 0 || score.busy())
+            return;
+        scoreMode = on;
+        if (!on)
+            score.stopPreview();
+        applyMode();
+    }
+
+    private void applyMode() {
+        for (AbstractWidget w : designWidgets)
+            w.visible = !scoreMode;
+        score.setShown(scoreMode);
+        designTab.setMessage(marked(Component.translatable("createoddsnends.editor.mode.design"), !scoreMode));
+        scoreTab.setMessage(marked(Component.translatable("createoddsnends.editor.mode.score"), scoreMode));
+    }
+
+    static Component marked(MutableComponent text, boolean current) {
+        return current ? text.withStyle(ChatFormatting.YELLOW) : text;
+    }
+
+    void finishImport(MidiImport.Result result) {
+        score.imported(result);
+    }
+
+    void openMidi(Path path) {
+        try {
+            if (Files.size(path) > MAX_MIDI_BYTES)
+                throw new IOException("the file is too big");
+            minecraft.setScreen(new MidiImportScreen(this, new MidiImport(MidiFile.parse(Files.readAllBytes(path)))));
+        } catch (IOException | RuntimeException e) {
+            score.failed(Component.translatable("createoddsnends.score.import.failed", e.getMessage()));
+        }
+    }
+
+    @Override
+    public void onFilesDrop(List<Path> paths) {
+        for (Path path : paths) {
+            String name = path.getFileName().toString().toLowerCase();
+            if (name.endsWith(".mid") || name.endsWith(".midi")) {
+                setScoreMode(true);
+                openMidi(path);
+                return;
+            }
+        }
     }
 
     private IconButton tile(int index, String name, Runnable action, @Nullable BooleanSupplier selected) {
-        return addRenderableWidget(new IconButton(leftPos + TOOLS_X + index % 4 * 19, topPos + TOOLS_Y + index / 4 * 19, name, action, selected));
+        IconButton button = addRenderableWidget(new IconButton(leftPos + TOOLS_X + index % 4 * 19, topPos + TOOLS_Y + index / 4 * 19, name, action, selected));
+        designWidgets.add(button);
+        return button;
     }
 
     private void sizeButtons(int y, boolean width) {
@@ -108,6 +184,7 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
             }).bounds(leftPos + (step < 0 ? 256 : 270), topPos + y, 12, 12).build();
             b.setTooltip(Tooltip.create(Component.translatable("createoddsnends.editor." + (width ? "width" : "height"))));
             addRenderableWidget(b);
+            designWidgets.add(b);
         }
     }
 
@@ -144,6 +221,7 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
     @Override
     protected void containerTick() {
         super.containerTick();
+        score.tick();
         int id = sourceId();
         load.active = id >= 0 && DesignSync.client(id) != null;
         if (previewDirty) {
@@ -171,6 +249,7 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
     @Override
     public void removed() {
         super.removed();
+        score.stopPreview();
         releasePreview();
     }
 
@@ -196,6 +275,8 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (scoreMode)
+            return score.mouseClicked(mouseX, mouseY, button) || super.mouseClicked(mouseX, mouseY, button);
         int x = pixelX(mouseX), y = pixelY(mouseY);
         if ((button == 0 || button == 1) && drawing < 0 && canvas.inside(x, y)) {
             press(x, y, button);
@@ -253,6 +334,8 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (scoreMode && score.mouseDragged(mouseX, mouseY))
+            return true;
         if (drawing >= 0) {
             int x = Mth.clamp(pixelX(mouseX), 0, canvas.pw() - 1), y = Mth.clamp(pixelY(mouseY), 0, canvas.ph() - 1);
             if (x != lastX || y != lastY)
@@ -264,6 +347,8 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (scoreMode && score.mouseReleased())
+            return true;
         if (drawing >= 0 && button == drawing) {
             drawing = -1;
             canvas.endShape();
@@ -273,7 +358,16 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
     }
 
     @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (scoreMode && score.mouseScrolled(mouseX, mouseY, scrollY))
+            return true;
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (scoreMode)
+            return score.keyPressed(keyCode) || super.keyPressed(keyCode, scanCode, modifiers);
         if (hasControlDown() && drawing < 0) {
             if (keyCode == GLFW.GLFW_KEY_Z) {
                 changed(hasShiftDown() ? canvas.redo() : canvas.undo());
@@ -292,7 +386,7 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
         return col >= 0 && col < 4 && row >= 0 && row < 4 ? row * 4 + col : -1;
     }
 
-    private static int argb(int dye) {
+    static int argb(int dye) {
         int[] rgb = DesignGen.DYE_RGB[dye];
         return 0xFF000000 | rgb[0] << 16 | rgb[1] << 8 | rgb[2];
     }
@@ -314,7 +408,12 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
             graphics.renderTooltip(font, Component.translatable("createoddsnends.editor.slot." + key), x, y);
             return;
         }
-        int swatch = swatchAt(x, y);
+        Component scoreTip = scoreMode ? score.tooltip(x, y) : null;
+        if (scoreTip != null) {
+            graphics.renderTooltip(font, scoreTip, x, y);
+            return;
+        }
+        int swatch = scoreMode ? -1 : swatchAt(x, y);
         if (swatch >= 0) {
             graphics.renderTooltip(font, Component.translatable("color.minecraft." + DyeColor.byId(swatch).getName()), x, y);
             return;
@@ -324,6 +423,11 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+        if (scoreMode) {
+            graphics.blit(SCORE_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, TEX_W, TEX_H);
+            score.render(graphics, mouseX, mouseY, partialTick);
+            return;
+        }
         graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, TEX_W, TEX_H);
         renderCanvas(graphics, mouseX, mouseY);
 
@@ -369,7 +473,7 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
             outline(graphics, left + hx * s, top + hy * s, s, s, 0xC0FFFFFF);
     }
 
-    private static void outline(GuiGraphics graphics, int x, int y, int w, int h, int argb) {
+    static void outline(GuiGraphics graphics, int x, int y, int w, int h, int argb) {
         graphics.fill(x, y, x + w, y + 1, argb);
         graphics.fill(x, y + h - 1, x + w, y + h, argb);
         graphics.fill(x, y, x + 1, y + h, argb);
@@ -379,16 +483,20 @@ public class CardPunchScreen extends AbstractContainerScreen<CardPunchMenu> {
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         super.renderLabels(graphics, mouseX, mouseY);
-        graphics.drawString(font, Component.translatable("createoddsnends.editor.size_w", canvas.width), 221, 90, 0x404040, false);
-        graphics.drawString(font, Component.translatable("createoddsnends.editor.size_h", canvas.height), 221, 103, 0x404040, false);
+        if (scoreMode) {
+            score.labels(graphics, font);
+        } else {
+            graphics.drawString(font, Component.translatable("createoddsnends.editor.size_w", canvas.width), 221, 90, 0x404040, false);
+            graphics.drawString(font, Component.translatable("createoddsnends.editor.size_h", canvas.height), 221, 103, 0x404040, false);
+        }
         int pending = menu.punch.pending();
         if (pending >= 0) {
-            Component text = Component.translatable("createoddsnends.tooltip.design", pending);
+            Component text = Component.translatable(menu.punch.pendingIsScore() ? "createoddsnends.score.pending" : "createoddsnends.tooltip.design", pending);
             graphics.drawString(font, text, imageWidth - 8 - font.width(text), titleLabelY, 0x404040, false);
         }
     }
 
-    private class IconButton extends AbstractButton {
+    static class IconButton extends AbstractButton {
         private final ResourceLocation icon;
         private final Runnable action;
         @Nullable

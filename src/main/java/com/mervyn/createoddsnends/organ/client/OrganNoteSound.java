@@ -30,7 +30,7 @@ public class OrganNoteSound extends AbstractTickableSoundInstance {
             stop();
     }
 
-    void release() {
+    public void release() {
         remaining = 0;
     }
 }

@@ -39,12 +39,17 @@ public record SaveDesign(int containerId, int width, int height, byte[] pixels) 
         Design design = new Design(payload.width, payload.height, payload.pixels);
         if (!design.valid())
             return;
+        if (allowed(player))
+            menu.punch.setPending(Designs.get(player.server).add(design));
+    }
+
+    public static boolean allowed(ServerPlayer player) {
         long now = player.server.getTickCount();
         Long last = LAST_SAVE.get(player.getUUID());
         if (last != null && now - last < 20)
-            return;
+            return false;
         LAST_SAVE.put(player.getUUID(), now);
-        menu.punch.setPending(Designs.get(player.server).add(design));
+        return true;
     }
 
     static void forget(ServerPlayer player) {
