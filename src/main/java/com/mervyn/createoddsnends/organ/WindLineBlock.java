@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
@@ -18,7 +19,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 // A thin copper pipe, 2 px wide at the height the preview runs it (y 3 to 5), that joins up with
-// other wind lines, wind chests and the organ. Looks only for now.
+// other wind lines, wind chests and the organ.
 public class WindLineBlock extends Block {
     private static final VoxelShape CORE = Block.box(6.5, 2.5, 6.5, 9.5, 5.5, 9.5);
     private static final Map<Direction, VoxelShape> ARMS = Map.of(
@@ -60,6 +61,20 @@ public class WindLineBlock extends Block {
     @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbor, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         return state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction), joins(neighbor));
+    }
+
+    @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
+        super.onPlace(state, level, pos, oldState, movedByPiston);
+        if (!level.isClientSide)
+            WindNetwork.changed();
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        super.onRemove(state, level, pos, newState, movedByPiston);
+        if (!level.isClientSide)
+            WindNetwork.changed();
     }
 
     @Override

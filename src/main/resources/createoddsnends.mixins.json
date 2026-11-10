@@ -3,6 +3,7 @@
   "package": "com.mervyn.createoddsnends.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "WhistleBlockEntityMixin",
     "WhistleBlockMixin"
   ],
   "injectors": {
