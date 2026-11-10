@@ -38,10 +38,10 @@ public class CardPunchRenderer extends SafeBlockEntityRenderer<CardPunchBlockEnt
         int needed = be.cardsNeeded(), done = be.punched();
         ItemStack finished = be.finished();
         if (finished != null && !be.isPunching())
-            done = needed = finished.getOrDefault(Jacquard.CARDS.get(), 16);
+            done = needed = finished.getOrDefault(Jacquard.CARDS.get(), needed);
         // a 64 card chain would stand two blocks tall, so long ones are drawn squashed
         int n = needed <= 22 ? done : done * 22 / needed;
-        int blanks = Math.min(14, Math.max(0, be.blankCount() - (be.isPunching() ? be.punched() : 0)));
+        int blanks = Math.min(14, Math.max(0, be.blanksLeft()));
         Direction facing = state.getValue(HorizontalKineticBlock.HORIZONTAL_FACING);
         ms.pushPose();
         ms.translate(.5, 0, .5);
