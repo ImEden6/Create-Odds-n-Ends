@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=south": {
+      "model": "createoddsnends:block/wind_chest"
+    },
+    "facing=west": {
+      "model": "createoddsnends:block/wind_chest",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "createoddsnends:block/wind_chest",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "createoddsnends:block/wind_chest",
+      "y": 270
+    }
+  }
+}

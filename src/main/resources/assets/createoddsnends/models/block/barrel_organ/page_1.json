@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "createoddsnends:block/punched_card_1",
+    "card1": "createoddsnends:block/punched_card_1"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        0.3,
+        13
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            3,
+            15.7,
+            13,
+            16
+          ],
+          "texture": "#card1"
+        },
+        "south": {
+          "uv": [
+            3,
+            15.7,
+            13,
+            16
+          ],
+          "texture": "#card1"
+        },
+        "east": {
+          "uv": [
+            3,
+            15.7,
+            13,
+            16
+          ],
+          "texture": "#card1"
+        },
+        "west": {
+          "uv": [
+            3,
+            15.7,
+            13,
+            16
+          ],
+          "texture": "#card1"
+        },
+        "up": {
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ],
+          "texture": "#card1"
+        },
+        "down": {
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ],
+          "texture": "#card1"
+        }
+      }
+    }
+  ]
+}

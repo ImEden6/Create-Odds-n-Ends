@@ -1,0 +1,105 @@
+package com.mervyn.createoddsnends.organ;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import org.jetbrains.annotations.Nullable;
+
+import com.mervyn.createoddsnends.Tracer;
+
+import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.ints.Int2LongMap;
+import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.Util;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+// Same on demand sync as DesignSync: a client asks for an id the first time it needs it and keeps
+// the score until it disconnects.
+public final class ScoreSync {
+    private static final int REQUESTS_PER_SECOND = 20;
+    private static final long RETRY_MILLIS = 2000;
+
+    private ScoreSync() {}
+
+    public record Request(int id) implements CustomPacketPayload {
+        public static final Type<Request> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Tracer.MODID, "request_score"));
+        public static final StreamCodec<ByteBuf, Request> STREAM_CODEC = ByteBufCodecs.VAR_INT.map(Request::new, Request::id);
+
+        @Override
+        public Type<Request> type() {
+            return TYPE;
+        }
+    }
+
+    public record Reply(int id, Score score) implements CustomPacketPayload {
+        public static final Type<Reply> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Tracer.MODID, "score"));
+        public static final StreamCodec<ByteBuf, Reply> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, Reply::id,
+                Score.STREAM_CODEC, Reply::score,
+                Reply::new);
+
+        @Override
+        public Type<Reply> type() {
+            return TYPE;
+        }
+    }
+
+    private record Budget(long second, int used) {}
+
+    private static final Map<UUID, Budget> BUDGETS = new HashMap<>();
+    private static final Int2ObjectMap<Score> CLIENT = new Int2ObjectOpenHashMap<>();
+    private static final Int2LongMap ASKED = new Int2LongOpenHashMap();
+
+    static void register(RegisterPayloadHandlersEvent event) {
+        event.registrar("1")
+                .playToServer(Request.TYPE, Request.STREAM_CODEC, ScoreSync::answer)
+                .playToClient(Reply.TYPE, Reply.STREAM_CODEC, (reply, ctx) -> {
+                    CLIENT.put(reply.id(), reply.score());
+                    ASKED.remove(reply.id());
+                });
+    }
+
+    private static void answer(Request request, IPayloadContext ctx) {
+        if (!(ctx.player() instanceof ServerPlayer player))
+            return;
+        long second = player.serverLevel().getGameTime() / 20;
+        Budget budget = BUDGETS.get(player.getUUID());
+        if (budget == null || budget.second != second)
+            budget = new Budget(second, 0);
+        if (budget.used >= REQUESTS_PER_SECOND)
+            return;
+        BUDGETS.put(player.getUUID(), new Budget(second, budget.used + 1));
+        Score score = Scores.get(player.server).get(request.id());
+        if (score != null)
+            PacketDistributor.sendToPlayer(player, new Reply(request.id(), score));
+    }
+
+    static void forget(ServerPlayer player) {
+        BUDGETS.remove(player.getUUID());
+    }
+
+    @Nullable
+    public static Score client(int id) {
+        Score score = CLIENT.get(id);
+        if (score == null && id >= 0 && Util.getMillis() >= ASKED.getOrDefault(id, 0)) {
+            ASKED.put(id, Util.getMillis() + RETRY_MILLIS);
+            PacketDistributor.sendToServer(new Request(id));
+        }
+        return score;
+    }
+
+    public static void clearClient() {
+        CLIENT.clear();
+        ASKED.clear();
+    }
+}
