@@ -79,6 +79,7 @@ public final class Organ {
     private Organ() {}
 
     public static void register(IEventBus modBus) {
+        Tracer.keepOldIds(BLOCKS, ITEMS, BLOCK_ENTITIES, COMPONENTS);
         BLOCKS.register(modBus);
         ITEMS.register(modBus);
         BLOCK_ENTITIES.register(modBus);

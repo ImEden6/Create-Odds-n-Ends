@@ -13,17 +13,29 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 
 // Every design in the world by id, kept on the overworld the way vanilla keeps map data.
 // Items and entities only ever hold the id.
 public class Designs extends SavedData {
     private static final String NAME = "createoddsnends_designs";
+    // the file a world saved before the mod was renamed
+    private static final String OLD_NAME = "createcoolstuffs_designs";
 
     private final Int2ObjectMap<Design> designs = new Int2ObjectOpenHashMap<>();
     private int nextId;
 
     public static Designs get(MinecraftServer server) {
-        return server.overworld().getDataStorage().computeIfAbsent(new Factory<>(Designs::new, Designs::load), NAME);
+        DimensionDataStorage storage = server.overworld().getDataStorage();
+        Factory<Designs> factory = new Factory<>(Designs::new, Designs::load);
+        if (storage.get(factory, NAME) == null) {
+            Designs old = storage.get(factory, OLD_NAME);
+            if (old != null) {
+                old.setDirty();
+                storage.set(NAME, old);
+            }
+        }
+        return storage.computeIfAbsent(factory, NAME);
     }
 
     @Nullable
