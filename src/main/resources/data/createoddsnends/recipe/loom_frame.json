@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    "PAP",
+    "PAP"
+  ],
+  "result": {
+    "count": 4,
+    "id": "createoddsnends:loom_frame"
+  }
+}

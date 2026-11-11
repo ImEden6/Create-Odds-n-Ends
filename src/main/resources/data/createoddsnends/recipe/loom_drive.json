@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "create:andesite_casing"
+    },
+    "G": {
+      "item": "create:cogwheel"
+    },
+    "W": {
+      "tag": "c:strings"
+    }
+  },
+  "pattern": [
+    " G ",
+    "WCW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createoddsnends:loom_drive"
+  }
+}

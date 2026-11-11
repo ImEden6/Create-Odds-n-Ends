@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "create:andesite_casing"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "tag": "c:plates/copper"
+    }
+  },
+  "pattern": [
+    " S ",
+    "PCP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createoddsnends:wind_chest"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "create:brass_casing"
+    },
+    "M": {
+      "item": "create:precision_mechanism"
+    },
+    "S": {
+      "tag": "c:plates/iron"
+    }
+  },
+  "pattern": [
+    " M ",
+    "SCS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createoddsnends:card_punch"
+  }
+}
