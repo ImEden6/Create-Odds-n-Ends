@@ -2,6 +2,7 @@ package com.mervyn.createoddsnends.jacquard.client;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import com.mervyn.createoddsnends.Tracer;
 import com.mervyn.createoddsnends.cnc.CncStructure;
@@ -17,6 +18,7 @@ import net.minecraft.client.Screenshot;
 import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
@@ -41,15 +43,25 @@ final class Showcase {
 
     // eye position and target, in blocks: ahead of the starting spot, to its right, and up.
     // move is false for a follow-up shot from the same spot.
-    private record View(String name, int at, boolean move, double ahead, double right, double up, double lookAhead, double lookRight, double lookUp) {}
+    private record View(String name, int at, boolean move, double ahead, double right, double up, double lookAhead, double lookRight, double lookUp,
+                        Function<ServerLevel, Vec3> target) {}
 
     private static View view(String name, int at, double ahead, double right, double up, double lookAhead, double lookRight, double lookUp) {
-        return new View(name, at, true, ahead, right, up, lookAhead, lookRight, lookUp);
+        return new View(name, at, true, ahead, right, up, lookAhead, lookRight, lookUp, null);
     }
 
     private static View again(String name, int at) {
-        return new View(name, at, false, 0, 0, 0, 0, 0, 0);
+        return new View(name, at, false, 0, 0, 0, 0, 0, 0, null);
     }
+
+    // aimed at a block the showcase built, the eye offset from it in the same ahead/right/up terms
+    private static View close(String name, int at, Function<ServerLevel, Vec3> target, double ahead, double right, double up) {
+        return new View(name, at, true, ahead, right, up, 0, 0, 0, target);
+    }
+
+    private static int tick;
+    private static BlockPos anchor;
+    private static Direction ahead;
 
     private static final int SETUP = 60;
     // ODDSNENDS_SHOWCASE picks which machine the camera visits; everything gets built either way
@@ -106,6 +118,13 @@ final class Showcase {
                     again("jei_turning", 1360),
                     again("jei_punching", 1460),
                     again("jei_weaving", 1560)),
+            "trim", List.of(
+                    close("trim_cnc_pendant", 200, level -> Vec3.atCenterOf(cnc().above()), -0.9, 0.3, 0.1),
+                    close("trim_cnc_front", 280, level -> Vec3.atCenterOf(CncTests.showcaseCell(cnc().above(), ahead.getOpposite(), 1, 1, 0)), -1.1, 0.5, 0.4),
+                    close("trim_cnc_hatch", 360, level -> Vec3.atCenterOf(CncTests.showcaseCell(cnc().above(), ahead.getOpposite(), 1, 2, 1)).add(0, 0.5, 0), -0.7, 0.2, 1.9),
+                    close("trim_loom_gearbox", 440, level -> point(4, -2.2, 0.5), -1.1, 0.3, 1.3),
+                    close("trim_card_punch", 520, level -> Vec3.atCenterOf(anchor.relative(ahead, 3).relative(ahead.getCounterClockWise(), 5)), -0.9, 0.5, 0.6),
+                    close("trim_organ_crank", 600, level -> point(5, 13.5, 1.1), 0, 1.1, 0.3)),
             "organ_nomotor", List.of(
                     view("organ_back", 440, 8.5, 14.8, 2.2, 5, 13, 1),
                     view("organ_crank_side", 360, 5, 16.5, 1.7, 5, 13, 1.1),
@@ -113,10 +132,6 @@ final class Showcase {
                     view("organ_pipes", 600, 3.4, 12.2, 2.8, 5, 13, 1.8)));
     private static final List<View> VIEWS = SETS.getOrDefault(System.getenv().getOrDefault("ODDSNENDS_SHOWCASE", "lathe"), SETS.get("lathe"));
     private static final int QUIT = VIEWS.get(VIEWS.size() - 1).at + 100;
-
-    private static int tick;
-    private static BlockPos anchor;
-    private static Direction ahead;
 
     private Showcase() {}
 
@@ -183,6 +198,10 @@ final class Showcase {
 
     private static void moveTo(ServerPlayer player, View view) {
         Vec3 eye = point(view.ahead, view.right, view.up), look = point(view.lookAhead, view.lookRight, view.lookUp);
+        if (view.target != null) {
+            look = view.target.apply(player.serverLevel());
+            eye = look.add(point(view.ahead, view.right, view.up).subtract(point(0, 0, 0)));
+        }
         Vec3 d = look.subtract(eye);
         float yaw = (float) Math.toDegrees(Math.atan2(-d.x, d.z));
         float pitch = (float) -Math.toDegrees(Math.atan2(d.y, Math.sqrt(d.x * d.x + d.z * d.z)));

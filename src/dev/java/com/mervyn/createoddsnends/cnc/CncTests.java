@@ -354,6 +354,10 @@ public final class CncTests {
         Tracer.LOGGER.info("CNCTEST DONE {} failures {}", failures.size(), failures);
     }
 
+    public static BlockPos showcaseCell(BlockPos pendant, Direction facing, int along, int up, int back) {
+        return CncStructure.at(pendant, facing, along, up, back);
+    }
+
     public static void showcaseDoors(ServerLevel level, BlockPos pendant) {
         if (level.getBlockEntity(pendant) instanceof CncBlockEntity be)
             be.setDoors(true);
