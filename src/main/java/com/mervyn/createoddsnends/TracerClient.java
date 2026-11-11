@@ -11,13 +11,19 @@ import com.mervyn.createoddsnends.organ.client.OrganPartials;
 
 import com.mervyn.createoddsnends.ponder.TracerPonder;
 import com.mervyn.createoddsnends.turned.TurnedBlockEntity;
+import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.item.KineticStats;
+import com.simibubi.create.foundation.item.TooltipModifier;
 
 import dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer;
+import net.createmod.catnip.lang.FontHelper;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -51,6 +57,14 @@ public class TracerClient {
                 .factory(LatheVisual::create)
                 .skipVanillaRender(be -> true)
                 .apply());
+        event.enqueueWork(TracerClient::shiftTooltips);
+    }
+
+    private static void shiftTooltips() {
+        for (Item item : BuiltInRegistries.ITEM)
+            if (BuiltInRegistries.ITEM.getKey(item).getNamespace().equals(Tracer.MODID))
+                TooltipModifier.REGISTRY.register(item, new ItemDescription.Modifier(item, FontHelper.Palette.STANDARD_CREATE)
+                        .andThen(TooltipModifier.mapNull(KineticStats.create(item))));
     }
 
     @SubscribeEvent
