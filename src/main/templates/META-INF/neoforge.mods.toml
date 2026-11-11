@@ -1,44 +1,36 @@
+modLoader="javafml"
 
-modLoader="javafml" #mandatory
-
-loaderVersion="${loader_version_range}" #mandatory
+loaderVersion="${loader_version_range}"
 
 license="${mod_license}"
 
-#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+issueTrackerURL="https://CHANGE-ME.invalid/issues"
 
-[[mods]] #mandatory
+[[mods]]
 
-modId="${mod_id}" #mandatory
+modId="${mod_id}"
 
-version="${mod_version}" #mandatory
+version="${mod_version}"
 
-displayName="${mod_name}" #mandatory
+displayName="${mod_name}"
 
-#updateJSONURL="https://change.me.example.invalid/updates.json" #optional
+displayURL="https://CHANGE-ME.invalid/source"
 
-#displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
-
-#logoFile="examplemod.png" #optional
-
-#credits="" #optional
+credits="The Create team, for Create and Ponder"
 
 authors="Mervyn"
 
 description='''
-Copy lathe addon for Create.
+A Create addon with three machines. A copy lathe that turns blocks into balusters and vases. A jacquard loom that weaves tapestries from punched card chains. And a barrel organ that plays book music through steam whistles.
 '''
 
 [[mixins]]
 config="${mod_id}.mixins.json"
 
-#[[accessTransformers]]
-#file="META-INF/accesstransformer.cfg"
-
-[[dependencies.${mod_id}]] #optional
-    modId="neoforge" #mandatory
-    type="required" #mandatory
-    versionRange="[${neo_version},)" #mandatory
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
     ordering="NONE"
     side="BOTH"
 
@@ -49,13 +41,10 @@ config="${mod_id}.mixins.json"
     ordering="NONE"
     side="BOTH"
 
-#[features.${mod_id}]
-#openGLVersion="[3.2,)"
-
 [[dependencies.${mod_id}]]
     modId="create"
     type="required"
-    versionRange="[6.0.10,)"
+    versionRange="[6.0.10,6.1)"
     ordering="AFTER"
     side="BOTH"
 
