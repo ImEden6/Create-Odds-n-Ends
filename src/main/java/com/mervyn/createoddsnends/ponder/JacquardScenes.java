@@ -5,10 +5,12 @@ import static com.mervyn.createoddsnends.jacquard.LoomPartBlock.FORMED;
 import java.util.Arrays;
 
 import com.mervyn.createoddsnends.jacquard.CardPunchBlockEntity;
+import com.mervyn.createoddsnends.jacquard.Design;
 import com.mervyn.createoddsnends.jacquard.DesignSync;
 import com.mervyn.createoddsnends.jacquard.Jacquard;
 import com.mervyn.createoddsnends.jacquard.JacquardHeadBlockEntity;
 import com.mervyn.createoddsnends.jacquard.JacquardWork;
+import com.mervyn.createoddsnends.jacquard.TapestryEntity;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
@@ -76,6 +78,22 @@ public final class JacquardScenes {
                 .placeNearTarget();
         scene.idle(80);
 
+        BlockPos gap = new BlockPos(2, 2, 3);
+        scene.world().setBlock(gap, Jacquard.LOOM_FRAME.get().defaultBlockState(), false);
+        scene.idle(10);
+        scene.overlay().showControls(util.vector().topOf(HEAD), Pointing.DOWN, 30).rightClick().withItem(AllItems.WRENCH.asStack());
+        scene.idle(10);
+        scene.overlay().showOutline(PonderPalette.RED, "wrong", util.select().position(gap), 70);
+        scene.overlay().showText(70)
+                .attachKeyFrame()
+                .colored(PonderPalette.RED)
+                .text("With a frame in the gap the wrench does nothing, and the message tells you which spot is wrong")
+                .pointAt(util.vector().centerOf(gap))
+                .placeNearTarget();
+        scene.idle(80);
+        scene.world().destroyBlock(gap);
+        scene.idle(15);
+
         scene.overlay().showControls(util.vector().topOf(HEAD), Pointing.DOWN, 30).rightClick().withItem(AllItems.WRENCH.asStack());
         scene.idle(10);
         Scenes.form(scene, util.select().fromTo(1, 1, 2, 3, 3, 3), FORMED, HEAD, DRIVE);
@@ -83,7 +101,7 @@ public final class JacquardScenes {
         scene.overlay().showText(70)
                 .attachKeyFrame()
                 .colored(PonderPalette.GREEN)
-                .text("Wrench the head to put it together. If something is off, it tells you where")
+                .text("Clear the gap and wrench the head again to put it together")
                 .pointAt(util.vector().topOf(HEAD))
                 .placeNearTarget();
         scene.idle(80);
@@ -243,6 +261,130 @@ public final class JacquardScenes {
                 .pointAt(top)
                 .placeNearTarget();
         scene.idle(100);
+    }
+
+    public static void automation(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+        scene.title("loom_automation", "Feeding the Loom");
+        scene.configureBasePlate(0, 0, 7);
+        BlockPos head = new BlockPos(4, 3, 3), drive = new BlockPos(5, 1, 2), funnel = new BlockPos(2, 1, 3), belt = new BlockPos(0, 1, 3);
+        Selection loom = util.select().fromTo(3, 1, 2, 5, 3, 3);
+        Selection kinetics = util.select().position(6, 1, 2).add(util.select().position(drive));
+        Selection conveyor = util.select().fromTo(0, 1, 3, 1, 1, 3);
+        Scenes.form(scene, loom, FORMED, head, drive);
+        scene.world().setKineticSpeed(kinetics, 0);
+        scene.world().setKineticSpeed(conveyor, 0);
+        Scenes.put(scene, util, head, JacquardHeadBlockEntity.class, "Chain", designed(Jacquard.PUNCHED_CARD_CHAIN.get().getDefaultInstance()));
+        scene.showBasePlate();
+        scene.idle(5);
+        scene.world().showSection(util.select().fromTo(3, 1, 2, 6, 3, 3), Direction.DOWN);
+        scene.idle(10);
+        scene.world().showSection(util.select().fromTo(0, 1, 3, 2, 1, 3), Direction.EAST);
+        scene.idle(10);
+
+        scene.overlay().showText(70)
+                .attachKeyFrame()
+                .text("A funnel on any part of the loom feeds wool straight into its thread")
+                .pointAt(util.vector().centerOf(funnel))
+                .placeNearTarget();
+        scene.idle(30);
+        scene.world().setKineticSpeed(conveyor, 32);
+        for (int i = 0; i < 3; i++) {
+            scene.world().createItemOnBelt(belt, Direction.WEST, new ItemStack(Items.WHITE_WOOL, 16));
+            scene.idle(25);
+            scene.world().flapFunnel(funnel, false);
+            scene.world().removeItemsFromBelt(new BlockPos(1, 1, 3));
+        }
+        int[] thread = new int[16];
+        Arrays.fill(thread, JacquardWork.THREAD_CAP);
+        scene.world().modifyBlockEntityNBT(util.select().position(head), JacquardHeadBlockEntity.class, nbt -> nbt.putIntArray("Thread", thread));
+        scene.idle(20);
+
+        scene.world().setKineticSpeed(kinetics, 64);
+        scene.world().modifyBlockEntityNBT(util.select().position(head), JacquardHeadBlockEntity.class, nbt -> {
+            nbt.putFloat("Speed", 64);
+            nbt.putBoolean("Weaving", true);
+        });
+        scene.idle(60);
+
+        int colour = JacquardHeadBlockEntity.DEBUG_DESIGN.dye(0, 0);
+        int[] empty = thread.clone();
+        empty[colour] = 0;
+        scene.world().modifyBlockEntityNBT(util.select().position(head), JacquardHeadBlockEntity.class, nbt -> nbt.putIntArray("Thread", empty));
+        scene.overlay().showText(80)
+                .attachKeyFrame()
+                .colored(PonderPalette.RED)
+                .text("When a colour runs out the loom stops with the shed open. Goggles show which wool it wants")
+                .pointAt(util.vector().topOf(head))
+                .placeNearTarget();
+        scene.idle(90);
+
+        scene.world().createItemOnBelt(belt, Direction.WEST, new ItemStack(JacquardHeadBlockEntity.wool(colour), 16));
+        scene.idle(25);
+        scene.world().flapFunnel(funnel, false);
+        scene.world().removeItemsFromBelt(new BlockPos(1, 1, 3));
+        scene.world().modifyBlockEntityNBT(util.select().position(head), JacquardHeadBlockEntity.class, nbt -> nbt.putIntArray("Thread", thread));
+        scene.overlay().showText(70)
+                .text("As soon as that colour arrives it picks up where it stopped")
+                .pointAt(util.vector().centerOf(funnel))
+                .placeNearTarget();
+        scene.idle(80);
+        scene.overlay().showText(70)
+                .text("Funnels pull finished tapestries back out too, and the chain stays in for the next one")
+                .pointAt(util.vector().topOf(head))
+                .placeNearTarget();
+        scene.idle(80);
+    }
+
+    public static void tapestry(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+        scene.title("tapestry", "Hanging Tapestries");
+        scene.configureBasePlate(0, 0, 5);
+        scene.showBasePlate();
+        scene.idle(5);
+        scene.world().showSection(util.select().fromTo(0, 1, 4, 4, 3, 4), Direction.DOWN);
+        scene.idle(15);
+
+        Design design = JacquardHeadBlockEntity.DEBUG_DESIGN;
+        ItemStack item = designed(Jacquard.TAPESTRY.get().getDefaultInstance());
+        Vec3 wall = util.vector().blockSurface(util.grid().at(2, 2, 4), Direction.NORTH);
+        scene.overlay().showControls(wall, Pointing.DOWN, 40).rightClick().withItem(item);
+        scene.idle(7);
+        scene.world().createEntity(level -> new TapestryEntity(level, new BlockPos(2, 2, 3), Direction.NORTH, Direction.NORTH, DesignSync.PONDER, design));
+        scene.overlay().showText(70)
+                .attachKeyFrame()
+                .text("Right-click a wall with a tapestry to hang it, like a painting. It keeps the size of its design")
+                .pointAt(wall)
+                .placeNearTarget();
+        scene.idle(80);
+
+        Vec3 floor = util.vector().topOf(util.grid().at(2, 0, 1));
+        scene.overlay().showControls(floor, Pointing.DOWN, 40).rightClick().withItem(item);
+        scene.idle(7);
+        scene.world().createEntity(level -> new TapestryEntity(level, new BlockPos(2, 1, 1), Direction.UP, Direction.NORTH, DesignSync.PONDER, design));
+        scene.overlay().showText(70)
+                .attachKeyFrame()
+                .text("On a floor it lies flat like a rug. The top of the design points the way you were facing")
+                .pointAt(floor)
+                .placeNearTarget();
+        scene.idle(80);
+
+        scene.world().showSection(util.select().fromTo(0, 4, 2, 4, 4, 4), Direction.DOWN);
+        scene.idle(10);
+        Vec3 ceiling = util.vector().blockSurface(util.grid().at(2, 4, 2), Direction.DOWN);
+        scene.overlay().showControls(ceiling, Pointing.UP, 40).rightClick().withItem(item);
+        scene.idle(7);
+        scene.world().createEntity(level -> new TapestryEntity(level, new BlockPos(2, 3, 2), Direction.DOWN, Direction.SOUTH, DesignSync.PONDER, design));
+        scene.overlay().showText(70)
+                .text("Ceilings work too")
+                .pointAt(ceiling)
+                .placeNearTarget();
+        scene.idle(80);
+        scene.overlay().showText(60)
+                .text("Hit it to take it down. The design stays on the item")
+                .pointAt(wall)
+                .placeNearTarget();
+        scene.idle(70);
     }
 
     private static ItemStack designed(ItemStack stack) {
