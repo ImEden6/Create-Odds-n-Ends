@@ -108,6 +108,11 @@ public class WindChestBlockEntity extends SmartBlockEntity {
         return blowing;
     }
 
+    // Ponder has no organ feeding its chests, so scenes set this by hand
+    public void showBlowing(boolean on) {
+        blowing = on;
+    }
+
     private void setBlowing(boolean on) {
         if (on == blowing)
             return;

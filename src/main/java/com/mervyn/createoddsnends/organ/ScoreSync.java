@@ -28,6 +28,8 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public final class ScoreSync {
     private static final int REQUESTS_PER_SECOND = 20;
     private static final long RETRY_MILLIS = 2000;
+    public static final int PONDER = -2;
+    public static final Score PONDER_SCORE = ScoreGen.generate(3, "carousel", 4, 3, 0);
 
     private ScoreSync() {}
 
@@ -91,6 +93,8 @@ public final class ScoreSync {
 
     @Nullable
     public static Score client(int id) {
+        if (id == PONDER)
+            return PONDER_SCORE;
         Score score = CLIENT.get(id);
         if (score == null && id >= 0 && Util.getMillis() >= ASKED.getOrDefault(id, 0)) {
             ASKED.put(id, Util.getMillis() + RETRY_MILLIS);
