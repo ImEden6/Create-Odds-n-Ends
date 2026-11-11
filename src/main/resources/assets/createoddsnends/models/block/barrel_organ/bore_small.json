@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "createoddsnends:block/organ/mouth",
+    "mouth": "createoddsnends:block/organ/mouth"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        0.04,
+        11
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            5,
+            15.96,
+            11,
+            16
+          ],
+          "texture": "#mouth"
+        },
+        "south": {
+          "uv": [
+            5,
+            15.96,
+            11,
+            16
+          ],
+          "texture": "#mouth"
+        },
+        "east": {
+          "uv": [
+            5,
+            15.96,
+            11,
+            16
+          ],
+          "texture": "#mouth"
+        },
+        "west": {
+          "uv": [
+            5,
+            15.96,
+            11,
+            16
+          ],
+          "texture": "#mouth"
+        },
+        "up": {
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#mouth"
+        },
+        "down": {
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#mouth"
+        }
+      }
+    }
+  ]
+}
