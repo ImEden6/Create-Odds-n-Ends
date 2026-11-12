@@ -31,6 +31,10 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
     private static final int WARP = 0xE9E2CF, CORD = 0xC9B78F, HOLE = 0x3E3428;
     // top of the shuttle race, just under the lower shed
     private static final float RACE = 24.6f;
+    // the beater, reed and shuttle boxes sit this far further out than the preview's, to clear a
+    // 48 px wide cloth
+    private static final float WIDE = 6;
+    private static final float FRAME = 34;
 
     public LoomRenderer(BlockEntityRendererProvider.Context context) {}
 
@@ -77,16 +81,13 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
         ms.translate(8, -32, 16);
 
         Mesh m = new Mesh(ms, buffer.getBuffer(RenderType.solid()), lit, false);
-        TextureAtlasSprite spruce = Mesh.sprite("minecraft:block/spruce_log");
-        TextureAtlasSprite oak = Mesh.sprite("minecraft:block/oak_log");
+        TextureAtlasSprite oak = Mesh.sprite("createoddsnends:block/loom_timber_h");
         TextureAtlasSprite linen = Mesh.sprite("createoddsnends:block/linen");
         TextureAtlasSprite brass = Mesh.sprite("create:block/brass_block");
         TextureAtlasSprite iron = Mesh.sprite("minecraft:block/iron_block");
 
         boolean real = be.hasDesign();
-        TextureAtlasSprite planks = Mesh.sprite("minecraft:block/spruce_planks");
-        TextureAtlasSprite stripped = Mesh.sprite("minecraft:block/stripped_spruce_log");
-        head(m, real ? d : null, spruce, planks, stripped, brass, iron, ph, Hp - 1 - ph.row());
+        head(m, real ? d : null, brass, iron, ph, Hp - 1 - ph.row());
 
         // card cylinder and card chain
         double cylAngle = ph.cardS() * Math.PI / 2;
@@ -117,21 +118,29 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
         // drive: cross shaft and riser to the head (the input shaft is Create's, on the drive block)
         m.push();
         m.rotX(ph.spin(), 6, 8);
-        m.shaft(0, -17, -1, -1, 20, 1, 1);
+        m.shaft(0, -33, -1, -1, 36, 1, 1);
         m.pop();
         m.push();
-        m.rotY(ph.spin(), -21, 8);
+        m.rotY(ph.spin(), -37, 8);
         m.shaft(1, -1, 10, -1, 1, 41, 1);
+        m.pop();
+        // from the gearbox on the cap beam across to the lift box on the head
+        m.push();
+        m.rotX(ph.spin(), 42, 8);
+        m.shaft(0, -32, -1, -1, -18, 1, 1);
         m.pop();
 
         // warp beam and cloth roller
         double rb = 3.2 - 0.8 * ph.R() / Hp;
-        double rowH = 38.0 / Wp;
-        m.prismX(linen, -19, 19, 10, -9, (float) rb, 10, -ph.R() * rowH / 3);
+        // one texel per design pixel, so the cloth lines up with tapestries on the block grid
+        double rowH = 1;
+        float half = Wp / 2f;
+        m.prismX(oak, -FRAME, FRAME, 10, -9, 1.4f, 8, -ph.R() / 3);
+        m.prismX(linen, -half, half, 10, -9, (float) rb, 10, -ph.R() * rowH / 3);
         double rr = 2 + 1.4 * ph.R() / Hp;
-        m.prismX(oak, -20, 20, 9, 12, 1.4f, 8, ph.R() * rowH / 2);
+        m.prismX(oak, -FRAME, FRAME, 9, 12, 1.4f, 8, ph.R() * rowH / 2);
         if (ph.R() > 0.5)
-            m.prismX(linen, -19, 19, 9, 12, (float) rr, 10, ph.R() * rowH / rr);
+            m.prismX(linen, -half, half, 9, 12, (float) rr, 10, ph.R() * rowH / rr);
 
         // beater: swords, top bar, race, reed, rotating about the floor pivot, shuttle on the race
         int row = Hp - 1 - ph.row();
@@ -143,21 +152,21 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
         // shuttle ran beneath the cloth. The race top is now just under the lower shed at RACE,
         // the shuttle passes through the shed, and the reed and top bar sit higher to match.
         // Beaten forward, the reed now meets the fell.
-        m.box(spruce, -22, 0, -1, -20, RACE + 9, 1);
-        m.box(spruce, 20, 0, -1, 22, RACE + 9, 1);
-        m.box(spruce, -22, RACE + 6.9f, -1.2f, 22, RACE + 8.9f, 1.2f);
-        m.box(spruce, -22, RACE - 1.5f, -1, 22, RACE, 3);
-        m.box(Mesh.sprite("createoddsnends:block/reed"), -20, RACE, -0.3f, 20, RACE + 6.9f, 0.3f);
+        m.beam("timber", 1, -22 - WIDE, 0, -1, -20 - WIDE, RACE + 9, 1);
+        m.beam("timber", 1, 20 + WIDE, 0, -1, 22 + WIDE, RACE + 9, 1);
+        m.beam("timber", 0, -22 - WIDE, RACE + 7, -1, 22 + WIDE, RACE + 9, 1);
+        m.beam("timber", 0, -22 - WIDE, RACE - 2, -1, 22 + WIDE, RACE, 3);
+        m.box(Mesh.sprite("createoddsnends:block/reed"), -20 - WIDE, RACE, -0.3f, 20 + WIDE, RACE + 7, 0.3f);
         float sx = (float) ph.sx();
         m.box(oak, sx - 3, RACE, 0.6f, sx + 3, RACE + 1.8f, 2.6f);
         m.box(brass, sx - 3.6f, RACE + 0.4f, 1.2f, sx - 3, RACE + 1.4f, 2.0f);
         m.box(brass, sx + 3, RACE + 0.4f, 1.2f, sx + 3.6f, RACE + 1.4f, 2.0f);
         m.box(paper, weftRgb, sx - 1.6f, RACE + 1.3f, 1.1f, sx + 1.6f, RACE + 1.86f, 2.1f);
         if (ph.flying() || (ph.sp() > 0 && ph.sp() < 1)) {
-            float start = ph.dir() > 0 ? -19.5f : 19.5f;
+            float start = ph.dir() > 0 ? -19.5f - WIDE : 19.5f + WIDE;
             m.thread(new Vector3f(start, RACE + 0.7f, 1.6f), new Vector3f(sx, RACE + 0.7f, 1.6f), new Vector3f(0, 1, 0), 0.6f, weftRgb);
         }
-        shuttleBoxes(m, spruce, oak, picks, ph);
+        shuttleBoxes(m, oak, oak, picks, ph);
         m.pop();
 
         // warp threads and harness cords, one per design column. Changed from the preview: the shed
@@ -167,7 +176,7 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
         int N = Wp;
         Vector3f across = new Vector3f(1, 0, 0);
         for (int i = 0; i < N; i++) {
-            float x = -18.5f + 37f * i / (N - 1);
+            float x = i + 0.5f - half;
             boolean up = d.dye(i, row) != ph.weft();
             float hy = (float) (25 + ph.shed() * (up ? 3.4 : 0));
             m.thread(new Vector3f(x, (float) (10 + rb), -9), new Vector3f(x, 26.2f, -13), across, 0.35f, WARP);
@@ -176,7 +185,7 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
             // harness: the cord fans out from the hooks packed under the head, through its hole in
             // the comber board, down to a heddle eye the warp runs through, with a lingo weight
             // hanging below to pull it back down
-            m.thread(new Vector3f(x * 0.78f, 40, -4), new Vector3f(x, 35, -4), across, 0.3f, CORD);
+            m.thread(new Vector3f(x * 0.55f, 40, -4), new Vector3f(x, 35, -4), across, 0.3f, CORD);
             m.thread(new Vector3f(x, 34, -4), new Vector3f(x, hy + 0.45f, -4), across, 0.3f, CORD);
             m.box(iron, x - 0.25f, hy - 0.45f, -4.25f, x + 0.25f, hy + 0.45f, -3.75f);
             m.box(iron, x - 0.15f, hy - 9, -4.15f, x + 0.15f, hy - 0.45f, -3.85f);
@@ -184,7 +193,7 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
 
         // cloth: fell to the breast beam, then down to the roller. Woven rows show the design,
         // the leader beyond them is plain linen.
-        float[][] pts = {{25, 6}, {26.3f, 16.3f}, {9, (float) (12 + rr + 0.2)}};
+        float[][] pts = {{25, 6}, {26.3f, 14.3f}, {9, (float) (12 + rr + 0.2)}};
         double dw = ph.R() * rowH, d0 = 0;
         List<float[]> woven = new ArrayList<>();
         for (int k = 0; k < 2; k++) {
@@ -203,7 +212,7 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
             if (lB > lA) {
                 float[] a = along(A, B, (lA - d0) / len), b = along(A, B, (lB - d0) / len);
                 float vl = (float) Math.min(16, lB - lA);
-                m.quad(linen, new Vector3f(-19, a[0], a[1]), new Vector3f(19, a[0], a[1]), new Vector3f(19, b[0], b[1]), new Vector3f(-19, b[0], b[1]),
+                m.quad(linen, new Vector3f(-half, a[0], a[1]), new Vector3f(half, a[0], a[1]), new Vector3f(half, b[0], b[1]), new Vector3f(-half, b[0], b[1]),
                         new float[] {0, 0, 16, 0, 16, vl, 0, vl}, n, Mesh.WHITE, true);
             }
             d0 += len;
@@ -212,25 +221,28 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
             ResourceLocation tex = DesignTextures.get(be.getDesignId() >= 0 && d != JacquardHeadBlockEntity.DEBUG_DESIGN ? be.getDesignId() : DesignTextures.DEBUG, d);
             Mesh cloth = new Mesh(ms, buffer.getBuffer(RenderType.entitySolid(tex)), lit, true);
             for (float[] q : woven)
-                cloth.quad(null, new Vector3f(-19, q[0], q[1]), new Vector3f(19, q[0], q[1]), new Vector3f(19, q[2], q[3]), new Vector3f(-19, q[2], q[3]),
+                cloth.quad(null, new Vector3f(-half, q[0], q[1]), new Vector3f(half, q[0], q[1]), new Vector3f(half, q[2], q[3]), new Vector3f(-half, q[2], q[3]),
                         new float[] {0, q[4], 1, q[4], 1, q[5], 0, q[5]}, new Vector3f(0, q[6], q[7]), Mesh.WHITE, true);
         }
         ms.popPose();
     }
 
-    private static void head(Mesh m, Design d, TextureAtlasSprite log, TextureAtlasSprite planks, TextureAtlasSprite stripped, TextureAtlasSprite brass,
-                             TextureAtlasSprite iron, JacquardHeadBlockEntity.Phase ph, int row) {
+    // an open cage, so the hooks and knives show from above
+    private static void head(Mesh m, Design d, TextureAtlasSprite brass, TextureAtlasSprite iron, JacquardHeadBlockEntity.Phase ph, int row) {
         for (float x : new float[] {-16, 14})
             for (float z : new float[] {-10, 2})
-                m.box(log, x, 38, z, x + 2, 46.5f, z + 2);
-        m.box(planks, -17, 46.5f, -11, 17, 48, 5);
-        m.box(planks, -14, 38.5f, -8, 14, 39.5f, 2);
+                m.beam("post", 1, x, 38, z, x + 2, 46, z + 2);
+        for (float z : new float[] {-12, 4})
+            m.beam("timber", 0, -18, 46, z, 18, 48, z + 2);
+        for (float x : new float[] {-18, 16})
+            m.beam("timber", 2, x, 46, -10, x + 2, 48, 4);
+        m.box(Mesh.sprite("createoddsnends:block/loom_planks_h"), -14, 38, -8, 14, 39, 2);
         for (float z : new float[] {-10, 3}) {
-            m.box(stripped, -14, 38, z, 14, 39.5f, z + 1);
-            m.box(stripped, -14, 45, z, 14, 46.5f, z + 1);
+            m.beam("timber", 0, -14, 38, z, 14, 40, z + 1);
+            m.beam("timber", 0, -14, 44, z, 14, 46, z + 1);
         }
         for (float x : new float[] {-16, 14})
-            m.box(stripped, x + 0.5f, 45, -8, x + 1.5f, 46.5f, 2);
+            m.beam("timber", 2, x + 0.5f, 44, -8, x + 1.5f, 46, 2);
 
         float lift = (float) (1.4 * ph.shed());
         m.box(brass, -14, 42.5f + lift, -8.5f, -13, 44.6f + lift, 2.5f);
@@ -275,16 +287,16 @@ public class LoomRenderer extends SafeBlockEntityRenderer<JacquardHeadBlockEntit
         double shift = Mth.lerp(ph.boxShift(), cell(picks, ph.lastWeft()), cell(picks, ph.weft()));
         float cellH = 2.2f, base = (float) (RACE - shift * cellH), top = base + cells * cellH;
         for (int side : new int[] {-1, 1}) {
-            float inner = side * 18.5f, outer = side * 23f, x0 = Math.min(inner, outer), x1 = Math.max(inner, outer);
+            float inner = side * (18.5f + WIDE), outer = side * (23f + WIDE), x0 = Math.min(inner, outer), x1 = Math.max(inner, outer);
             m.box(spruce, x0, base - 0.3f, -0.6f, x1, top, -0.2f);
             m.box(spruce, x0, base - 0.3f, 2.8f, x1, top, 3.2f);
-            m.box(spruce, side > 0 ? 22.6f : -23f, base - 0.3f, -0.2f, side > 0 ? 23f : -22.6f, top, 2.8f);
+            m.box(spruce, side > 0 ? 22.6f + WIDE : -23f - WIDE, base - 0.3f, -0.2f, side > 0 ? 23f + WIDE : -22.6f - WIDE, top, 2.8f);
             for (int j = 0; j <= cells; j++)
                 m.box(spruce, x0, base + j * cellH - 0.3f, -0.2f, x1, base + j * cellH, 2.8f);
             // the picker on the side the shuttle leaves from snaps inward as it throws
             boolean throwing = side == -ph.dir() && ph.sp() > 0 && ph.sp() < 1;
             float stroke = throwing ? (float) (2 * Math.sin(Math.min(1, ph.sp() / 0.3) * Math.PI)) : 0;
-            float pin = side * (22.6f - stroke), pout = side * (21.4f - stroke);
+            float pin = side * (22.6f + WIDE - stroke), pout = side * (21.4f + WIDE - stroke);
             m.box(leather, Math.min(pin, pout), RACE + 0.1f, 0.8f, Math.max(pin, pout), RACE + 1.9f, 2.4f);
         }
     }
