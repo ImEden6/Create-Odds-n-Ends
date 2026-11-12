@@ -29,8 +29,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
 public final class JacquardScenes {
-    private static final BlockPos HEAD = new BlockPos(2, 3, 3);
-    private static final BlockPos DRIVE = new BlockPos(3, 1, 2);
+    private static final BlockPos HEAD = new BlockPos(3, 3, 3);
+    private static final BlockPos DRIVE = new BlockPos(5, 1, 2);
     private static final BlockPos PUNCH = new BlockPos(2, 1, 2);
 
     private JacquardScenes() {}
@@ -38,18 +38,18 @@ public final class JacquardScenes {
     public static void build(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
         scene.title("loom_build", "Building the Jacquard Loom");
-        scene.configureBasePlate(0, 0, 5);
+        scene.configureBasePlate(0, 0, 7);
         scene.showBasePlate();
-        Selection motor = util.select().position(4, 1, 2);
-        Selection kinetics = util.select().position(4, 1, 2).add(util.select().position(DRIVE));
+        Selection motor = util.select().position(6, 1, 2);
+        Selection kinetics = util.select().position(6, 1, 2).add(util.select().position(DRIVE));
         scene.world().setKineticSpeed(kinetics, 0);
         scene.idle(10);
 
-        scene.world().showSection(util.select().fromTo(1, 1, 2, 3, 1, 3), Direction.DOWN);
+        scene.world().showSection(util.select().fromTo(1, 1, 2, 5, 1, 3), Direction.DOWN);
         scene.idle(10);
         scene.overlay().showText(70)
                 .attachKeyFrame()
-                .text("The loom is three blocks wide, three tall and two deep, built from loom frames")
+                .text("The loom is five blocks wide, three tall and two deep, built from loom frames")
                 .pointAt(util.vector().topOf(util.grid().at(1, 1, 2)))
                 .placeNearTarget();
         scene.idle(80);
@@ -60,17 +60,17 @@ public final class JacquardScenes {
                 .placeNearTarget();
         scene.idle(80);
 
-        scene.world().showSection(util.select().fromTo(1, 2, 2, 3, 2, 3), Direction.DOWN);
+        scene.world().showSection(util.select().fromTo(1, 2, 2, 5, 2, 3), Direction.DOWN);
         scene.idle(10);
-        scene.overlay().showOutline(PonderPalette.RED, "hollow", util.select().fromTo(2, 2, 2, 2, 2, 3), 70);
+        scene.overlay().showOutline(PonderPalette.RED, "hollow", util.select().fromTo(2, 2, 2, 4, 2, 3), 70);
         scene.overlay().showText(70)
                 .colored(PonderPalette.RED)
-                .text("Leave the middle of the middle layer empty, the warp runs through there")
-                .pointAt(util.vector().centerOf(2, 2, 3))
+                .text("Leave the middle three of the middle layer empty, the warp runs through there")
+                .pointAt(util.vector().centerOf(3, 2, 3))
                 .placeNearTarget();
         scene.idle(80);
 
-        scene.world().showSection(util.select().fromTo(1, 3, 2, 3, 3, 2).add(util.select().position(1, 3, 3)).add(util.select().position(3, 3, 3)), Direction.DOWN);
+        scene.world().showSection(util.select().fromTo(1, 3, 2, 5, 3, 2).add(util.select().fromTo(1, 3, 3, 2, 3, 3)).add(util.select().fromTo(4, 3, 3, 5, 3, 3)), Direction.DOWN);
         scene.idle(5);
         scene.world().showSection(util.select().position(HEAD), Direction.DOWN);
         scene.idle(10);
@@ -81,7 +81,7 @@ public final class JacquardScenes {
                 .placeNearTarget();
         scene.idle(80);
 
-        BlockPos gap = new BlockPos(2, 2, 3);
+        BlockPos gap = new BlockPos(3, 2, 3);
         scene.world().setBlock(gap, Jacquard.LOOM_FRAME.get().defaultBlockState(), false);
         scene.idle(10);
         scene.overlay().showControls(util.vector().topOf(HEAD), Pointing.DOWN, 30).rightClick().withItem(AllItems.WRENCH.asStack());
@@ -99,7 +99,7 @@ public final class JacquardScenes {
 
         scene.overlay().showControls(util.vector().topOf(HEAD), Pointing.DOWN, 30).rightClick().withItem(AllItems.WRENCH.asStack());
         scene.idle(10);
-        Scenes.form(scene, util.select().fromTo(1, 1, 2, 3, 3, 3), FORMED, HEAD, DRIVE);
+        Scenes.form(scene, util.select().fromTo(1, 1, 2, 5, 3, 3), FORMED, HEAD, DRIVE);
         scene.effects().indicateSuccess(HEAD);
         scene.overlay().showText(70)
                 .attachKeyFrame()
@@ -119,7 +119,7 @@ public final class JacquardScenes {
         scene.idle(80);
         scene.overlay().showText(60)
                 .text("Breaking any part takes the loom apart again")
-                .pointAt(util.vector().topOf(util.grid().at(3, 3, 3)))
+                .pointAt(util.vector().topOf(util.grid().at(5, 3, 3)))
                 .placeNearTarget();
         scene.idle(70);
     }
@@ -127,16 +127,16 @@ public final class JacquardScenes {
     public static void weaving(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
         scene.title("loom_weaving", "Weaving Tapestries");
-        scene.configureBasePlate(0, 0, 5);
-        Selection kinetics = util.select().position(4, 1, 2).add(util.select().position(DRIVE));
-        Scenes.form(scene, util.select().fromTo(1, 1, 2, 3, 3, 3), FORMED, HEAD, DRIVE);
+        scene.configureBasePlate(0, 0, 7);
+        Selection kinetics = util.select().position(6, 1, 2).add(util.select().position(DRIVE));
+        Scenes.form(scene, util.select().fromTo(1, 1, 2, 5, 3, 3), FORMED, HEAD, DRIVE);
         scene.world().setKineticSpeed(kinetics, 0);
         scene.showBasePlate();
         scene.idle(5);
         scene.world().showSection(util.select().layersFrom(1), Direction.DOWN);
         scene.idle(15);
 
-        Vec3 front = util.vector().blockSurface(util.grid().at(2, 1, 2), Direction.NORTH);
+        Vec3 front = util.vector().blockSurface(util.grid().at(3, 1, 2), Direction.NORTH);
         ItemStack chain = designed(Jacquard.PUNCHED_CARD_CHAIN.get().getDefaultInstance());
         scene.overlay().showControls(front, Pointing.DOWN, 40).rightClick().withItem(chain);
         scene.idle(7);
@@ -167,7 +167,7 @@ public final class JacquardScenes {
         scene.overlay().showText(80)
                 .attachKeyFrame()
                 .text("Give it rotation and it weaves the design, one throw of the shuttle for each colour in a row")
-                .pointAt(util.vector().centerOf(2, 2, 2))
+                .pointAt(util.vector().centerOf(3, 2, 2))
                 .placeNearTarget();
         scene.idle(100);
         scene.overlay().showText(80)
@@ -191,7 +191,7 @@ public final class JacquardScenes {
         scene.idle(90);
         scene.overlay().showText(70)
                 .text("Funnels, hoppers and mechanical arms work on any part: chains and wool go in, tapestries come out")
-                .pointAt(util.vector().topOf(util.grid().at(3, 3, 3)))
+                .pointAt(util.vector().topOf(util.grid().at(5, 3, 3)))
                 .placeNearTarget();
         scene.idle(80);
     }
@@ -269,16 +269,16 @@ public final class JacquardScenes {
     public static void automation(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
         scene.title("loom_automation", "Feeding the Loom");
-        scene.configureBasePlate(0, 0, 7);
-        BlockPos head = new BlockPos(4, 3, 3), drive = new BlockPos(5, 1, 2), funnel = new BlockPos(2, 1, 3);
-        Selection loom = util.select().fromTo(3, 1, 2, 5, 3, 3);
-        Selection kinetics = util.select().position(6, 1, 2).add(util.select().position(drive));
+        scene.configureBasePlate(0, 0, 9);
+        BlockPos head = new BlockPos(5, 3, 3), drive = new BlockPos(7, 1, 2), funnel = new BlockPos(2, 1, 3);
+        Selection loom = util.select().fromTo(3, 1, 2, 7, 3, 3);
+        Selection kinetics = util.select().position(8, 1, 2).add(util.select().position(drive));
         Scenes.form(scene, loom, FORMED, head, drive);
         scene.world().setKineticSpeed(kinetics, 0);
         Scenes.put(scene, util, head, JacquardHeadBlockEntity.class, "Chain", designed(Jacquard.PUNCHED_CARD_CHAIN.get().getDefaultInstance()));
         scene.showBasePlate();
         scene.idle(5);
-        scene.world().showSection(util.select().fromTo(3, 1, 2, 6, 3, 3), Direction.DOWN);
+        scene.world().showSection(util.select().fromTo(3, 1, 2, 8, 3, 3), Direction.DOWN);
         scene.idle(10);
         scene.world().showSection(util.select().position(funnel), Direction.EAST);
         scene.idle(10);

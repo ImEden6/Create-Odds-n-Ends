@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 // Layout is relative to the jacquard head, which sits top, back, middle. Cells are (x, y, z)
 // with x running left to right seen from the front (counter-clockwise of facing), y up and z
-// toward the front (facing). The two middle cells stay hollow and get filled with loom voids.
+// toward the front (facing). The six middle-row inner cells stay hollow and get filled with loom voids.
 public final class LoomStructure {
     record Spot(int x, int y, int z, @Nullable Supplier<? extends Block> block, @Nullable LoomCell cell) {}
 
@@ -35,17 +35,18 @@ public final class LoomStructure {
 
     private static List<Spot> spots() {
         List<Spot> out = new ArrayList<>();
-        out.add(new Spot(1, 2, 0, Jacquard.JACQUARD_HEAD, null));
+        out.add(new Spot(2, 2, 0, Jacquard.JACQUARD_HEAD, null));
         out.add(new Spot(0, 0, 1, Jacquard.LOOM_DRIVE, null));
         for (LoomCell cell : LoomCell.values())
             out.add(new Spot(cell.x, cell.y, cell.z, Jacquard.LOOM_FRAME, cell));
-        out.add(new Spot(1, 1, 0, null, null));
-        out.add(new Spot(1, 1, 1, null, null));
+        for (int x = 1; x <= 3; x++)
+            for (int z = 0; z <= 1; z++)
+                out.add(new Spot(x, 1, z, null, null));
         return out;
     }
 
     static BlockPos at(BlockPos head, Direction facing, int x, int y, int z) {
-        return head.relative(facing.getCounterClockWise(), x - 1).above(y - 2).relative(facing, z);
+        return head.relative(facing.getCounterClockWise(), x - 2).above(y - 2).relative(facing, z);
     }
 
     static InteractionResult wrench(Level level, BlockPos head, @Nullable Player player) {
@@ -144,7 +145,7 @@ public final class LoomStructure {
     // every formed part knows its own cell and facing, so the head is a fixed offset away
     public static BlockPos findHead(BlockPos pos, BlockState state) {
         Direction facing = state.getValue(FACING);
-        int x = 1, y = 2, z = 0;
+        int x = 2, y = 2, z = 0;
         if (state.getBlock() instanceof LoomDriveBlock) {
             x = 0;
             y = 0;
@@ -155,6 +156,6 @@ public final class LoomStructure {
             y = cell.y;
             z = cell.z;
         }
-        return pos.relative(facing.getCounterClockWise(), 1 - x).above(2 - y).relative(facing, -z);
+        return pos.relative(facing.getCounterClockWise(), 2 - x).above(2 - y).relative(facing, -z);
     }
 }
