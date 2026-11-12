@@ -34,4 +34,10 @@ public final class InstrumentPlayback {
         if (sound != null)
             held.add(sound);
     }
+
+    public static void release(InstrumentBlockEntity be) {
+        List<OrganNoteSound> held = HELD.remove(be);
+        if (held != null)
+            held.forEach(OrganNoteSound::release);
+    }
 }

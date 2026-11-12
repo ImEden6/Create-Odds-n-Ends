@@ -1,5 +1,6 @@
 package com.mervyn.createoddsnends.organ;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +21,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.TickTask;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -103,12 +106,12 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
     public Score gridScore;
     public int[] grid;
 
+    // what the last walk of the wind lines found, kept on both sides: the client plays the
+    // instruments on these chests and only animates the cabinet for what they cover
     private List<BlockPos> chests = List.of();
-    private int networkVersion = -1;
-    private int mutedVoices;
-    private int chestCount;
-    private List<BlockPos> heard = List.of();
-    private int heardVersion = -1;
+    private int coveredVoices, instruments;
+    private boolean kick, snare, rebuildQueued;
+    public boolean sounding;
 
     public BarrelOrganBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -209,8 +212,6 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
     }
 
     private void feedChests(@Nullable Score score) {
-        if (networkVersion != WindNetwork.version() || level.getGameTime() % 40 == 0)
-            rebuildNetwork();
         if (!running || score == null || chests.isEmpty())
             return;
         if (gridScore != score) {
@@ -223,54 +224,75 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
                 chest.feed(grid, offset);
     }
 
+    @Override
+    public void initialize() {
+        super.initialize();
+        if (!level.isClientSide && level.getServer() != null) {
+            WindNetwork.track(this);
+            queueRebuild();
+        }
+    }
+
+    void queueRebuild() {
+        MinecraftServer server = level.getServer();
+        if (rebuildQueued || server == null)
+            return;
+        rebuildQueued = true;
+        server.tell(new TickTask(server.getTickCount(), () -> {
+            rebuildQueued = false;
+            if (!isRemoved())
+                rebuildNetwork();
+        }));
+    }
+
     private void rebuildNetwork() {
-        networkVersion = WindNetwork.version();
-        List<BlockPos> found = WindNetwork.walk(level, worldPosition);
-        int muted = 0;
+        survey(WindNetwork.walk(level, worldPosition));
+        sendData();
+    }
+
+    // Ponder has no server to walk the lines, so its scenes ask once the chests are in place
+    public void ponderNetwork() {
+        survey(WindNetwork.walk(level, worldPosition));
+    }
+
+    private void survey(List<BlockPos> found) {
+        chests = found;
+        coveredVoices = 0;
+        instruments = 0;
+        kick = snare = false;
         for (BlockPos pos : found) {
             if (!(level.getBlockEntity(pos) instanceof WindChestBlockEntity chest))
                 continue;
-            if (chest.voiceColour() != null)
-                muted |= 1 << chest.voiceColour().getId();
-            if (level.getBlockState(pos.above()).getBlock() instanceof InstrumentBlock block)
-                muted |= switch (block.instrument) {
-                    case KICK_DRUM -> MUTE_KICK;
-                    case SNARE_DRUM -> MUTE_SNARE;
-                    default -> chest.voiceColour() == null ? MUTE_PITCHED : 0;
-                };
+            BlockState top = level.getBlockState(pos.above());
+            int voices = chest.voiceColour() == null ? 0xFFFF : 1 << chest.voiceColour().getId();
+            if (top.getBlock() instanceof InstrumentBlock block) {
+                instruments++;
+                switch (block.instrument) {
+                    case KICK_DRUM -> kick = true;
+                    case SNARE_DRUM -> snare = true;
+                    default -> coveredVoices |= voices;
+                }
+            } else if (WindChestBlock.whistleOnTop(top)) {
+                instruments++;
+                coveredVoices |= voices;
+            }
         }
-        boolean differs = muted != mutedVoices || found.size() != chests.size();
-        chests = found;
-        chestCount = found.size();
-        mutedVoices = muted;
-        if (differs)
-            sendData();
     }
 
-    // the client walks the lines itself to find the instruments it has to play, Ponder included
-    public List<BlockPos> clientChests() {
-        if (heardVersion != WindNetwork.version() || level.getGameTime() % 40 == 0) {
-            heardVersion = WindNetwork.version();
-            heard = WindNetwork.walk(level, worldPosition);
-        }
-        return heard;
+    public List<BlockPos> chests() {
+        return chests;
     }
 
-    // bits 0 to 15 are voices a filtered chest took, the rest are things an instrument plays instead
-    private static final int MUTE_KICK = 1 << 16, MUTE_SNARE = 1 << 17, MUTE_PITCHED = 1 << 18;
+    public boolean covers(int voice) {
+        return (coveredVoices >> voice & 1) != 0;
+    }
 
-    public boolean mutes(Score.Note note) {
-        if (note.column() == 0)
-            return (mutedVoices & MUTE_KICK) != 0;
-        if (note.column() == 1)
-            return (mutedVoices & MUTE_SNARE) != 0;
-        if ((mutedVoices & MUTE_PITCHED) != 0 && !Timbre.of(note.voice(), note.column()).drum())
-            return true;
-        return (mutedVoices >> note.voice() & 1) != 0;
+    public boolean drums(int column) {
+        return column == 0 ? kick : column == 1 && snare;
     }
 
     public int chestCount() {
-        return chestCount;
+        return chests.size();
     }
 
     // the client's count, moved on to the frame being drawn
@@ -328,6 +350,8 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
         super.invalidate();
         if (level != null && level.isClientSide)
             OrganPlayback.stop(this);
+        else if (level != null)
+            WindNetwork.untrack(this);
     }
 
     @Override
@@ -346,8 +370,12 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
             String state = finished ? "finished" : running ? "playing" : "paused";
             lang().translate("organ.goggles." + state).style(finished ? ChatFormatting.GOLD : ChatFormatting.GRAY).forGoggles(tooltip, 1);
         }
-        if (chestCount > 0)
-            lang().translate("organ.goggles.chests", chestCount).style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
+        if (!chests.isEmpty())
+            lang().translate("organ.goggles.chests", chests.size()).style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
+        if (instruments == 0)
+            lang().translate("organ.goggles.no_instruments").style(ChatFormatting.RED).forGoggles(tooltip, 1);
+        else
+            lang().translate("organ.goggles.instruments", instruments).style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
         super.addToGoggleTooltip(tooltip, isPlayerSneaking);
         return true;
     }
@@ -365,8 +393,11 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
         tag.putBoolean("Running", running);
         tag.putInt("Pulse", pulse);
         if (clientPacket) {
-            tag.putInt("Muted", mutedVoices);
-            tag.putInt("Chests", chestCount);
+            tag.putLongArray("Chests", chests.stream().mapToLong(BlockPos::asLong).toArray());
+            tag.putInt("Voices", coveredVoices);
+            tag.putInt("Instruments", instruments);
+            tag.putBoolean("Kick", kick);
+            tag.putBoolean("Snare", snare);
         }
     }
 
@@ -379,8 +410,11 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
         running = tag.getBoolean("Running");
         pulse = tag.getInt("Pulse");
         if (clientPacket) {
-            mutedVoices = tag.getInt("Muted");
-            chestCount = tag.getInt("Chests");
+            chests = Arrays.stream(tag.getLongArray("Chests")).mapToObj(BlockPos::of).toList();
+            coveredVoices = tag.getInt("Voices");
+            instruments = tag.getInt("Instruments");
+            kick = tag.getBoolean("Kick");
+            snare = tag.getBoolean("Snare");
         }
     }
 
