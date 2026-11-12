@@ -292,6 +292,8 @@ public class CardPunchBlockEntity extends KineticBlockEntity {
         ItemHelper.dropContents(level, worldPosition, source);
         ItemHelper.dropContents(level, worldPosition, blanks);
         ItemHelper.dropContents(level, worldPosition, output);
+        for (; consumed > 0; consumed -= Math.min(consumed, 64))
+            Block.popResource(level, worldPosition, new ItemStack(Jacquard.BLANK_CARD.get(), Math.min(consumed, 64)));
     }
 
     @Override
