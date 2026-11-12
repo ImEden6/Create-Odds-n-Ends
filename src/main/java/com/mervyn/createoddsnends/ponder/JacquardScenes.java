@@ -16,11 +16,14 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
@@ -267,19 +270,17 @@ public final class JacquardScenes {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
         scene.title("loom_automation", "Feeding the Loom");
         scene.configureBasePlate(0, 0, 7);
-        BlockPos head = new BlockPos(4, 3, 3), drive = new BlockPos(5, 1, 2), funnel = new BlockPos(2, 1, 3), belt = new BlockPos(0, 1, 3);
+        BlockPos head = new BlockPos(4, 3, 3), drive = new BlockPos(5, 1, 2), funnel = new BlockPos(2, 1, 3);
         Selection loom = util.select().fromTo(3, 1, 2, 5, 3, 3);
         Selection kinetics = util.select().position(6, 1, 2).add(util.select().position(drive));
-        Selection conveyor = util.select().fromTo(0, 1, 3, 1, 1, 3);
         Scenes.form(scene, loom, FORMED, head, drive);
         scene.world().setKineticSpeed(kinetics, 0);
-        scene.world().setKineticSpeed(conveyor, 0);
         Scenes.put(scene, util, head, JacquardHeadBlockEntity.class, "Chain", designed(Jacquard.PUNCHED_CARD_CHAIN.get().getDefaultInstance()));
         scene.showBasePlate();
         scene.idle(5);
         scene.world().showSection(util.select().fromTo(3, 1, 2, 6, 3, 3), Direction.DOWN);
         scene.idle(10);
-        scene.world().showSection(util.select().fromTo(0, 1, 3, 2, 1, 3), Direction.EAST);
+        scene.world().showSection(util.select().position(funnel), Direction.EAST);
         scene.idle(10);
 
         scene.overlay().showText(70)
@@ -288,13 +289,8 @@ public final class JacquardScenes {
                 .pointAt(util.vector().centerOf(funnel))
                 .placeNearTarget();
         scene.idle(30);
-        scene.world().setKineticSpeed(conveyor, 32);
-        for (int i = 0; i < 3; i++) {
-            scene.world().createItemOnBelt(belt, Direction.WEST, new ItemStack(Items.WHITE_WOOL, 16));
-            scene.idle(25);
-            scene.world().flapFunnel(funnel, false);
-            scene.world().removeItemsFromBelt(new BlockPos(1, 1, 3));
-        }
+        for (int i = 0; i < 3; i++)
+            feed(scene, util, funnel, new ItemStack(Items.WHITE_WOOL, 16));
         int[] thread = new int[16];
         Arrays.fill(thread, JacquardWork.THREAD_CAP);
         scene.world().modifyBlockEntityNBT(util.select().position(head), JacquardHeadBlockEntity.class, nbt -> nbt.putIntArray("Thread", thread));
@@ -319,10 +315,7 @@ public final class JacquardScenes {
                 .placeNearTarget();
         scene.idle(90);
 
-        scene.world().createItemOnBelt(belt, Direction.WEST, new ItemStack(JacquardHeadBlockEntity.wool(colour), 16));
-        scene.idle(25);
-        scene.world().flapFunnel(funnel, false);
-        scene.world().removeItemsFromBelt(new BlockPos(1, 1, 3));
+        feed(scene, util, funnel, new ItemStack(JacquardHeadBlockEntity.wool(colour), 16));
         scene.world().modifyBlockEntityNBT(util.select().position(head), JacquardHeadBlockEntity.class, nbt -> nbt.putIntArray("Thread", thread));
         scene.overlay().showText(70)
                 .text("As soon as that colour arrives it picks up where it stopped")
@@ -334,6 +327,15 @@ public final class JacquardScenes {
                 .pointAt(util.vector().topOf(head))
                 .placeNearTarget();
         scene.idle(80);
+    }
+
+    private static void feed(CreateSceneBuilder scene, SceneBuildingUtil util, BlockPos funnel, ItemStack wool) {
+        Vec3 from = util.vector().centerOf(funnel).add(-1.5, 0.4, 0);
+        ElementLink<EntityElement> item = scene.world().createItemEntity(from, new Vec3(0.12, 0.1, 0), wool);
+        scene.idle(12);
+        scene.world().modifyEntity(item, Entity::discard);
+        scene.world().flapFunnel(funnel, false);
+        scene.idle(10);
     }
 
     public static void tapestry(SceneBuilder builder, SceneBuildingUtil util) {
