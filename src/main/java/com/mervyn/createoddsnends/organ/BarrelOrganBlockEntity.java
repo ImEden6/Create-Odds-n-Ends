@@ -107,6 +107,8 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
     private int networkVersion = -1;
     private int mutedVoices;
     private int chestCount;
+    private List<BlockPos> heard = List.of();
+    private int heardVersion = -1;
 
     public BarrelOrganBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -234,6 +236,15 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
         mutedVoices = muted;
         if (differs)
             sendData();
+    }
+
+    // the client walks the lines itself to find the instruments it has to play, Ponder included
+    public List<BlockPos> clientChests() {
+        if (heardVersion != WindNetwork.version() || level.getGameTime() % 40 == 0) {
+            heardVersion = WindNetwork.version();
+            heard = WindNetwork.walk(level, worldPosition);
+        }
+        return heard;
     }
 
     public boolean mutes(int voice) {

@@ -30,6 +30,7 @@ public final class OrganClient {
     static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(Organ.BARREL_ORGAN_BE.get(), BarrelOrganRenderer::new);
         event.registerBlockEntityRenderer(Organ.WIND_CHEST_BE.get(), WindChestRenderer::new);
+        event.registerBlockEntityRenderer(Organ.INSTRUMENT_BE.get(), InstrumentRenderer::new);
     }
 
     @SubscribeEvent
