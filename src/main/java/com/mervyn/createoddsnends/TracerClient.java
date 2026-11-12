@@ -9,6 +9,7 @@ import com.mervyn.createoddsnends.client.TurnedModel;
 import com.mervyn.createoddsnends.client.TurnedQuads;
 import com.mervyn.createoddsnends.organ.client.OrganPartials;
 
+import com.mervyn.createoddsnends.ponder.PonderShots;
 import com.mervyn.createoddsnends.ponder.TracerPonder;
 import com.mervyn.createoddsnends.turned.TurnedBlockEntity;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -40,6 +41,7 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.common.NeoForge;
 
 @Mod(value = Tracer.MODID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = Tracer.MODID, value = Dist.CLIENT)
@@ -49,6 +51,8 @@ public class TracerClient {
         LathePartials.init();
         OrganPartials.init();
         PonderIndex.addPlugin(new TracerPonder());
+        if (PonderShots.ENABLED)
+            NeoForge.EVENT_BUS.addListener(PonderShots::tick);
     }
 
     @SubscribeEvent
