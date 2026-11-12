@@ -5,6 +5,7 @@ import com.mervyn.createoddsnends.organ.InstrumentBlock;
 import com.mervyn.createoddsnends.organ.InstrumentBlockEntity;
 import com.mervyn.createoddsnends.organ.Organ;
 import com.mervyn.createoddsnends.organ.ScoreSync;
+import com.mervyn.createoddsnends.organ.WindChestBlock;
 import com.mervyn.createoddsnends.organ.WindChestBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
@@ -19,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
@@ -74,6 +76,21 @@ public final class OrganScenes {
                 .pointAt(util.vector().blockSurface(ORGAN, Direction.SOUTH))
                 .placeNearTarget();
         scene.idle(70);
+
+        BlockPos line = new BlockPos(1, 1, 2), chest = new BlockPos(0, 1, 2);
+        scene.world().setBlock(line, Organ.WIND_LINE.get().defaultBlockState()
+                .setValue(PipeBlock.EAST, true).setValue(PipeBlock.WEST, true), false);
+        scene.world().setBlock(chest, Organ.WIND_CHEST.get().defaultBlockState().setValue(WindChestBlock.FACING, Direction.NORTH), false);
+        mount(scene, chest, Organ.REED_PIPE.get(), Direction.NORTH);
+        scene.world().showSection(util.select().fromTo(0, 1, 2, 1, 2, 2), Direction.EAST);
+        listen(scene, ORGAN);
+        scene.idle(10);
+        scene.overlay().showText(80)
+                .attachKeyFrame()
+                .text("The cabinet makes no sound of its own. Run a wind line to a wind chest with an instrument or whistle on it, that's what plays")
+                .pointAt(util.vector().topOf(chest.above()))
+                .placeNearTarget();
+        scene.idle(90);
 
         Vec3 front = util.vector().blockSurface(ORGAN, Direction.NORTH);
         ItemStack book = book();
@@ -169,6 +186,7 @@ public final class OrganScenes {
         scene.idle(80);
 
         scene.world().showSection(util.select().fromTo(1, 2, 2, 5, 4, 2), Direction.DOWN);
+        listen(scene, NET_ORGAN);
         scene.idle(10);
         scene.overlay().showText(80)
                 .attachKeyFrame()
@@ -227,9 +245,10 @@ public final class OrganScenes {
         scene.world().hideSection(tops, Direction.UP);
         scene.idle(15);
         scene.world().setBlocks(tops, Blocks.AIR.defaultBlockState(), false);
-        mount(scene, small, Organ.KICK_DRUM.get());
-        mount(scene, medium, Organ.REED_PIPE.get());
-        mount(scene, large, Organ.REED_BOX.get());
+        mount(scene, small, Organ.KICK_DRUM.get(), Direction.SOUTH);
+        mount(scene, medium, Organ.REED_PIPE.get(), Direction.SOUTH);
+        mount(scene, large, Organ.REED_BOX.get(), Direction.SOUTH);
+        listen(scene, NET_ORGAN);
         scene.world().showSection(util.select().fromTo(1, 2, 2, 5, 2, 2), Direction.DOWN);
         scene.idle(10);
         scene.overlay().showText(90)
@@ -249,8 +268,9 @@ public final class OrganScenes {
         scene.world().hideSection(util.select().position(small.above()), Direction.UP);
         scene.world().hideSection(util.select().position(large.above()), Direction.UP);
         scene.idle(15);
-        mount(scene, small, Organ.SNARE_DRUM.get());
-        mount(scene, large, Organ.WOOD_PIPE.get());
+        mount(scene, small, Organ.SNARE_DRUM.get(), Direction.SOUTH);
+        mount(scene, large, Organ.WOOD_PIPE.get(), Direction.SOUTH);
+        listen(scene, NET_ORGAN);
         scene.world().showSection(util.select().position(small.above()), Direction.DOWN);
         scene.world().showSection(util.select().position(large.above()), Direction.DOWN);
         scene.idle(10);
@@ -267,8 +287,12 @@ public final class OrganScenes {
         scene.idle(20);
     }
 
-    private static void mount(CreateSceneBuilder scene, BlockPos chest, Block instrument) {
-        scene.world().setBlock(chest.above(), instrument.defaultBlockState().setValue(InstrumentBlock.FACING, Direction.SOUTH), false);
+    private static void mount(CreateSceneBuilder scene, BlockPos chest, Block instrument, Direction facing) {
+        scene.world().setBlock(chest.above(), instrument.defaultBlockState().setValue(InstrumentBlock.FACING, facing), false);
+    }
+
+    private static void listen(CreateSceneBuilder scene, BlockPos organ) {
+        scene.world().modifyBlockEntity(organ, BarrelOrganBlockEntity.class, BarrelOrganBlockEntity::ponderNetwork);
     }
 
     private static void strike(CreateSceneBuilder scene, BlockPos pos, int ticks) {
