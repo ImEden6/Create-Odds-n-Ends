@@ -52,6 +52,7 @@ neoForge {
             client()
             programArguments.addAll '--quickPlaySingleplayer', 'Showcase', '--width', '1600', '--height', '900'
             systemProperty 'createoddsnends.showcase', 'true'
+            systemProperty 'createoddsnends.nocabinet', providers.environmentVariable('ODDSNENDS_NOCABINET').getOrElse('false')
         }
 
         // opens every Ponder scene of ours, saves run/screenshots/ponder_*.png at each keyframe and quits

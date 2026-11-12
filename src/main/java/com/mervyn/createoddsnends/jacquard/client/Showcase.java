@@ -66,7 +66,12 @@ final class Showcase {
                     view("organ_back", 440, 8.5, 14.8, 2.2, 5, 13, 1),
                     view("organ_wind", 520, 0.5, 12, 5.5, 5, 19, 1),
                     view("organ_pipes", 600, 3.4, 12.2, 2.8, 5, 13, 1.8),
-                    view("chest_close", 680, 2.2, 18.2, 1.9, 4, 19.5, 0.7)));
+                    view("chest_close", 680, 2.2, 18.2, 1.9, 4, 19.5, 0.7)),
+            "organ_nomotor", List.of(
+                    view("organ_back", 440, 8.5, 14.8, 2.2, 5, 13, 1),
+                    view("organ_crank_side", 360, 5, 16.5, 1.7, 5, 13, 1.1),
+                    view("organ_front", 200, 2, 13, 1.6, 5, 13, 1.1),
+                    view("organ_pipes", 600, 3.4, 12.2, 2.8, 5, 13, 1.8)));
     private static final List<View> VIEWS = SETS.getOrDefault(System.getenv().getOrDefault("ODDSNENDS_SHOWCASE", "lathe"), SETS.get("lathe"));
     private static final int QUIT = VIEWS.get(VIEWS.size() - 1).at + 100;
 
