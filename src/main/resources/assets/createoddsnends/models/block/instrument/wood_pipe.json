@@ -146,74 +146,6 @@
     },
     {
       "from": [
-        6,
-        2.5,
-        11
-      ],
-      "to": [
-        10,
-        3,
-        11.6
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            6,
-            13,
-            10,
-            13.5
-          ],
-          "texture": "#pipe_wood"
-        },
-        "south": {
-          "uv": [
-            6,
-            13,
-            10,
-            13.5
-          ],
-          "texture": "#pipe_wood"
-        },
-        "east": {
-          "uv": [
-            4.4,
-            13,
-            5,
-            13.5
-          ],
-          "texture": "#pipe_wood"
-        },
-        "west": {
-          "uv": [
-            11,
-            13,
-            11.6,
-            13.5
-          ],
-          "texture": "#pipe_wood"
-        },
-        "up": {
-          "uv": [
-            6,
-            11,
-            10,
-            11.6
-          ],
-          "texture": "#pipe_wood"
-        },
-        "down": {
-          "uv": [
-            6,
-            4.4,
-            10,
-            5
-          ],
-          "texture": "#pipe_wood"
-        }
-      }
-    },
-    {
-      "from": [
         4.8,
         0,
         4.8
@@ -484,5 +416,6 @@
         }
       }
     }
-  ]
+  ],
+  "render_type": "minecraft:cutout"
 }

@@ -19,7 +19,10 @@ public final class OrganPartials {
     public static final PartialModel SNARE_STICKS = instrument("snare_drum_sticks");
     public static final PartialModel REED_BODY = instrument("reed_pipe_body");
     public static final PartialModel REED_BODY_LIT = instrument("reed_pipe_body_lit");
+    public static final PartialModel REED_BELL = instrument("reed_pipe_bell");
+    public static final PartialModel REED_BELL_LIT = instrument("reed_pipe_bell_lit");
     public static final PartialModel WOOD_STOPPER = instrument("wood_pipe_stopper");
+    public static final PartialModel WOOD_LIP = instrument("wood_pipe_lip");
     public static final PartialModel BELLOWS = instrument("reed_box_bellows");
 
     static {
