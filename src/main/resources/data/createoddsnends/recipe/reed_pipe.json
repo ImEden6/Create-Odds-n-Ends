@@ -2,17 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "tag": "c:plates/brass"
+    "C": {
+      "tag": "c:plates/copper"
     },
-    "N": {
-      "tag": "c:nuggets/brass"
+    "A": {
+      "item": "create:andesite_alloy"
     }
   },
   "pattern": [
-    "B",
-    "B",
-    "N"
+    "C",
+    "C",
+    "A"
   ],
   "result": {
     "count": 1,

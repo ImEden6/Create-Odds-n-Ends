@@ -2,22 +2,22 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "P": {
-      "tag": "minecraft:planks"
-    },
     "L": {
       "item": "minecraft:leather"
     },
-    "B": {
-      "tag": "c:nuggets/brass"
-    },
     "S": {
       "item": "minecraft:stick"
+    },
+    "I": {
+      "tag": "c:nuggets/iron"
+    },
+    "N": {
+      "tag": "c:ingots/iron"
     }
   },
   "pattern": [
     "SLS",
-    "BPB"
+    "INI"
   ],
   "result": {
     "count": 1,
