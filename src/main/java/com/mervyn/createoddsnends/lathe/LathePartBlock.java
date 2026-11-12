@@ -41,17 +41,17 @@ public class LathePartBlock extends Block implements IWrenchable {
     }
 
     public static final Outline BED = Outline.of(
-            Shapes.or(box(0, 0, 0, 16, 13, 16), box(1, 13, 1, 15, 16, 15)),
-            Shapes.or(box(0, 0, 0, 16, 13, 16), box(1, 13, 0, 15, 16, 16)));
+            Shapes.or(box(3, 0, 4, 13, 7, 12), box(0, 7, 0, 16, 13, 16), box(1, 13, 0, 15, 16, 16)),
+            Shapes.or(box(3, 0, 4, 13, 7, 12), box(0, 7, 0, 16, 13, 16), box(1, 13, 0, 15, 16, 16)));
     public static final Outline TAILSTOCK = Outline.of(
-            Shapes.or(box(1, 0, 1, 15, 14, 14), box(6, 6, 14, 10, 10, 16)),
-            Shapes.or(box(0, 0, 0, 16, 16, 12), box(5, 5, 12, 11, 11, 16)));
+            Shapes.or(box(2, 0, 1, 14, 2, 12), box(4, 2, 2, 12, 11, 11), box(3, 3, 0, 13, 13, 2)),
+            Shapes.or(box(2, 0, 1, 14, 2, 12), box(4, 2, 2, 12, 11, 11), box(3, 3, 0, 13, 13, 2), box(5, 5, 11, 11, 11, 16)));
     public static final Outline RAIL = Outline.of(
-            Shapes.or(box(0, 0, 0, 16, 13, 16), box(5, 13, 1, 11, 16, 15)),
-            Shapes.or(box(0, 0, 0, 16, 13, 16), box(5, 13, 0, 11, 16, 16)));
+            Shapes.or(box(3, 0, 4, 13, 5, 12), box(1, 5, 0, 15, 13, 16), box(5, 13, 0, 11, 16, 16)),
+            Shapes.or(box(3, 0, 4, 13, 5, 12), box(1, 5, 0, 15, 13, 16), box(5, 13, 0, 11, 16, 16)));
     public static final Outline HOLDER = Outline.of(
-            Shapes.or(box(2, 0, 2, 14, 12, 14), box(6, 12, 6, 10, 16, 10)),
-            Shapes.or(box(2, 0, 3, 14, 14, 13), box(6, 6, 0, 10, 10, 16)));
+            Shapes.or(box(3, 0, 3, 13, 3, 13), box(5, 3, 5, 11, 12, 11)),
+            Shapes.or(box(3, 0, 3, 13, 3, 13), box(5, 3, 5, 11, 12, 11), box(6.5, 6.5, 0, 9.5, 9.5, 16)));
 
     private final Outline outline;
 
