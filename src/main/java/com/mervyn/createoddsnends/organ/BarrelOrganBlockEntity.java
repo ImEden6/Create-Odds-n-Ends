@@ -227,9 +227,18 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
         networkVersion = WindNetwork.version();
         List<BlockPos> found = WindNetwork.walk(level, worldPosition);
         int muted = 0;
-        for (BlockPos pos : found)
-            if (level.getBlockEntity(pos) instanceof WindChestBlockEntity chest && chest.voiceColour() != null)
+        for (BlockPos pos : found) {
+            if (!(level.getBlockEntity(pos) instanceof WindChestBlockEntity chest))
+                continue;
+            if (chest.voiceColour() != null)
                 muted |= 1 << chest.voiceColour().getId();
+            if (level.getBlockState(pos.above()).getBlock() instanceof InstrumentBlock block)
+                muted |= switch (block.instrument) {
+                    case KICK_DRUM -> MUTE_KICK;
+                    case SNARE_DRUM -> MUTE_SNARE;
+                    default -> chest.voiceColour() == null ? MUTE_PITCHED : 0;
+                };
+        }
         boolean differs = muted != mutedVoices || found.size() != chests.size();
         chests = found;
         chestCount = found.size();
@@ -247,8 +256,17 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
         return heard;
     }
 
-    public boolean mutes(int voice) {
-        return (mutedVoices >> voice & 1) != 0;
+    // bits 0 to 15 are voices a filtered chest took, the rest are things an instrument plays instead
+    private static final int MUTE_KICK = 1 << 16, MUTE_SNARE = 1 << 17, MUTE_PITCHED = 1 << 18;
+
+    public boolean mutes(Score.Note note) {
+        if (note.column() == 0)
+            return (mutedVoices & MUTE_KICK) != 0;
+        if (note.column() == 1)
+            return (mutedVoices & MUTE_SNARE) != 0;
+        if ((mutedVoices & MUTE_PITCHED) != 0 && !Timbre.of(note.voice(), note.column()).drum())
+            return true;
+        return (mutedVoices >> note.voice() & 1) != 0;
     }
 
     public int chestCount() {
