@@ -2,9 +2,9 @@
   "parent": "minecraft:block/block",
   "ambientocclusion": false,
   "textures": {
-    "particle": "createoddsnends:block/organ/brass_lit",
-    "brass_lit": "createoddsnends:block/organ/brass_lit",
-    "mouth": "createoddsnends:block/organ/mouth"
+    "particle": "createoddsnends:block/organ/pipe_lit",
+    "mouth": "createoddsnends:block/organ/mouth",
+    "pipe_lit": "createoddsnends:block/organ/pipe_lit"
   },
   "elements": [
     {
@@ -26,7 +26,7 @@
             3.82,
             8.9
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "south": {
           "uv": [
@@ -35,7 +35,7 @@
             13.42,
             8.9
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "east": {
           "uv": [
@@ -44,7 +44,7 @@
             2.6568,
             8.9
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "west": {
           "uv": [
@@ -53,7 +53,7 @@
             13.8568,
             8.9
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "up": {
           "uv": [
@@ -62,7 +62,7 @@
             13.42,
             13.8568
           ],
-          "texture": "#mouth"
+          "texture": "#pipe_lit"
         },
         "down": {
           "uv": [
@@ -71,7 +71,7 @@
             13.42,
             2.6568
           ],
-          "texture": "#mouth"
+          "texture": "#pipe_lit"
         }
       }
     },
@@ -94,7 +94,7 @@
             3.4568,
             8.89
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "south": {
           "uv": [
@@ -103,7 +103,7 @@
             13.0568,
             8.89
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "east": {
           "uv": [
@@ -112,7 +112,7 @@
             3.02,
             8.89
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "west": {
           "uv": [
@@ -121,7 +121,7 @@
             14.22,
             8.89
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "up": {
           "uv": [
@@ -130,7 +130,7 @@
             13.0568,
             14.22
           ],
-          "texture": "#mouth"
+          "texture": "#pipe_lit"
         },
         "down": {
           "uv": [
@@ -139,7 +139,7 @@
             13.0568,
             3.02
           ],
-          "texture": "#mouth"
+          "texture": "#pipe_lit"
         }
       }
     },
@@ -162,7 +162,7 @@
             3.82,
             8.88
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "south": {
           "uv": [
@@ -171,7 +171,7 @@
             13.42,
             8.88
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "east": {
           "uv": [
@@ -180,7 +180,7 @@
             2.6568,
             8.88
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "west": {
           "uv": [
@@ -189,7 +189,7 @@
             13.8568,
             8.88
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "up": {
           "uv": [
@@ -198,7 +198,7 @@
             13.42,
             13.8568
           ],
-          "texture": "#mouth"
+          "texture": "#pipe_lit"
         },
         "down": {
           "uv": [
@@ -207,7 +207,7 @@
             13.42,
             2.6568
           ],
-          "texture": "#mouth"
+          "texture": "#pipe_lit"
         }
       },
       "rotation": {
@@ -239,7 +239,7 @@
             3.4568,
             8.87
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "south": {
           "uv": [
@@ -248,7 +248,7 @@
             13.0568,
             8.87
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "east": {
           "uv": [
@@ -257,7 +257,7 @@
             3.02,
             8.87
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "west": {
           "uv": [
@@ -266,7 +266,7 @@
             14.22,
             8.87
           ],
-          "texture": "#brass_lit"
+          "texture": "#pipe_lit"
         },
         "up": {
           "uv": [
@@ -275,7 +275,7 @@
             13.0568,
             14.22
           ],
-          "texture": "#mouth"
+          "texture": "#pipe_lit"
         },
         "down": {
           "uv": [
@@ -284,7 +284,7 @@
             13.0568,
             3.02
           ],
-          "texture": "#mouth"
+          "texture": "#pipe_lit"
         }
       },
       "rotation": {
