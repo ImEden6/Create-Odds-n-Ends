@@ -74,7 +74,8 @@ public final class OrganPlayback {
                 be.pipeLit[(note.column() * 7) % 9] = 1;
         }
         for (BlockPos chestPos : be.chests())
-            if (level.getBlockEntity(chestPos) instanceof WindChestBlockEntity chest && level.getBlockEntity(chestPos.above()) instanceof InstrumentBlockEntity instrument) {
+            if (level.getBlockEntity(chestPos) instanceof WindChestBlockEntity chest && level.getBlockEntity(chestPos.above()) instanceof InstrumentBlockEntity instrument
+                    && instrument.claim(be.getBlockPos(), level.getGameTime())) {
                 be.sounding = true;
                 for (int i = score.firstAt(row); i < notes.size() && notes.get(i).row() == row; i++)
                     InstrumentPlayback.play(instrument, chest.voiceColour(), notes.get(i), be.rowsPerTick());
