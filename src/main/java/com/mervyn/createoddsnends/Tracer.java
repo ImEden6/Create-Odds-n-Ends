@@ -143,7 +143,7 @@ public class Tracer {
         modEventBus.addListener(Tracer::registerPayloads);
         modEventBus.addListener(Tracer::registerCapabilities);
 
-        if (!FMLEnvironment.production)
+        if (!FMLEnvironment.production || Boolean.getBoolean("oddsnends.debug"))
             NeoForge.EVENT_BUS.addListener(OddsNEndsCommands::register);
         NeoForge.EVENT_BUS.addListener(LathePartBlock::keepSlotsClear);
 
