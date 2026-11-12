@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "N": {
+      "tag": "c:nuggets/brass"
+    }
+  },
+  "pattern": [
+    "P",
+    "P",
+    "N"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createoddsnends:wood_pipe"
+  }
+}

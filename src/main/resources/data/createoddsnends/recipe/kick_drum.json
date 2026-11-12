@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "B": {
+      "tag": "c:nuggets/brass"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "PLP",
+    "BSB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createoddsnends:kick_drum"
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "createoddsnends:block/organ/cabinet",
+    "cabinet": "createoddsnends:block/organ/cabinet",
+    "lacquer": "createoddsnends:block/organ/lacquer"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        4,
+        14
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2,
+            12,
+            14,
+            16
+          ],
+          "texture": "#cabinet"
+        },
+        "south": {
+          "uv": [
+            2,
+            12,
+            14,
+            16
+          ],
+          "texture": "#cabinet"
+        },
+        "east": {
+          "uv": [
+            2,
+            12,
+            14,
+            16
+          ],
+          "texture": "#cabinet"
+        },
+        "west": {
+          "uv": [
+            2,
+            12,
+            14,
+            16
+          ],
+          "texture": "#cabinet"
+        },
+        "up": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "#cabinet"
+        },
+        "down": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "#cabinet"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0.5,
+        14
+      ],
+      "to": [
+        13,
+        3.5,
+        14.2
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            3,
+            12.5,
+            13,
+            15.5
+          ],
+          "texture": "#lacquer"
+        },
+        "south": {
+          "uv": [
+            3,
+            12.5,
+            13,
+            15.5
+          ],
+          "texture": "#lacquer"
+        },
+        "east": {
+          "uv": [
+            1.8,
+            12.5,
+            2,
+            15.5
+          ],
+          "texture": "#lacquer"
+        },
+        "west": {
+          "uv": [
+            14,
+            12.5,
+            14.2,
+            15.5
+          ],
+          "texture": "#lacquer"
+        },
+        "up": {
+          "uv": [
+            3,
+            14,
+            13,
+            14.2
+          ],
+          "texture": "#lacquer"
+        },
+        "down": {
+          "uv": [
+            3,
+            1.8,
+            13,
+            2
+          ],
+          "texture": "#lacquer"
+        }
+      }
+    }
+  ]
+}

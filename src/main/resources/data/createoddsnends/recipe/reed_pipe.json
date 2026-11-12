@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "c:plates/brass"
+    },
+    "N": {
+      "tag": "c:nuggets/brass"
+    }
+  },
+  "pattern": [
+    "B",
+    "B",
+    "N"
+  ],
+  "result": {
+    "count": 1,
+    "id": "createoddsnends:reed_pipe"
+  }
+}

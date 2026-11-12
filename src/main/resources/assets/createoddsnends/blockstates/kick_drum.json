@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=south": {
+      "model": "createoddsnends:block/instrument/kick_drum"
+    },
+    "facing=west": {
+      "model": "createoddsnends:block/instrument/kick_drum",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "createoddsnends:block/instrument/kick_drum",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "createoddsnends:block/instrument/kick_drum",
+      "y": 270
+    }
+  }
+}
