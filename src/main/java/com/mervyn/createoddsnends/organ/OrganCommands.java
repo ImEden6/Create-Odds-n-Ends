@@ -1,5 +1,6 @@
 package com.mervyn.createoddsnends.organ;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,7 +48,43 @@ public final class OrganCommands {
                                         .then(Commands.argument("bars", IntegerArgumentType.integer(1, 64))
                                                 .then(Commands.argument("voices", IntegerArgumentType.integer(1, 4))
                                                         .then(Commands.argument("transpose", IntegerArgumentType.integer(-12, 12))
-                                                                .executes(OrganCommands::score)))))));
+                                                                .executes(OrganCommands::score)))))))
+                .then(Commands.literal("birthday").executes(OrganCommands::birthday));
+    }
+
+    // happy birthday in C, 3/4 at four rows a beat: melody on blue, bass on green, chords on red,
+    // drums on black
+    private static final int[][] TUNE = {
+            {0, 67, 3}, {3, 67, 1}, {4, 69, 4}, {8, 67, 4}, {12, 72, 4}, {16, 71, 8}, {24, 67, 3}, {27, 67, 1},
+            {28, 69, 4}, {32, 67, 4}, {36, 74, 4}, {40, 72, 8}, {48, 67, 3}, {51, 67, 1}, {52, 79, 4}, {56, 76, 4},
+            {60, 72, 4}, {64, 71, 4}, {68, 69, 4}, {72, 77, 3}, {75, 77, 1}, {76, 76, 4}, {80, 72, 4}, {84, 74, 4}, {88, 72, 12}};
+    private static final int[][] BARS = {{48, 52, 55, 60}, {43, 50, 55, 59}, {43, 50, 55, 59}, {48, 52, 55, 60},
+            {48, 52, 55, 60}, {41, 53, 57, 60}, {43, 50, 55, 59}, {48, 52, 55, 60}};
+
+    private static Score birthdayScore() {
+        List<Score.Note> notes = new ArrayList<>();
+        for (int[] n : TUNE)
+            notes.add(new Score.Note(n[0], n[1] - Score.LOW_MIDI, n[2], 11));
+        for (int b = 0; b < BARS.length; b++) {
+            int r = 4 + b * 12;
+            boolean last = b == BARS.length - 1;
+            notes.add(new Score.Note(r, BARS[b][0] - Score.LOW_MIDI, last ? 12 : 4, 13));
+            notes.add(new Score.Note(r, 0, 1, 15));
+            for (int beat = 1; beat < (last ? 2 : 3); beat++) {
+                notes.add(new Score.Note(r + beat * 4, 1, 1, 15));
+                for (int k = 1; k < 4; k++)
+                    notes.add(new Score.Note(r + beat * 4, BARS[b][k] - Score.LOW_MIDI, last ? 8 : 3, 14));
+            }
+        }
+        return new Score(100, 12, 0, notes);
+    }
+
+    private static int birthday(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        ItemStack book = new ItemStack(Organ.BOOK_MUSIC.get());
+        book.set(Organ.SCORE.get(), Scores.get(player.server).add(birthdayScore()));
+        player.getInventory().placeItemBackInInventory(book);
+        return 1;
     }
 
     private static int score(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
@@ -104,7 +141,7 @@ public final class OrganCommands {
                 WhistleBlock.incrementSize(level, chest.above());
         }
 
-        Score score = ScoreGen.generate(5, "march", 8, 4, 0);
+        Score score = Boolean.getBoolean("createoddsnends.birthday") ? birthdayScore() : ScoreGen.generate(5, "march", 8, 4, 0);
         ItemStack book = new ItemStack(Organ.BOOK_MUSIC.get());
         book.set(Organ.SCORE.get(), Scores.get(player.server).add(score));
         if (level.getBlockEntity(at) instanceof BarrelOrganBlockEntity organ) {
