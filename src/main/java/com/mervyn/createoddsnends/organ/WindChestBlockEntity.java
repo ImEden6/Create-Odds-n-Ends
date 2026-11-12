@@ -158,6 +158,11 @@ public class WindChestBlockEntity extends SmartBlockEntity {
     void feed(int[] grid, int offset) {
         long now = level.getGameTime();
         fedAt = now;
+        // an instrument plays its own notes, the chest under it isn't a sequencer
+        if (top instanceof InstrumentBlock) {
+            setBlowing(false);
+            return;
+        }
         DyeColor filter = voiceColour();
         WhistleBlockEntity whistle = whistle();
         int target = whistle == null ? -1 : midi(whistle);
