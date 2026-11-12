@@ -3,6 +3,7 @@ package com.mervyn.createoddsnends.organ;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.foundation.block.IBE;
 
+import net.createmod.catnip.math.VoxelShaper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -16,22 +17,27 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 // Only stands on a wind chest and drops off when the chest goes.
 public class InstrumentBlock extends HorizontalDirectionalBlock implements IBE<InstrumentBlockEntity> {
-    private static final VoxelShape DRUM = box(1, 0, 1, 15, 14, 15), PIPE = box(4, 0, 4, 12, 16, 12), BOX = box(2, 0, 2, 14, 12, 14);
+    private static final VoxelShaper KICK = VoxelShaper.forHorizontal(Shapes.or(box(2, 0, 2, 14, 13, 12), box(6, 0, 12, 10, 11, 15.5)), Direction.SOUTH),
+            SNARE = VoxelShaper.forHorizontal(box(2.5, 0, 3.5, 15.5, 11.5, 14.5), Direction.SOUTH);
+    private static final VoxelShape PIPE = box(4, 0, 4, 12, 16, 12), BOX = box(2, 0, 2, 14, 12, 14);
 
     public final Instrument instrument;
+    private final MapCodec<InstrumentBlock> codec;
 
     public InstrumentBlock(Instrument instrument, Properties properties) {
         super(properties);
         this.instrument = instrument;
+        codec = simpleCodec(p -> new InstrumentBlock(instrument, p));
     }
 
     @Override
     protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return simpleCodec(p -> new InstrumentBlock(instrument, p));
+        return codec;
     }
 
     @Override
@@ -57,7 +63,8 @@ public class InstrumentBlock extends HorizontalDirectionalBlock implements IBE<I
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return switch (instrument) {
-            case KICK_DRUM, SNARE_DRUM -> DRUM;
+            case KICK_DRUM -> KICK.get(state.getValue(FACING));
+            case SNARE_DRUM -> SNARE.get(state.getValue(FACING));
             case REED_PIPE, WOOD_PIPE -> PIPE;
             case REED_BOX -> BOX;
         };
