@@ -1,8 +1,9 @@
 {
   "parent": "block/block",
   "textures": {
-    "particle": "create:block/andesite_casing",
-    "casing": "create:block/andesite_casing",
+    "particle": "createoddsnends:block/lathe_iron",
+    "casing": "createoddsnends:block/lathe_iron",
+    "plate": "createoddsnends:block/lathe_iron_plate",
     "steel": "createoddsnends:block/tool_steel",
     "way": "createoddsnends:block/lathe_way",
     "tway": "createoddsnends:block/tracer_way",
@@ -46,7 +47,7 @@
             14,
             16
           ],
-          "texture": "#casing"
+          "texture": "#plate"
         },
         "west": {
           "uv": [
@@ -55,7 +56,7 @@
             14,
             16
           ],
-          "texture": "#casing"
+          "texture": "#plate"
         },
         "up": {
           "uv": [

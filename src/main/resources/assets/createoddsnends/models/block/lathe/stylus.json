@@ -1,7 +1,7 @@
 {
   "textures": {
-    "particle": "create:block/andesite_casing",
-    "casing": "create:block/andesite_casing",
+    "particle": "createoddsnends:block/lathe_iron_formed",
+    "casing": "createoddsnends:block/lathe_iron_formed",
     "steel": "createoddsnends:block/tool_steel",
     "way": "createoddsnends:block/lathe_way",
     "tway": "createoddsnends:block/tracer_way",
@@ -164,7 +164,7 @@
             16,
             11
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "south": {
           "uv": [
@@ -173,7 +173,7 @@
             4,
             11
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "east": {
           "uv": [
@@ -182,7 +182,7 @@
             9,
             11
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "west": {
           "uv": [
@@ -191,7 +191,7 @@
             9,
             11
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "up": {
           "uv": [
@@ -200,7 +200,7 @@
             4,
             9
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "down": {
           "uv": [
@@ -209,7 +209,7 @@
             4,
             9
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         }
       }
     },
@@ -232,7 +232,7 @@
             16,
             11
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "south": {
           "uv": [
@@ -241,7 +241,7 @@
             16,
             11
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "east": {
           "uv": [
@@ -250,7 +250,7 @@
             9,
             11
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "west": {
           "uv": [
@@ -259,7 +259,7 @@
             9,
             11
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "up": {
           "uv": [
@@ -268,7 +268,7 @@
             16,
             9
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "down": {
           "uv": [
@@ -277,7 +277,7 @@
             16,
             9
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         }
       }
     },
@@ -300,7 +300,7 @@
             13,
             11
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "south": {
           "uv": [
@@ -309,7 +309,7 @@
             16,
             11
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "east": {
           "uv": [
@@ -318,7 +318,7 @@
             9,
             11
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "west": {
           "uv": [
@@ -327,7 +327,7 @@
             9,
             11
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "up": {
           "uv": [
@@ -336,7 +336,7 @@
             16,
             9
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         },
         "down": {
           "uv": [
@@ -345,7 +345,7 @@
             16,
             9
           ],
-          "texture": "#steel"
+          "texture": "#brass"
         }
       }
     },
