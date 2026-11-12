@@ -4,10 +4,10 @@
   "textures": {
     "particle": "createoddsnends:block/organ/gold",
     "cover": "createoddsnends:block/organ/cover",
-    "drum_head": "createoddsnends:block/organ/drum_head",
     "gold": "createoddsnends:block/organ/gold",
     "iron": "minecraft:block/iron_block",
     "pipe_wood": "createoddsnends:block/organ/pipe_wood",
+    "snare_head": "createoddsnends:block/organ/snare_head",
     "snare_shell": "createoddsnends:block/organ/snare_shell"
   },
   "elements": [
@@ -247,18 +247,18 @@
         },
         "east": {
           "uv": [
-            5.906,
+            0,
             6,
-            8.094,
+            2.188,
             10
           ],
           "texture": "#snare_shell"
         },
         "west": {
           "uv": [
-            7.906,
+            1.5043,
             6,
-            10.094,
+            3.6923,
             10
           ],
           "texture": "#snare_shell"
@@ -270,7 +270,7 @@
             13.5,
             10.094
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         },
         "down": {
           "uv": [
@@ -279,7 +279,7 @@
             13.5,
             8.094
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         }
       },
       "shade": false
@@ -298,18 +298,18 @@
       "faces": {
         "north": {
           "uv": [
-            6.906,
+            8.7521,
             6.01,
-            9.094,
+            10.9402,
             10
           ],
           "texture": "#snare_shell"
         },
         "south": {
           "uv": [
-            6.906,
+            10.2564,
             6.01,
-            9.094,
+            12.4445,
             10
           ],
           "texture": "#snare_shell"
@@ -339,7 +339,7 @@
             9.094,
             14.5
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         },
         "down": {
           "uv": [
@@ -348,7 +348,7 @@
             9.094,
             12.5
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         }
       },
       "shade": false
@@ -385,18 +385,18 @@
         },
         "east": {
           "uv": [
-            5.906,
+            2.188,
             6.02,
-            8.094,
+            4.3761,
             10
           ],
           "texture": "#snare_shell"
         },
         "west": {
           "uv": [
-            7.906,
+            3.6923,
             6.02,
-            10.094,
+            5.8804,
             10
           ],
           "texture": "#snare_shell"
@@ -408,7 +408,7 @@
             13.5,
             10.094
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         },
         "down": {
           "uv": [
@@ -417,7 +417,7 @@
             13.5,
             8.094
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         }
       },
       "rotation": {
@@ -445,18 +445,18 @@
       "faces": {
         "north": {
           "uv": [
-            6.906,
+            10.9402,
             6.03,
-            9.094,
+            13.1282,
             10
           ],
           "texture": "#snare_shell"
         },
         "south": {
           "uv": [
-            6.906,
+            12.4445,
             6.03,
-            9.094,
+            14.6325,
             10
           ],
           "texture": "#snare_shell"
@@ -486,7 +486,7 @@
             9.094,
             14.5
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         },
         "down": {
           "uv": [
@@ -495,7 +495,7 @@
             9.094,
             12.5
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         }
       },
       "rotation": {
@@ -541,18 +541,18 @@
         },
         "east": {
           "uv": [
-            5.906,
+            4.3761,
             6.04,
-            8.094,
+            6.5641,
             10
           ],
           "texture": "#snare_shell"
         },
         "west": {
           "uv": [
-            7.906,
+            5.8804,
             6.04,
-            10.094,
+            8.0684,
             10
           ],
           "texture": "#snare_shell"
@@ -564,7 +564,7 @@
             13.5,
             10.094
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         },
         "down": {
           "uv": [
@@ -573,7 +573,7 @@
             13.5,
             8.094
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         }
       },
       "rotation": {
@@ -601,18 +601,18 @@
       "faces": {
         "north": {
           "uv": [
-            6.906,
+            13.1282,
             6.05,
-            9.094,
+            15.3163,
             10
           ],
           "texture": "#snare_shell"
         },
         "south": {
           "uv": [
-            6.906,
+            13.812,
             6.05,
-            9.094,
+            16,
             10
           ],
           "texture": "#snare_shell"
@@ -642,7 +642,7 @@
             9.094,
             14.5
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         },
         "down": {
           "uv": [
@@ -651,7 +651,7 @@
             9.094,
             12.5
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         }
       },
       "rotation": {
@@ -697,18 +697,18 @@
         },
         "east": {
           "uv": [
-            5.906,
+            0.8205,
             6.06,
-            8.094,
+            3.0086,
             10
           ],
           "texture": "#snare_shell"
         },
         "west": {
           "uv": [
-            7.906,
+            13.812,
             6.06,
-            10.094,
+            16,
             10
           ],
           "texture": "#snare_shell"
@@ -720,7 +720,7 @@
             13.5,
             10.094
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         },
         "down": {
           "uv": [
@@ -729,7 +729,7 @@
             13.5,
             8.094
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         }
       },
       "rotation": {
@@ -757,18 +757,18 @@
       "faces": {
         "north": {
           "uv": [
-            6.906,
+            6.5641,
             6.07,
-            9.094,
+            8.7521,
             10
           ],
           "texture": "#snare_shell"
         },
         "south": {
           "uv": [
-            6.906,
+            8.0684,
             6.07,
-            9.094,
+            10.2564,
             10
           ],
           "texture": "#snare_shell"
@@ -798,7 +798,7 @@
             9.094,
             14.5
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         },
         "down": {
           "uv": [
@@ -807,7 +807,7 @@
             9.094,
             12.5
           ],
-          "texture": "#drum_head"
+          "texture": "#gold"
         }
       },
       "rotation": {
@@ -820,6 +820,29 @@
         "angle": -22.5
       },
       "shade": false
+    },
+    {
+      "from": [
+        2.5,
+        10.02,
+        3.5
+      ],
+      "to": [
+        13.5,
+        10.02,
+        14.5
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            2.5,
+            2.5,
+            13.5,
+            13.5
+          ],
+          "texture": "#snare_head"
+        }
+      }
     },
     {
       "from": [
@@ -1025,5 +1048,6 @@
         }
       }
     }
-  ]
+  ],
+  "render_type": "minecraft:cutout"
 }
