@@ -211,7 +211,8 @@
           ],
           "texture": "#drum_head"
         }
-      }
+      },
+      "shade": false
     },
     {
       "from": [
@@ -279,7 +280,8 @@
           ],
           "texture": "#drum_head"
         }
-      }
+      },
+      "shade": false
     },
     {
       "from": [
@@ -356,7 +358,8 @@
         ],
         "axis": "y",
         "angle": 22.5
-      }
+      },
+      "shade": false
     },
     {
       "from": [
@@ -433,7 +436,8 @@
         ],
         "axis": "y",
         "angle": 22.5
-      }
+      },
+      "shade": false
     },
     {
       "from": [
@@ -510,7 +514,8 @@
         ],
         "axis": "y",
         "angle": 45
-      }
+      },
+      "shade": false
     },
     {
       "from": [
@@ -587,7 +592,8 @@
         ],
         "axis": "y",
         "angle": 45
-      }
+      },
+      "shade": false
     },
     {
       "from": [
@@ -664,7 +670,8 @@
         ],
         "axis": "y",
         "angle": -22.5
-      }
+      },
+      "shade": false
     },
     {
       "from": [
@@ -741,7 +748,8 @@
         ],
         "axis": "y",
         "angle": -22.5
-      }
+      },
+      "shade": false
     }
   ]
 }
