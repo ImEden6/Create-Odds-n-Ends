@@ -67,6 +67,7 @@ public class WindChestBlockEntity extends SmartBlockEntity {
     public void initialize() {
         super.initialize();
         if (!level.isClientSide) {
+            topChanged();
             WindNetwork.changed(level);
             level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
         }
