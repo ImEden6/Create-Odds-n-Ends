@@ -3,8 +3,8 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "createoddsnends:block/organ/cabinet",
+    "bellows": "createoddsnends:block/organ/bellows",
     "cabinet": "createoddsnends:block/organ/cabinet",
-    "cover": "createoddsnends:block/organ/cover",
     "gold": "createoddsnends:block/organ/gold"
   },
   "elements": [
@@ -27,7 +27,7 @@
             13.5,
             12
           ],
-          "texture": "#cover"
+          "texture": "#bellows"
         },
         "south": {
           "uv": [
@@ -36,7 +36,7 @@
             13.5,
             12
           ],
-          "texture": "#cover"
+          "texture": "#bellows"
         },
         "east": {
           "uv": [
@@ -45,7 +45,7 @@
             13.5,
             12
           ],
-          "texture": "#cover"
+          "texture": "#bellows"
         },
         "west": {
           "uv": [
@@ -54,7 +54,7 @@
             13.5,
             12
           ],
-          "texture": "#cover"
+          "texture": "#bellows"
         },
         "up": {
           "uv": [
@@ -63,7 +63,7 @@
             13.5,
             13.5
           ],
-          "texture": "#cover"
+          "texture": "#bellows"
         },
         "down": {
           "uv": [
@@ -72,7 +72,7 @@
             13.5,
             13.5
           ],
-          "texture": "#cover"
+          "texture": "#bellows"
         }
       }
     },

@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "ambientocclusion": false,
   "textures": {
-    "particle": "createoddsnends:block/organ/cabinet",
+    "particle": "createoddsnends:block/organ/pipe_wood",
     "gold": "createoddsnends:block/organ/gold"
   },
   "elements": [
