@@ -41,8 +41,9 @@ final class Showcase {
             view("lathe_close", 600, 2.6, -11, 2.3, 4.5, -11, 1.5),
             view("lathe_end", 800, 5, -17, 3, 5, -11, 1),
             view("lathe_back", 1000, 10.5, -8, 4, 5, -11, 1),
-            view("lathe_top", 1200, 5, -11, 9, 5.01, -11, 0));
-    private static final int QUIT = 1300;
+            view("lathe_top", 1200, 5, -11, 9, 5.01, -11, 0),
+            view("lathe_parts", 1350, -4.5, -10, 3.2, -0.5, -10, 0.2));
+    private static final int QUIT = 1450;
 
     private static int tick;
     private static BlockPos anchor;

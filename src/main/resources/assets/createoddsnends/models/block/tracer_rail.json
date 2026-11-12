@@ -3,77 +3,146 @@
   "textures": {
     "particle": "createoddsnends:block/lathe_iron",
     "casing": "createoddsnends:block/lathe_iron",
+    "plate": "createoddsnends:block/lathe_iron_plate",
     "steel": "createoddsnends:block/tool_steel",
     "way": "createoddsnends:block/lathe_way",
     "tway": "createoddsnends:block/tracer_way",
-    "chuck": "createoddsnends:block/chuck"
+    "brass": "create:block/brass_block"
   },
   "elements": [
     {
       "from": [
+        3,
         0,
-        0,
+        4
+      ],
+      "to": [
+        13,
+        5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#casing",
+          "uv": [
+            3,
+            11,
+            13,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#casing",
+          "uv": [
+            3,
+            11,
+            13,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#casing",
+          "uv": [
+            4,
+            11,
+            12,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#casing",
+          "uv": [
+            4,
+            11,
+            12,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#casing",
+          "uv": [
+            3,
+            4,
+            13,
+            12
+          ]
+        },
+        "down": {
+          "texture": "#casing",
+          "uv": [
+            3,
+            4,
+            13,
+            12
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        5,
         0
       ],
       "to": [
-        16,
+        15,
         13,
         16
       ],
       "faces": {
         "north": {
+          "texture": "#casing",
           "uv": [
-            0,
+            1,
             3,
-            16,
-            16
-          ],
-          "texture": "#casing"
+            15,
+            11
+          ]
         },
         "south": {
+          "texture": "#casing",
           "uv": [
-            0,
+            1,
             3,
-            16,
-            16
-          ],
-          "texture": "#casing"
+            15,
+            11
+          ]
         },
         "east": {
+          "texture": "#casing",
           "uv": [
             0,
             3,
             16,
-            16
-          ],
-          "texture": "#casing"
+            11
+          ]
         },
         "west": {
+          "texture": "#casing",
           "uv": [
             0,
             3,
             16,
-            16
-          ],
-          "texture": "#casing"
+            11
+          ]
         },
         "up": {
+          "texture": "#casing",
           "uv": [
+            1,
             0,
-            0,
-            16,
+            15,
             16
-          ],
-          "texture": "#casing"
+          ]
         },
         "down": {
+          "texture": "#casing",
           "uv": [
+            1,
             0,
-            0,
-            16,
+            15,
             16
-          ],
-          "texture": "#casing"
+          ]
         }
       }
     },
@@ -81,67 +150,67 @@
       "from": [
         5,
         13,
-        1
+        0
       ],
       "to": [
         11,
         16,
-        15
+        16
       ],
       "faces": {
         "north": {
+          "texture": "#steel",
           "uv": [
             5,
             0,
             11,
             3
-          ],
-          "texture": "#steel"
+          ]
         },
         "south": {
+          "texture": "#steel",
           "uv": [
             5,
             0,
             11,
             3
-          ],
-          "texture": "#steel"
+          ]
         },
         "east": {
+          "texture": "#steel",
           "uv": [
-            1,
             0,
-            15,
+            0,
+            16,
             3
-          ],
-          "texture": "#steel"
+          ]
         },
         "west": {
+          "texture": "#steel",
           "uv": [
-            1,
             0,
-            15,
+            0,
+            16,
             3
-          ],
-          "texture": "#steel"
+          ]
         },
         "up": {
+          "texture": "#steel",
           "uv": [
             5,
-            1,
+            0,
             11,
-            15
-          ],
-          "texture": "#tway"
+            16
+          ]
         },
         "down": {
+          "texture": "#steel",
           "uv": [
             5,
-            1,
+            0,
             11,
-            15
-          ],
-          "texture": "#steel"
+            16
+          ]
         }
       }
     }
