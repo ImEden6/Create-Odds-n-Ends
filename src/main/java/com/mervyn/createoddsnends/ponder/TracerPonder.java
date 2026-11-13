@@ -55,7 +55,7 @@ public class TracerPonder implements PonderPlugin {
         helper.registerTag(TAG)
                 .addToIndex()
                 .item(Tracer.LATHE_HEADSTOCK.get(), true, false)
-                .title("Create: Odds 'n Ends")
+                .title("Create: Odds 'N Ends")
                 .description("The copy lathe, the jacquard loom, the barrel organ and the bits that go with them")
                 .register();
         helper.addToTag(TAG)

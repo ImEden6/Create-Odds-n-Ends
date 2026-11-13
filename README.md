@@ -1,4 +1,4 @@
-# Create: Odds 'n Ends
+# Create: Odds 'N Ends
 
 A Create addon of workshop machines that do one odd job each: a copy lathe that turns blocks
 into shapes, a jacquard loom that weaves pictures from punched cards, a barrel organ that plays
