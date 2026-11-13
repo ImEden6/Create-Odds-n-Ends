@@ -59,8 +59,8 @@ doesn't change anything there.
 
 A 4×3×3 brass-framed mill. Build the box from CNC frames, put the pendant against the middle of one
 short end at the front, and a CNC drive in the bottom middle of the other short end. Wrench the pendant to
-put it together, or to find out what's missing. Rotation goes into the drive's socket. Right-click
-the machine or use funnels to load it, and the tool follows the shape of whatever it's cutting.
+put it together, or to find out what's missing. Rotation goes into the drive's socket. Load it through
+the doors or the hatches below, and the tool follows the shape of whatever it's cutting.
 
 Out of the box it runs Create's deploying recipes (the part and the deployer's item go in together,
 and a tool like an axe has to be in there but doesn't get used up)
