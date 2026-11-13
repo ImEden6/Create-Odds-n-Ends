@@ -13,6 +13,7 @@ public final class OrganPartials {
     public static final PartialModel CRANK = of("crank");
     public static final PartialModel SHAFT = of("shaft");
     public static final PartialModel SHELF = of("shelf");
+    public static final PartialModel WIND_PORT = of("wind_port");
     public static final PartialModel BADGE = of("badge");
     public static final PartialModel[] BORES = {of("bore_small"), of("bore_medium"), of("bore_large")};
     public static final PartialModel KICK_BEATER = instrument("kick_drum_beater");

@@ -46,21 +46,23 @@ public class WindLineBlock extends Block {
         builder.add(PipeBlock.PROPERTY_BY_DIRECTION.values().toArray(BooleanProperty[]::new));
     }
 
-    private static boolean joins(BlockState neighbor) {
-        return neighbor.is(Organ.WIND_LINE.get()) || neighbor.is(Organ.WIND_CHEST.get()) || neighbor.is(Organ.BARREL_ORGAN.get());
+    private static boolean joins(BlockState neighbor, Direction towards) {
+        if (neighbor.is(Organ.BARREL_ORGAN.get()))
+            return BarrelOrganBlock.windSide(neighbor) == towards.getOpposite();
+        return neighbor.is(Organ.WIND_LINE.get()) || neighbor.is(Organ.WIND_CHEST.get());
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = defaultBlockState();
         for (Direction d : Direction.values())
-            state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(d), joins(context.getLevel().getBlockState(context.getClickedPos().relative(d))));
+            state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(d), joins(context.getLevel().getBlockState(context.getClickedPos().relative(d)), d));
         return state;
     }
 
     @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbor, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-        return state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction), joins(neighbor));
+        return state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction), joins(neighbor, direction));
     }
 
     @Override

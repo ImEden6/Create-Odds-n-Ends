@@ -421,7 +421,7 @@ public class BarrelOrganBlockEntity extends KineticBlockEntity {
     private static class ModeSlot extends ValueBoxTransform.Sided {
         @Override
         protected Vec3 getSouthLocation() {
-            return VecHelper.voxelSpace(8, 6, 16.05);
+            return VecHelper.voxelSpace(8, 10, 16.05);
         }
 
         @Override

@@ -51,8 +51,8 @@ final class WindNetwork {
         Set<BlockPos> seen = new HashSet<>();
         Deque<BlockPos> todo = new ArrayDeque<>();
         seen.add(organ);
-        for (Direction d : Direction.values())
-            reach(level, organ.relative(d), d.getOpposite(), seen, todo);
+        Direction out = BarrelOrganBlock.windSide(level.getBlockState(organ));
+        reach(level, organ.relative(out), out.getOpposite(), seen, todo);
         while (!todo.isEmpty()) {
             BlockPos pos = todo.pop();
             BlockState state = level.getBlockState(pos);

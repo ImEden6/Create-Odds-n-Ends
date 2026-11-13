@@ -4,54 +4,55 @@
   "textures": {
     "particle": "createoddsnends:block/organ/cabinet",
     "cabinet": "createoddsnends:block/organ/cabinet",
-    "gold": "createoddsnends:block/organ/gold"
+    "gold": "createoddsnends:block/organ/gold",
+    "mouth": "createoddsnends:block/organ/mouth"
   },
   "elements": [
     {
       "from": [
         -13,
-        11,
+        7,
         2
       ],
       "to": [
         0,
-        12,
+        8,
         14
       ],
       "faces": {
         "north": {
           "uv": [
             0,
-            4,
+            8,
             13,
-            5
+            9
           ],
           "texture": "#cabinet"
         },
         "south": {
           "uv": [
             3,
-            4,
+            8,
             16,
-            5
+            9
           ],
           "texture": "#cabinet"
         },
         "east": {
           "uv": [
             2,
-            4,
+            8,
             14,
-            5
+            9
           ],
           "texture": "#cabinet"
         },
         "west": {
           "uv": [
             2,
-            4,
+            8,
             14,
-            5
+            9
           ],
           "texture": "#cabinet"
         },
@@ -78,48 +79,48 @@
     {
       "from": [
         -13,
-        8,
+        0,
         2
       ],
       "to": [
         -12,
-        11,
+        7,
         3
       ],
       "faces": {
         "north": {
           "uv": [
             12,
-            5,
+            9,
             13,
-            8
+            16
           ],
           "texture": "#gold"
         },
         "south": {
           "uv": [
             3,
-            5,
+            9,
             4,
-            8
+            16
           ],
           "texture": "#gold"
         },
         "east": {
           "uv": [
             13,
-            5,
+            9,
             14,
-            8
+            16
           ],
           "texture": "#gold"
         },
         "west": {
           "uv": [
             2,
-            5,
+            9,
             3,
-            8
+            16
           ],
           "texture": "#gold"
         },
@@ -146,48 +147,48 @@
     {
       "from": [
         -13,
-        8,
+        0,
         13
       ],
       "to": [
         -12,
-        11,
+        7,
         14
       ],
       "faces": {
         "north": {
           "uv": [
             12,
-            5,
+            9,
             13,
-            8
+            16
           ],
           "texture": "#gold"
         },
         "south": {
           "uv": [
             3,
-            5,
+            9,
             4,
-            8
+            16
           ],
           "texture": "#gold"
         },
         "east": {
           "uv": [
             2,
-            5,
+            9,
             3,
-            8
+            16
           ],
           "texture": "#gold"
         },
         "west": {
           "uv": [
             13,
-            5,
+            9,
             14,
-            8
+            16
           ],
           "texture": "#gold"
         },
@@ -208,6 +209,74 @@
             3
           ],
           "texture": "#gold"
+        }
+      }
+    },
+    {
+      "from": [
+        -0.1,
+        0.5,
+        2.5
+      ],
+      "to": [
+        0,
+        1.5,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            14.5,
+            0.1,
+            15.5
+          ],
+          "texture": "#mouth"
+        },
+        "south": {
+          "uv": [
+            15.9,
+            14.5,
+            16,
+            15.5
+          ],
+          "texture": "#mouth"
+        },
+        "east": {
+          "uv": [
+            2.5,
+            14.5,
+            13.5,
+            15.5
+          ],
+          "texture": "#mouth"
+        },
+        "west": {
+          "uv": [
+            2.5,
+            14.5,
+            13.5,
+            15.5
+          ],
+          "texture": "#mouth"
+        },
+        "up": {
+          "uv": [
+            15.9,
+            2.5,
+            16,
+            13.5
+          ],
+          "texture": "#mouth"
+        },
+        "down": {
+          "uv": [
+            15.9,
+            2.5,
+            16,
+            13.5
+          ],
+          "texture": "#mouth"
         }
       }
     }
