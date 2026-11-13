@@ -6,14 +6,18 @@ import com.mervyn.createoddsnends.jacquard.TapestryEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.phys.AABB;
 
 // hangOnWall() and layRug(). Drawn in pixels in a frame where x runs along the design's width,
 // y up the design (toward its top) and z out of the face it shows; the wall or floor is at z -0.5.
@@ -32,6 +36,7 @@ public class TapestryRenderer extends EntityRenderer<TapestryEntity> {
     @Override
     public void render(TapestryEntity entity, float yaw, float partialTick, PoseStack ms, MultiBufferSource buffer, int light) {
         Direction face = entity.getDirection();
+        light = brightestInFront(entity, face);
         int Wp = entity.widthBlocks() * 16, Hp = entity.heightBlocks() * 16;
         ms.pushPose();
         if (face.getAxis().isHorizontal()) {
@@ -70,5 +75,18 @@ public class TapestryRenderer extends EntityRenderer<TapestryEntity> {
         }
         ms.popPose();
         super.render(entity, yaw, partialTick, ms, buffer, light);
+    }
+
+    // the entity's own light probe can land in the wall or a leaf block beside it, which blacked out
+    // whole tapestries; take the brightest block the cloth faces instead
+    private static int brightestInFront(TapestryEntity entity, Direction face) {
+        AABB box = entity.getBoundingBox().deflate(1e-3).expandTowards(face.getStepX() * 0.5, face.getStepY() * 0.5, face.getStepZ() * 0.5);
+        int block = 0, sky = 0;
+        for (BlockPos pos : BlockPos.betweenClosed(BlockPos.containing(box.minX, box.minY, box.minZ), BlockPos.containing(box.maxX, box.maxY, box.maxZ))) {
+            int packed = LevelRenderer.getLightColor(entity.level(), pos);
+            block = Math.max(block, LightTexture.block(packed));
+            sky = Math.max(sky, LightTexture.sky(packed));
+        }
+        return LightTexture.pack(block, sky);
     }
 }
