@@ -4,18 +4,22 @@ import com.mervyn.createoddsnends.Tracer;
 import com.mervyn.createoddsnends.organ.Organ;
 import com.mervyn.createoddsnends.organ.ScoreSync;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 @EventBusSubscriber(modid = Tracer.MODID, value = Dist.CLIENT)
 public final class OrganClient {
+    private static boolean soundsPaused;
+
     private OrganClient() {}
 
     @SubscribeEvent
@@ -23,6 +27,18 @@ public final class OrganClient {
         NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut e) -> {
             ScoreSync.clearClient();
             BookIconModel.clearAll();
+        });
+        // a pausing screen like Ponder stops sounds ticking but not playing, so held notes never got
+        // their fade and whistles kept blowing; pause what's playing and pick it back up after
+        NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) -> {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.isPaused() == soundsPaused)
+                return;
+            soundsPaused = mc.isPaused();
+            if (soundsPaused)
+                mc.getSoundManager().pause();
+            else
+                mc.getSoundManager().resume();
         });
     }
 
