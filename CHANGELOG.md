@@ -2,7 +2,7 @@
 
 ## 0.1.0
 
-First release. Needs Create 6.0.10 or newer on NeoForge 1.21.1. JEI is optional.
+First release. Needs Create 6.0.11 or newer on NeoForge 1.21.1. JEI is optional.
 
 ### Copy lathe
 - lathe headstock, bed and tailstock. wrench it together, give it rotation and it turns any full block into the shape on a profile template
