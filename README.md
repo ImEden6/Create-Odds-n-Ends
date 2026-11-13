@@ -33,8 +33,9 @@ blank cards. It punches one card per row.
 ## Barrel organ
 
 The organ plays book music, which also comes from the card punch. You can write a score there or
-import a MIDI file. The organ makes no sound by itself. Run wind lines out from it to wind chests and
-put something on each chest to play the notes.
+import a MIDI file. The organ makes no sound by itself. Run wind lines from the copper port on its
+right side out to wind chests, and put something on each chest to play the notes. Played pages come
+out low on the left and pile up under the book shelf.
 
 - Steam whistles blow on their own note, no boiler needed. The back of the chest switches between
   exact pitch and any octave.
