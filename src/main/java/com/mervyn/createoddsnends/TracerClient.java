@@ -39,15 +39,12 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.gui.ConfigurationScreen;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 
 @Mod(value = Tracer.MODID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = Tracer.MODID, value = Dist.CLIENT)
 public class TracerClient {
     public TracerClient(ModContainer container) {
-        container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
         LathePartials.init();
         OrganPartials.init();
         PonderIndex.addPlugin(new TracerPonder());

@@ -32,6 +32,19 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
+// showcase runner and its test rigs: on the dev runs' classpath, never in the jar
+sourceSets {
+    dev {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+configurations {
+    devImplementation.extendsFrom implementation
+    devCompileOnly.extendsFrom compileOnly
+    devRuntimeOnly.extendsFrom runtimeOnly
+}
+
 neoForge {
     version = project.neo_version
 
@@ -85,9 +98,12 @@ neoForge {
         }
     }
 
+    addModdingDependenciesTo(sourceSets.dev)
+
     mods {
         "${mod_id}" {
             sourceSet(sourceSets.main)
+            sourceSet(sourceSets.dev)
         }
     }
 }

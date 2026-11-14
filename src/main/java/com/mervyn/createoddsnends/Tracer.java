@@ -40,7 +40,6 @@ import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -138,7 +137,6 @@ public class Tracer {
         NeoForge.EVENT_BUS.addListener(OddsNEndsCommands::register);
         NeoForge.EVENT_BUS.addListener(LathePartBlock::keepSlotsClear);
 
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
     private static void registerCapabilities(RegisterCapabilitiesEvent event) {
