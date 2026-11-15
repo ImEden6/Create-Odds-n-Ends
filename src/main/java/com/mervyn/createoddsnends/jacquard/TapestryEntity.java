@@ -120,6 +120,11 @@ public class TapestryEntity extends HangingEntity {
                 && level().getEntities(this, getBoundingBox(), HANGING_ENTITY).isEmpty();
     }
 
+    @Override
+    public boolean isIgnoringBlockTriggers() {
+        return true;
+    }
+
     private static double offset(int size) {
         return size % 2 == 0 ? 0.5 : 0;
     }
