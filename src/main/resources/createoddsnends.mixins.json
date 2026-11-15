@@ -7,7 +7,7 @@
     "WhistleBlockMixin"
   ],
   "client": [
-    "GameRendererMixin"
+    "MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1
