@@ -66,6 +66,7 @@ final class Showcase {
     private static final int SETUP = 60;
     // ODDSNENDS_SHOWCASE picks which machine the camera visits; everything gets built either way
     private static final Map<String, List<View>> SETS = Map.of(
+            "rugs", List.of(view("rugs_done", 760, 0, 4, 3, 3, 4, 0)),
             "lathe", List.of(
                     view("lathe_front", 200, -1.5, -11, 3, 4.5, -11, 1.2),
                     view("lathe_angle", 400, 0, -5, 4, 5, -11, 1),
