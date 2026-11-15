@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -109,6 +110,14 @@ public class TapestryEntity extends HangingEntity {
         double x = top.getAxis() == Direction.Axis.X ? h : w;
         double z = top.getAxis() == Direction.Axis.Z ? h : w;
         return AABB.ofSize(centre, x, 0.0625, z);
+    }
+
+    @Override
+    public boolean survives() {
+        if (direction != Direction.UP)
+            return super.survives();
+        return BlockPos.betweenClosedStream(calculateSupportBox()).allMatch(p -> Block.canSupportCenter(level(), p, Direction.UP) || level().getBlockState(p).isSolid())
+                && level().getEntities(this, getBoundingBox(), HANGING_ENTITY).isEmpty();
     }
 
     private static double offset(int size) {

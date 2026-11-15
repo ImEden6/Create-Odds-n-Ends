@@ -6,6 +6,9 @@
     "WhistleBlockEntityMixin",
     "WhistleBlockMixin"
   ],
+  "client": [
+    "GameRendererMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },
