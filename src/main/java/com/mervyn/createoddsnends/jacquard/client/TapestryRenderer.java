@@ -36,7 +36,11 @@ public class TapestryRenderer extends EntityRenderer<TapestryEntity> {
     @Override
     public void render(TapestryEntity entity, float yaw, float partialTick, PoseStack ms, MultiBufferSource buffer, int light) {
         Direction face = entity.getDirection();
-        light = brightestInFront(entity, face);
+        if (entity.lightTick != entity.level().getGameTime()) {
+            entity.lightTick = entity.level().getGameTime();
+            entity.light = brightestInFront(entity, face);
+        }
+        light = entity.light;
         int Wp = entity.widthBlocks() * 16, Hp = entity.heightBlocks() * 16;
         ms.pushPose();
         if (face.getAxis().isHorizontal()) {
@@ -77,8 +81,6 @@ public class TapestryRenderer extends EntityRenderer<TapestryEntity> {
         super.render(entity, yaw, partialTick, ms, buffer, light);
     }
 
-    // the entity's own light probe can land in the wall or a leaf block beside it, which blacked out
-    // whole tapestries; take the brightest block the cloth faces instead
     private static int brightestInFront(TapestryEntity entity, Direction face) {
         AABB box = entity.getBoundingBox().deflate(1e-3).expandTowards(face.getStepX() * 0.5, face.getStepY() * 0.5, face.getStepZ() * 0.5);
         int block = 0, sky = 0;

@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public final class CncShowcase {
     public static final List<String> VARIANTS = List.of("hopper", "chute", "funnel", "arm", "arm_front");
@@ -88,12 +89,7 @@ public final class CncShowcase {
         IItemHandler chest = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, Direction.DOWN);
         if (chest != null)
             for (ItemStack stack : parts())
-                insert(chest, stack);
-    }
-
-    private static void insert(IItemHandler handler, ItemStack stack) {
-        for (int i = 0; i < handler.getSlots() && !stack.isEmpty(); i++)
-            stack = handler.insertItem(i, stack, false);
+                ItemHandlerHelper.insertItem(chest, stack, false);
     }
 
     private static void arm(ServerLevel level, BlockPos pendant, Direction facing, boolean front) {

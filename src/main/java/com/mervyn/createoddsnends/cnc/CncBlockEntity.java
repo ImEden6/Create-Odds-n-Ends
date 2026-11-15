@@ -76,6 +76,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     float door;
     float lastDoor;
     private boolean doorsOpen;
+    private boolean armOpen;
     private List<ItemStack> tools = List.of();
     private int armDoors;
     private int armWaiting;
@@ -200,7 +201,8 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
 
     private void tickDoor() {
         lastDoor = door;
-        door = Mth.approach(door, doorsOpen ? 1 : 0, doorsOpen ? .15f : .08f);
+        boolean open = doorsOpen || armOpen;
+        door = Mth.approach(door, open ? 1 : 0, open ? .15f : .08f);
     }
 
     void setDoors(boolean open) {
@@ -295,6 +297,12 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     }
 
     @Override
+    public void onChunkUnloaded() {
+        super.onChunkUnloaded();
+        CncDoors.track(level, worldPosition, false);
+    }
+
+    @Override
     public void remove() {
         super.remove();
         CncDoors.track(level, worldPosition, false);
@@ -343,7 +351,9 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         tag.putFloat("Progress", progress);
         tag.putInt("Duration", duration);
         tag.putBoolean("Running", running);
-        tag.putBoolean("DoorsOpen", doorsOpen || clientPacket && armDoors > 0);
+        tag.putBoolean("DoorsOpen", doorsOpen);
+        if (clientPacket)
+            tag.putBoolean("ArmDoors", armDoors > 0);
         if (clientPacket && job != null) {
             ListTag shown = new ListTag();
             for (Ingredient tool : job.tools())
@@ -369,6 +379,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         running = tag.getBoolean("Running");
         doorsOpen = tag.getBoolean("DoorsOpen");
         if (clientPacket) {
+            armOpen = tag.getBoolean("ArmDoors");
             List<ItemStack> shown = new ArrayList<>();
             for (Tag tool : tag.getList("Tools", Tag.TAG_COMPOUND))
                 ItemStack.parse(registries, tool).ifPresent(shown::add);

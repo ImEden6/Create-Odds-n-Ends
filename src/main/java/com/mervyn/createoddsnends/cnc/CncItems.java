@@ -50,7 +50,7 @@ public class CncItems implements IItemHandler {
 
     @Override
     public int getSlots() {
-        return cnc() == null ? 0 : CncBlockEntity.SLOTS;
+        return cnc() == null ? 0 : hatch == Hatch.FRONT ? CncBlockEntity.SLOTS * 2 : CncBlockEntity.SLOTS;
     }
 
     @Override
@@ -58,7 +58,15 @@ public class CncItems implements IItemHandler {
         CncBlockEntity cnc = cnc();
         if (cnc == null)
             return ItemStack.EMPTY;
-        return hatch == Hatch.INPUT ? cnc.input.getStackInSlot(slot) : cnc.output.getStackInSlot(slot);
+        return takesInput(slot) ? cnc.input.getStackInSlot(slot) : cnc.output.getStackInSlot(outputSlot(slot));
+    }
+
+    private boolean takesInput(int slot) {
+        return hatch == Hatch.INPUT || hatch == Hatch.FRONT && slot < CncBlockEntity.SLOTS;
+    }
+
+    private int outputSlot(int slot) {
+        return hatch == Hatch.FRONT ? slot - CncBlockEntity.SLOTS : slot;
     }
 
     private boolean armReaches(CncBlockEntity cnc) {
@@ -73,7 +81,7 @@ public class CncItems implements IItemHandler {
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         CncBlockEntity cnc = cnc();
-        if (cnc == null || hatch == Hatch.OUTPUT || !CncJob.accepts(level, stack) || !armReaches(cnc))
+        if (cnc == null || !takesInput(slot) || !CncJob.accepts(level, stack) || !armReaches(cnc))
             return stack;
         ItemStack left = cnc.input.insertItem(slot, stack, simulate);
         if (!simulate && hatch == Hatch.FRONT && left.getCount() != stack.getCount())
@@ -84,9 +92,9 @@ public class CncItems implements IItemHandler {
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         CncBlockEntity cnc = cnc();
-        if (cnc == null || hatch == Hatch.INPUT || cnc.output.getStackInSlot(slot).isEmpty() || !armReaches(cnc))
+        if (cnc == null || takesInput(slot) || cnc.output.getStackInSlot(outputSlot(slot)).isEmpty() || !armReaches(cnc))
             return ItemStack.EMPTY;
-        ItemStack taken = cnc.output.extractItem(slot, amount, simulate);
+        ItemStack taken = cnc.output.extractItem(outputSlot(slot), amount, simulate);
         if (!simulate && hatch == Hatch.FRONT && !taken.isEmpty())
             cnc.armVisit();
         return taken;
@@ -99,6 +107,6 @@ public class CncItems implements IItemHandler {
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return hatch != Hatch.OUTPUT && cnc() != null && CncJob.accepts(level, stack);
+        return takesInput(slot) && cnc() != null && CncJob.accepts(level, stack);
     }
 }

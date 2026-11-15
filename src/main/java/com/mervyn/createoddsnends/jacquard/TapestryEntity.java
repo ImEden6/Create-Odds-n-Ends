@@ -26,6 +26,8 @@ import net.minecraft.world.phys.Vec3;
 // A woven design hung like a painting. Direction is the face it shows: horizontal on walls, UP as
 // a rug, DOWN on a ceiling. Rugs and ceiling pieces also keep which way their top points.
 public class TapestryEntity extends HangingEntity {
+    public int light;
+    public long lightTick = -1;
     private static final EntityDataAccessor<Integer> DESIGN = SynchedEntityData.defineId(TapestryEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> WIDTH = SynchedEntityData.defineId(TapestryEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> HEIGHT = SynchedEntityData.defineId(TapestryEntity.class, EntityDataSerializers.INT);

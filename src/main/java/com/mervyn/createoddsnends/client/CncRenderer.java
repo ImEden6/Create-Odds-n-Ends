@@ -88,8 +88,8 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
 
         float open = CncDoors.OPEN_DEGREES * be.door(partialTicks);
         VertexConsumer glass = buffer.getBuffer(RenderType.translucent());
-        door(DOOR_A, state, ms, glass, light, 72, 56, -open);
-        door(DOOR_B, state, ms, glass, light, 24, 16, open);
+        door(DOOR_A, state, ms, glass, light, CncDoors.HINGE_A, 56, -open);
+        door(DOOR_B, state, ms, glass, light, CncDoors.HINGE_B, 16, open);
 
         List<ItemStack> tools = be.tools();
         for (int i = 0; i < tools.size() && i < 6; i++) {
@@ -116,9 +116,9 @@ public class CncRenderer extends SafeBlockEntityRenderer<CncBlockEntity> {
 
     private static void door(PartialModel model, BlockState state, PoseStack ms, VertexConsumer vb, int light, float hinge, float shift, float angle) {
         ms.pushPose();
-        ms.translate(hinge / 16, 0, 2 / 16f);
+        ms.translate(hinge / 16, 0, CncDoors.HINGE_Z / 16);
         ms.mulPose(Axis.YP.rotationDegrees(angle));
-        ms.translate(-hinge / 16, 0, -2 / 16f);
+        ms.translate(-hinge / 16, 0, -CncDoors.HINGE_Z / 16);
         part(model, state, ms, vb, light, shift, 16, 0);
         ms.popPose();
     }

@@ -25,11 +25,14 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public final class CncDoors {
     public static final float OPEN_DEGREES = 100;
+    public static final float HINGE_A = 72, HINGE_B = 24, HINGE_Z = 2, WIDTH = 24, BOTTOM = 10, TOP = 40;
     private static final Map<Level, Set<BlockPos>> OPEN = Collections.synchronizedMap(new WeakHashMap<>());
 
     private CncDoors() {}
 
     static void track(Level level, BlockPos pendant, boolean open) {
+        if (!level.isClientSide)
+            return;
         Set<BlockPos> set = OPEN.computeIfAbsent(level, l -> Collections.synchronizedSet(new HashSet<>()));
         if (open)
             set.add(pendant.immutable());
@@ -58,7 +61,8 @@ public final class CncDoors {
         public static void handle(Close payload, IPayloadContext context) {
             Player player = context.player();
             Level level = player.level();
-            if (level.getBlockEntity(payload.pendant) instanceof CncBlockEntity cnc
+            if (level.isLoaded(payload.pendant) && player.distanceToSqr(Vec3.atCenterOf(payload.pendant)) < 100
+                    && level.getBlockEntity(payload.pendant) instanceof CncBlockEntity cnc
                     && crossesDoor(payload.pendant, cnc.getBlockState().getValue(CncFrameBlock.FACING), player.getEyePosition(), player.getViewVector(1),
                     player.blockInteractionRange() + 1))
                 cnc.setDoors(false);
@@ -74,7 +78,7 @@ public final class CncDoors {
         Matrix4f toMachine = toWorld.invert(new Matrix4f());
         Vector3f o = toMachine.transformPosition(new Vector3f((float) eye.x, (float) eye.y, (float) eye.z));
         Vector3f r = toMachine.transformDirection(new Vector3f((float) look.x, (float) look.y, (float) look.z));
-        return hits(o, r, toWorld, eye, reach, 72, -1, -OPEN_DEGREES) || hits(o, r, toWorld, eye, reach, 24, 1, OPEN_DEGREES);
+        return hits(o, r, toWorld, eye, reach, HINGE_A, -1, -OPEN_DEGREES) || hits(o, r, toWorld, eye, reach, HINGE_B, 1, OPEN_DEGREES);
     }
 
     private static boolean hits(Vector3f o, Vector3f r, Matrix4f toWorld, Vec3 eye, double reach, float hinge, float toward, float degrees) {
@@ -84,12 +88,12 @@ public final class CncDoors {
         float facing = nx * r.x + nz * r.z;
         if (Math.abs(facing) < 1e-5f)
             return false;
-        float t = (nx * (hinge - o.x) + nz * (2 - o.z)) / facing;
+        float t = (nx * (hinge - o.x) + nz * (HINGE_Z - o.z)) / facing;
         if (t <= 0)
             return false;
         Vector3f p = new Vector3f(r).mul(t).add(o);
-        float along = (p.x - hinge) * dx + (p.z - 2) * dz;
-        if (along < 0 || along > 24 || p.y < 10 || p.y > 40)
+        float along = (p.x - hinge) * dx + (p.z - HINGE_Z) * dz;
+        if (along < 0 || along > WIDTH || p.y < BOTTOM || p.y > TOP)
             return false;
         Vector3f world = toWorld.transformPosition(new Vector3f(p));
         return eye.distanceTo(new Vec3(world.x, world.y, world.z)) < reach;

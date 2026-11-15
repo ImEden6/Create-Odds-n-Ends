@@ -257,7 +257,7 @@ public final class CncTests {
         if (front != null) {
             ItemStack left = front.insert(null, new ItemStack(Items.COPPER_BLOCK), false);
             check("arm_front_inserts", left.isEmpty(), left.toString());
-            check("arm_front_opens_doors", cnc(level, 13).getUpdateTag(level.registryAccess()).getBoolean("DoorsOpen"), "");
+            check("arm_front_opens_doors", cnc(level, 13).getUpdateTag(level.registryAccess()).getBoolean("ArmDoors"), "");
             check("arm_front_saves_shut", !cnc(level, 13).saveWithoutMetadata(level.registryAccess()).getBoolean("DoorsOpen"), "");
         }
         check("funnel_not_on_front", level.getCapability(Capabilities.ItemHandler.BLOCK, face, Direction.NORTH) == null, "");
