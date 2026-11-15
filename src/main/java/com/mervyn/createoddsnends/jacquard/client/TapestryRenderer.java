@@ -56,13 +56,13 @@ public class TapestryRenderer extends EntityRenderer<TapestryEntity> {
         boolean rug = face == Direction.UP;
         Mesh m = new Mesh(ms, buffer.getBuffer(RenderType.entitySolid(InventoryMenu.BLOCK_ATLAS)), light, true);
         TextureAtlasSprite linen = Mesh.sprite("createoddsnends:block/linen");
-        float front = z + 1;
-        m.box(linen, x0, y0, z, x1, y1, z + 0.95f);
+        float front = z + 0.9f;
+        m.box(linen, x0, y0, z, x1, y1, z + 0.85f);
         if (rug) {
             TextureAtlasSprite white = Mesh.sprite("createoddsnends:item/white");
             for (int i = 0; i < Wp; i += 2) {
-                m.box(white, LINEN, x0 + i, y1, z, x0 + i + 1, y1 + 2, z + 1);
-                m.box(white, LINEN, x1 - i - 1, y0 - 2, z, x1 - i, y0, z + 1);
+                m.box(white, LINEN, x0 + i, y1, z, x0 + i + 1, y1 + 2, front);
+                m.box(white, LINEN, x1 - i - 1, y0 - 2, z, x1 - i, y0, front);
             }
         } else {
             TextureAtlasSprite brass = Mesh.sprite("createoddsnends:block/brass_trim");
