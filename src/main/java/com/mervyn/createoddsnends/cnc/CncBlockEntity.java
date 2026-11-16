@@ -8,12 +8,11 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 import com.mervyn.createoddsnends.Tracer;
+import com.mervyn.createoddsnends.client.MachineSound;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.sound.SoundScapes;
-import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 
 import net.createmod.catnip.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
@@ -24,7 +23,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -125,7 +123,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
         if (armWaiting > 0)
             armWaiting--;
         if (armDoors > 0 && --armDoors == 0) {
-            level.playSound(null, worldPosition, SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .6f, 1.2f);
+            level.playSound(null, worldPosition, Tracer.CNC_DOOR_CLOSE.get(), SoundSource.BLOCKS, .6f, 1);
             sendData();
         }
         if (stale)
@@ -210,7 +208,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
             return;
         doorsOpen = open;
         CncDoors.track(level, worldPosition, open);
-        level.playSound(null, worldPosition, open ? SoundEvents.IRON_DOOR_OPEN : SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .6f, 1.2f);
+        level.playSound(null, worldPosition, (open ? Tracer.CNC_DOOR_OPEN : Tracer.CNC_DOOR_CLOSE).get(), SoundSource.BLOCKS, .6f, 1);
         sendData();
     }
 
@@ -269,7 +267,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     void armVisit() {
         armWaiting = 0;
         if (armDoors == 0 && !doorsOpen) {
-            level.playSound(null, worldPosition, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, .6f, 1.2f);
+            level.playSound(null, worldPosition, Tracer.CNC_DOOR_OPEN.get(), SoundSource.BLOCKS, .6f, 1);
             armDoors = 30;
             sendData();
         } else
@@ -318,7 +316,7 @@ public class CncBlockEntity extends SmartBlockEntity implements IHaveGoggleInfor
     @OnlyIn(Dist.CLIENT)
     private void tickAudio() {
         if (running && speed() != 0)
-            SoundScapes.play(AmbienceGroup.MILLING, worldPosition, Mth.clamp(Math.abs(speed()) / 256f + .8f, .8f, 1.3f));
+            MachineSound.keep(this, Tracer.CNC_CUTTING.get(), speed());
     }
 
     @Override

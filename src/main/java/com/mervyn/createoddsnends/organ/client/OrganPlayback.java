@@ -64,6 +64,8 @@ public final class OrganPlayback {
     // onRow(): every note starting on this row goes to the instruments, held ones don't retrigger
     private static void onRow(BarrelOrganBlockEntity be, Score score, int row) {
         Level level = be.getLevel();
+        if (row % score.barLength() == 0)
+            level.playLocalSound(be.getBlockPos(), Organ.BELLOWS.get(), SoundSource.BLOCKS, .35f, .9f + level.random.nextFloat() * .2f, false);
         List<Score.Note> notes = score.notes();
         for (int i = score.firstAt(row); i < notes.size() && notes.get(i).row() == row; i++) {
             Score.Note note = notes.get(i);

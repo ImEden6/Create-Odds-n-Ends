@@ -8,13 +8,12 @@ import org.jetbrains.annotations.Nullable;
 
 import com.mervyn.createoddsnends.Profile;
 import com.mervyn.createoddsnends.Tracer;
+import com.mervyn.createoddsnends.client.MachineSound;
 import com.mervyn.createoddsnends.turned.TurnedBlockItem;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.sound.SoundScapes;
-import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 
 import net.createmod.catnip.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
@@ -25,6 +24,7 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -181,6 +181,7 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
         input.extractItem(0, 1, false);
         progress = 0;
         cutting = false;
+        level.playSound(null, worldPosition, Tracer.LATHE_FINISH.get(), SoundSource.BLOCKS, .7f, 1);
         sendData();
     }
 
@@ -272,7 +273,7 @@ public class HeadstockBlockEntity extends KineticBlockEntity {
     public void tickAudio() {
         super.tickAudio();
         if (cutting && getSpeed() != 0)
-            SoundScapes.play(AmbienceGroup.MILLING, worldPosition, Mth.clamp(Math.abs(getSpeed()) / 256f + .7f, .7f, 1.2f));
+            MachineSound.keep(this, Tracer.LATHE_TURNING.get(), getSpeed());
     }
 
     public ItemInteractionResult useItem(Player player, ItemStack held) {

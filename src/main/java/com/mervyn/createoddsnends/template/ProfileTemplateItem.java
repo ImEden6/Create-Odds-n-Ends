@@ -8,7 +8,6 @@ import com.mervyn.createoddsnends.turned.TurnedBlockEntity;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +31,7 @@ public class ProfileTemplateItem extends Item {
             return InteractionResult.PASS;
         if (!level.isClientSide) {
             context.getItemInHand().set(Tracer.PROFILE.get(), be.getProfile());
-            level.playSound(null, context.getClickedPos(), SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.PLAYERS, 1, 1);
+            level.playSound(null, context.getClickedPos(), Tracer.TEMPLATE_WRITE.get(), SoundSource.PLAYERS, 1, 1);
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }

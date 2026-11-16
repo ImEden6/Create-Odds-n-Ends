@@ -3,6 +3,7 @@ package com.mervyn.createoddsnends.template;
 import com.mervyn.createoddsnends.Profile;
 import com.mervyn.createoddsnends.Tracer;
 
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -57,6 +58,7 @@ public class TemplateTableMenu extends AbstractContainerMenu {
         stack.set(Tracer.PROFILE.get(), profile);
         template.setChanged();
         broadcastChanges();
+        access.execute((level, pos) -> level.playSound(null, pos, Tracer.TEMPLATE_WRITE.get(), SoundSource.BLOCKS, 1, 1));
     }
 
     @Override

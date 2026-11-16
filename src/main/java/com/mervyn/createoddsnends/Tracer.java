@@ -30,6 +30,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -66,6 +67,7 @@ public class Tracer {
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, MODID);
     public static final DeferredRegister<ArmInteractionPointType> ARM_POINTS = DeferredRegister.create(CreateRegistries.ARM_INTERACTION_POINT_TYPE, MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Registries.SOUND_EVENT, MODID);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Profile>> PROFILE = COMPONENTS.registerComponentType("profile",
             b -> b.persistent(Profile.CODEC).networkSynchronized(Profile.STREAM_CODEC));
@@ -106,6 +108,20 @@ public class Tracer {
     public static final DeferredHolder<ArmInteractionPointType, LatheArmPoint.Type> LATHE_ARM_POINT = ARM_POINTS.register("lathe", LatheArmPoint.Type::new);
     public static final DeferredHolder<ArmInteractionPointType, CncArmPoint.Type> CNC_ARM_POINT = ARM_POINTS.register("cnc", CncArmPoint.Type::new);
 
+    public static final DeferredHolder<SoundEvent, SoundEvent> LATHE_TURNING = sound("lathe.turning");
+    public static final DeferredHolder<SoundEvent, SoundEvent> LATHE_FINISH = sound("lathe.finish");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CNC_CUTTING = sound("cnc.cutting");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CNC_DOOR_OPEN = sound("cnc.door_open");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CNC_DOOR_CLOSE = sound("cnc.door_close");
+    public static final DeferredHolder<SoundEvent, SoundEvent> LOOM_WEAVING = sound("loom.weaving");
+    public static final DeferredHolder<SoundEvent, SoundEvent> LOOM_FINISH = sound("loom.finish");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARD_PUNCH = sound("card_punch.punch");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TEMPLATE_WRITE = sound("template_table.write");
+
+    private static DeferredHolder<SoundEvent, SoundEvent> sound(String name) {
+        return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(MODID, name)));
+    }
+
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("tracer", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.createoddsnends"))
             .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
@@ -136,6 +152,7 @@ public class Tracer {
         MENUS.register(modEventBus);
         ARM_POINTS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
+        SOUNDS.register(modEventBus);
         Jacquard.register(modEventBus);
         Organ.register(modEventBus);
         Cnc.register(modEventBus);

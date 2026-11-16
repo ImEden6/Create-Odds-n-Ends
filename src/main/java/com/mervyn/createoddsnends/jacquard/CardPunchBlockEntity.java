@@ -19,7 +19,6 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -249,7 +248,7 @@ public class CardPunchBlockEntity extends KineticBlockEntity {
 
     private void strike() {
         RandomSource random = level.random;
-        level.playLocalSound(worldPosition, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.BLOCKS, 0.4f, 1.4f + random.nextFloat() * 0.2f, false);
+        level.playLocalSound(worldPosition, Tracer.CARD_PUNCH.get(), SoundSource.BLOCKS, 0.5f, 0.9f + random.nextFloat() * 0.2f, false);
         ItemParticleOption paper = new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.PAPER));
         for (int i = 0; i < 4; i++)
             level.addParticle(paper, worldPosition.getX() + 0.5 + random.nextGaussian() * 0.1, worldPosition.getY() + 0.58,

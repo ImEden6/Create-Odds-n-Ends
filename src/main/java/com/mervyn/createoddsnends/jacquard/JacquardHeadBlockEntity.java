@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 import org.jetbrains.annotations.Nullable;
 
 import com.mervyn.createoddsnends.Tracer;
+import com.mervyn.createoddsnends.client.MachineSound;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -21,6 +22,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
@@ -32,6 +34,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 // Controller of a formed loom. Holds the card chain, the thread and the woven piece, and weaves
@@ -212,6 +216,14 @@ public class JacquardHeadBlockEntity extends SmartBlockEntity implements IHaveGo
         }
         if (weaving && design != null)
             weave(design);
+        if (level.isClientSide)
+            tickAudio(design);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void tickAudio(@Nullable Design design) {
+        if (weaving && !waiting && design != null && speed != 0)
+            MachineSound.keep(this, Tracer.LOOM_WEAVING.get(), speed);
     }
 
     private void weave(Design design) {
@@ -265,6 +277,7 @@ public class JacquardHeadBlockEntity extends SmartBlockEntity implements IHaveGo
         ItemStack piece = new ItemStack(Jacquard.TAPESTRY.get());
         piece.set(Jacquard.DESIGN.get(), getDesignId());
         output.insertItem(0, piece, false);
+        level.playSound(null, worldPosition, Tracer.LOOM_FINISH.get(), SoundSource.BLOCKS, .8f, 1);
         sendData();
     }
 

@@ -62,5 +62,95 @@
         "attenuation_distance": 64
       }
     ]
+  },
+  "lathe.turning": {
+    "sounds": [
+      {
+        "name": "createoddsnends:lathe/turning",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.createoddsnends.lathe.turning"
+  },
+  "lathe.finish": {
+    "sounds": [
+      {
+        "name": "createoddsnends:lathe/finish",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.createoddsnends.lathe.finish"
+  },
+  "cnc.cutting": {
+    "sounds": [
+      {
+        "name": "createoddsnends:cnc/cutting",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.createoddsnends.cnc.cutting"
+  },
+  "cnc.door_open": {
+    "sounds": [
+      {
+        "name": "createoddsnends:cnc/door_open",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.createoddsnends.cnc.door_open"
+  },
+  "cnc.door_close": {
+    "sounds": [
+      {
+        "name": "createoddsnends:cnc/door_close",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.createoddsnends.cnc.door_close"
+  },
+  "loom.weaving": {
+    "sounds": [
+      {
+        "name": "createoddsnends:loom/weaving",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.createoddsnends.loom.weaving"
+  },
+  "loom.finish": {
+    "sounds": [
+      {
+        "name": "createoddsnends:loom/finish",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.createoddsnends.loom.finish"
+  },
+  "card_punch.punch": {
+    "sounds": [
+      {
+        "name": "createoddsnends:card_punch/punch",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.createoddsnends.card_punch.punch"
+  },
+  "template_table.write": {
+    "sounds": [
+      {
+        "name": "createoddsnends:template/write",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.createoddsnends.template_table.write"
+  },
+  "organ.bellows": {
+    "sounds": [
+      {
+        "name": "createoddsnends:organ/bellows",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.createoddsnends.organ.bellows"
   }
 }
