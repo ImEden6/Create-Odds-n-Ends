@@ -176,7 +176,7 @@ idea {
 def releaseVersion = mod_version
 def releaseMinecraft = minecraft_version
 def releaseNotes = providers.fileContents(layout.projectDirectory.file('CHANGELOG.md')).asText.map { text ->
-    def section = text.replace('\r\n', '\n') =~ /(?ms)^## ${java.util.regex.Pattern.quote(releaseVersion)}[ \t]*\n(.*?)(?=^## |\z)/
+    def section = text.replace('\r\n', '\n') =~ /(?ms)^## \[${java.util.regex.Pattern.quote(releaseVersion)}\][^\n]*\n(.*?)(?=^## \[|\z)/
     if (!section.find())
         throw new GradleException("CHANGELOG.md has no section for ${releaseVersion}")
     section.group(1).trim()

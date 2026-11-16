@@ -1,14 +1,21 @@
 # Changelog
 
-## 0.1.1
+All notable changes to this project will be documented in this file.
 
-### Tapestries
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.1] - 2026-11-17
+
+### Added
 - rugs stay down when something's placed on them, stools, tables, chairs from furniture mods all sit on top now
 - right click with a block on a rug places it on the floor through the rug, left click still breaks the rug
-- carpets, pressure plates and thin furniture bases on a rug don't flicker anymore
-- wooden and weighted pressure plates on a rug used to count the rug as someone standing there and stay pressed forever, fixed
 
-## 0.1.0
+### Fixed
+- carpets, pressure plates and thin furniture bases on a rug don't flicker anymore
+- wooden and weighted pressure plates on a rug used to count the rug as someone standing there and stay pressed forever
+
+## [0.1.0] - 2026-11-16
 
 First release. Needs Create 6.0.10 or newer on NeoForge 1.21.1. JEI and EMI both work, either one or both, neither is required.
 
