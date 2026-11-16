@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.148'
     id 'idea'
+    id 'me.modmuss50.mod-publish-plugin' version '2.2.1'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -169,5 +170,50 @@ idea {
     module {
         downloadSources = true
         downloadJavadoc = true
+    }
+}
+
+def releaseVersion = mod_version
+def releaseMinecraft = minecraft_version
+def releaseNotes = providers.fileContents(layout.projectDirectory.file('CHANGELOG.md')).asText.map { text ->
+    def section = text.replace('\r\n', '\n') =~ /(?ms)^## ${java.util.regex.Pattern.quote(releaseVersion)}[ \t]*\n(.*?)(?=^## |\z)/
+    if (!section.find())
+        throw new GradleException("CHANGELOG.md has no section for ${releaseVersion}")
+    section.group(1).trim()
+}
+def modrinthId = modrinth_project_id.trim()
+def curseforgeId = curseforge_project_id.trim()
+def missingToken = (!modrinthId.isEmpty() && providers.environmentVariable('MODRINTH_TOKEN').getOrNull() == null)
+        || (!curseforgeId.isEmpty() && providers.environmentVariable('CURSEFORGE_TOKEN').getOrNull() == null)
+
+publishMods {
+    file = jar.archiveFile
+    changelog = releaseNotes
+    type = STABLE
+    displayName = "Create: Odds 'N Ends ${releaseVersion}"
+    modLoaders.add('neoforge')
+    dryRun = missingToken
+
+    if (!modrinthId.isEmpty()) {
+        modrinth {
+            projectId = modrinthId
+            accessToken = providers.environmentVariable('MODRINTH_TOKEN')
+            minecraftVersions.add(releaseMinecraft)
+            requires('create')
+            optional('jei', 'emi')
+        }
+    }
+
+    if (!curseforgeId.isEmpty()) {
+        curseforge {
+            projectId = curseforgeId
+            accessToken = providers.environmentVariable('CURSEFORGE_TOKEN')
+            minecraftVersions.add(releaseMinecraft)
+            javaVersions.add(JavaVersion.VERSION_21)
+            client = true
+            server = true
+            requires('create')
+            optional('jei', 'emi')
+        }
     }
 }
