@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.mervyn.createoddsnends.Tracer;
-import com.mervyn.createoddsnends.organ.Organ;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -31,9 +30,7 @@ final class ShowcaseSounds {
             new Clip(Tracer.LOOM_WEAVING, 80, 1.3f, true),
             new Clip(Tracer.LOOM_FINISH, 30, 1, false),
             new Clip(Tracer.CARD_PUNCH, 30, 1, false),
-            new Clip(Tracer.TEMPLATE_WRITE, 30, 1, false),
-            new Clip(Organ.WIND, 80, .8f, true),
-            new Clip(Organ.WIND, 80, 1.3f, true));
+            new Clip(Tracer.TEMPLATE_WRITE, 30, 1, false));
     static final int QUIT;
 
     static {

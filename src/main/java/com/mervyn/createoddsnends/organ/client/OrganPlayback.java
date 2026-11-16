@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.mervyn.createoddsnends.client.MachineSound;
 import com.mervyn.createoddsnends.organ.BarrelOrganBlockEntity;
 import com.mervyn.createoddsnends.organ.InstrumentBlockEntity;
 import com.mervyn.createoddsnends.organ.Organ;
@@ -17,7 +16,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 // Client side of playback. The cabinet has no voice of its own: notes play at the instruments on
 // its wind chests, and the facade pipes and the beater only move for what those cover.
@@ -37,8 +35,6 @@ public final class OrganPlayback {
             be.lastRow = be.shownRow(0) == 0 ? -1 : cur;
             return;
         }
-        if (!be.chests().isEmpty())
-            MachineSound.keep(be, windAt(be), Organ.WIND.get(), be.getSpeed());
         if (cur != be.lastRow) {
             int from = be.lastRow, step = Math.floorMod(cur - from, rows), near = (int) Math.ceil(be.rowsPerTick()) + 1;
             if (from < 0 || step <= near || Math.floorMod(from - cur, rows) > near) {
@@ -63,13 +59,6 @@ public final class OrganPlayback {
             if (t == Timbre.MELODY || t == Timbre.CHORD)
                 be.pipeLit[(c * 7) % 9] = Math.max(be.pipeLit[(c * 7) % 9], 0.7f);
         }
-    }
-
-    private static Vec3 windAt(BarrelOrganBlockEntity be) {
-        Vec3 sum = Vec3.atCenterOf(be.getBlockPos());
-        for (BlockPos chest : be.chests())
-            sum = sum.add(Vec3.atCenterOf(chest));
-        return sum.scale(1.0 / (be.chests().size() + 1));
     }
 
     // onRow(): every note starting on this row goes to the instruments, held ones don't retrigger

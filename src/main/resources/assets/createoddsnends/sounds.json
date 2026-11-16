@@ -143,14 +143,5 @@
       }
     ],
     "subtitle": "subtitles.createoddsnends.template_table.write"
-  },
-  "organ.wind": {
-    "sounds": [
-      {
-        "name": "createoddsnends:organ/wind",
-        "attenuation_distance": 24
-      }
-    ],
-    "subtitle": "subtitles.createoddsnends.organ.wind"
   }
 }
