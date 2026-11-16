@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1
+
+### Tapestries
+- rugs stay down when something's placed on them, stools, tables, chairs from furniture mods all sit on top now
+- right click with a block on a rug places it on the floor through the rug, left click still breaks the rug
+- carpets, pressure plates and thin furniture bases on a rug don't flicker anymore
+- wooden and weighted pressure plates on a rug used to count the rug as someone standing there and stay pressed forever, fixed
+
 ## 0.1.0
 
 First release. Needs Create 6.0.10 or newer on NeoForge 1.21.1. JEI and EMI both work, either one or both, neither is required.
