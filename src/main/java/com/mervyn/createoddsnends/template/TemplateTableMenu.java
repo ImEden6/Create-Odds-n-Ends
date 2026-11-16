@@ -58,7 +58,7 @@ public class TemplateTableMenu extends AbstractContainerMenu {
         stack.set(Tracer.PROFILE.get(), profile);
         template.setChanged();
         broadcastChanges();
-        access.execute((level, pos) -> level.playSound(null, pos, Tracer.TEMPLATE_WRITE.get(), SoundSource.BLOCKS, 1, 1));
+        access.execute((level, pos) -> level.playSound(null, pos, Tracer.TEMPLATE_WRITE.get(), SoundSource.BLOCKS, .6f, 1));
     }
 
     @Override

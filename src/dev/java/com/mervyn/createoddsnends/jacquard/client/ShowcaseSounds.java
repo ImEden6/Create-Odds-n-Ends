@@ -32,7 +32,8 @@ final class ShowcaseSounds {
             new Clip(Tracer.LOOM_FINISH, 30, 1, false),
             new Clip(Tracer.CARD_PUNCH, 30, 1, false),
             new Clip(Tracer.TEMPLATE_WRITE, 30, 1, false),
-            new Clip(Organ.BELLOWS, 30, 1, false));
+            new Clip(Organ.WIND, 80, .8f, true),
+            new Clip(Organ.WIND, 80, 1.3f, true));
     static final int QUIT;
 
     static {

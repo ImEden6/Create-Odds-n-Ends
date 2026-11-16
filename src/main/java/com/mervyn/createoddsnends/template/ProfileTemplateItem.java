@@ -31,7 +31,7 @@ public class ProfileTemplateItem extends Item {
             return InteractionResult.PASS;
         if (!level.isClientSide) {
             context.getItemInHand().set(Tracer.PROFILE.get(), be.getProfile());
-            level.playSound(null, context.getClickedPos(), Tracer.TEMPLATE_WRITE.get(), SoundSource.PLAYERS, 1, 1);
+            level.playSound(null, context.getClickedPos(), Tracer.TEMPLATE_WRITE.get(), SoundSource.PLAYERS, .6f, 1);
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }

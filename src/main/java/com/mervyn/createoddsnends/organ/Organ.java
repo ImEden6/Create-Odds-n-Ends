@@ -88,7 +88,7 @@ public final class Organ {
     public static final DeferredHolder<SoundEvent, SoundEvent> CHORD_HIGH = sound("organ.chord.high");
     public static final DeferredHolder<SoundEvent, SoundEvent> KICK = sound("organ.kick");
     public static final DeferredHolder<SoundEvent, SoundEvent> SNARE = sound("organ.snare");
-    public static final DeferredHolder<SoundEvent, SoundEvent> BELLOWS = sound("organ.bellows");
+    public static final DeferredHolder<SoundEvent, SoundEvent> WIND = sound("organ.wind");
 
     private static DeferredHolder<SoundEvent, SoundEvent> sound(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Tracer.MODID, name)));
